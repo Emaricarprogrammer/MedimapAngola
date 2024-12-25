@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const CreateAccountAdmincontroller_1 = __importDefault(require("../../Controllers/AdminController/CreateAccountAdmincontroller"));
+const FindAdminController_1 = __importDefault(require("../../Controllers/AdminController/FindAdminController"));
+const FindAllAdminsController_1 = require("../../Controllers/AdminController/FindAllAdminsController");
+const UpdateAdminAccountController_1 = require("../../Controllers/AdminController/UpdateAdminAccountController");
+const DeleteAdminAccountController_1 = require("../../Controllers/AdminController/DeleteAdminAccountController");
+const AdminRouter = (0, express_1.Router)();
+const adminController = new CreateAccountAdmincontroller_1.default();
+const findadmin = new FindAdminController_1.default();
+const findAllAdmins = new FindAllAdminsController_1.FindAllAdminsController();
+const updateAdmin = new UpdateAdminAccountController_1.UpdateAdminAccountController();
+const deleteAdmin = new DeleteAdminAccountController_1.DeleteAdmin();
+AdminRouter.route("/signup").post((req, res) => { adminController.CreateAdminAccount(req, res); });
+AdminRouter.route("/:id_admin").post((req, res) => { findadmin.findAdmin(req, res); });
+AdminRouter.route("/admins").get((req, res) => { findAllAdmins.findAllAdmin(req, res); });
+AdminRouter.route("/:id_admin").delete((req, res) => { deleteAdmin.DeleteAdminController(req, res); });
+AdminRouter.route("/edit/:id_admin").put((req, res) => { updateAdmin.updateAdminAccount(req, res); });
+exports.default = AdminRouter;

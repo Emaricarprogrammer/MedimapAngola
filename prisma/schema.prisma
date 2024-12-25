@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model Contas{
+  id_conta              String @id @default(uuid())
+  email                 String @unique
+  password              String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  admin                 Admin[]
+  entidades             Entidades[]
+  @@map("tbl_contas")
+}
+
+model Admin{
+  id_admin              String    @id @default(uuid())
+  username              String
+  nivel_acesso          Tipo_acesso
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  id_conta_fk           String
+  credenciais_admin     Contas @relation(fields: [id_conta_fk], references: [id_conta])
+  @@map("tbl_admin")
+}
+
+model Entidades {
+  id_entidade             String    @id @default(uuid())
+  NIF_entidade            Int
+  firma_entidade          String
+  tipo_entidade           Tipo_entidades
+  contacto_entidade       Contactos[]
+  endereco_entidade       Enderecos[]
+  geolocalizacao_entidade Geolocalizacao[]
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  aquisicao_medicamento   Aquisicao[]
+  id_conta_fk             String
+  credenciais_entidades                   Contas @relation(fields: [id_conta_fk], references: [id_conta])
+  medicamentos            Medicamentos[] @relation("DepositoMedicamentos") // Relação nomeada
+
+  @@map("tbl_entidades")
+}
+
+model Geolocalizacao {
+  id_geolocalizacao String    @id @default(uuid())
+  latitude          Float
+  longitude         Float
+  id_entidade_fk    String
+  entidade          Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
+
+  @@index([id_entidade_fk], map: "tbl_geolocalizacao_id_entidade_fkey")
+  @@map("tbl_geolocalizacao")
+}
+
+model Contactos {
+  id_contacto      String    @id @default(uuid())
+  contacto         String
+  id_entidade_fk   String
+  entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
+
+  @@index([id_entidade_fk], map: "tbl_contactos_id_entidade_fkey")
+  @@map("tbl_contactos")
+}
+
+model Enderecos {
+  id_endereco     String    @id @default(uuid())
+  logradouro       String
+  numero          Int
+  cidade          String
+  pais            String   @default("Angola")
+  id_entidade_fk  String
+  entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
+
+  @@index([id_entidade_fk], map: "tbl_enderecos_id_entidade_fkey")
+  @@map("tbl_enderecos")
+}
+
+model Categoria_Medicamentos {
+  id_categoria_medicamento      String    @id @default(uuid())
+  nome_categoria_medicamento    String
+  createdAt                     DateTime @default(now())
+  updatedAt                     DateTime @updatedAt
+  medicamento                   Medicamentos[]
+
+  @@map("tbl_categoria_medicamentos")
+}
+
+model Medicamentos {
+  id_medicamento                    String    @id @default(uuid())
+  nome_generico_medicamento         String
+  nome_comercial_medicamento        String
+  origem_medicamento                String
+  preco_medicamento                 Float
+  validade_medicamento              DateTime
+  imagem_url                        String
+  quantidade_disponivel_medicamento Int
+  createdAt                         DateTime @default(now())
+  updatedAt                         DateTime @updatedAt
+  id_categoria                      String
+  categoria                         Categoria_Medicamentos @relation(fields: [id_categoria], references: [id_categoria_medicamento])
+
+id_entidade_fk                    String
+deposito                          Entidades @relation("DepositoMedicamentos", fields: [id_entidade_fk], references: [id_entidade])
+
+  @@index([id_categoria], map: "tbl_medicamentos_id_categoria_fkey")
+  @@index([id_entidade_fk], map: "tbl_medicamentos_id_entidade_fkey") // Índice para FK
+  @@map("tbl_medicamentos")
+}
+
+
+model Aquisicao {
+  id_aquisicao          String    @id @default(uuid())
+  quantidade_aquisicao  Int
+  data_aquisicao        DateTime
+  tipo_aquisicao        Tipo_aquisicao
+  createdAt             DateTime? @default(now())
+  updatedAt             DateTime? @updatedAt
+  id_entidade_fk        String
+  entidade              Entidades                @relation(fields: [id_entidade_fk], references: [id_entidade])
+  aquisicao_medicamento Aquisicao_medicamentos[]
+
+  @@index([id_entidade_fk], map: "tbl_aquisicao_id_entidade_fkey")
+  @@map("tbl_aquisicao")
+}
+
+model Aquisicao_medicamentos {
+  id_aquisicao_medicamento  String    @id @default(uuid())
+  id_aquisicao              String
+  aquisicao                 Aquisicao              @relation(fields: [id_aquisicao], references: [id_aquisicao])
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  @@index([id_aquisicao], map: "tbl_aquisicao_medicamentos_id_aquisicao_fkey")
+  @@map("tbl_aquisicao_medicamentos")
+}
+
+enum Tipo_entidades {
+  farmacia
+  deposito
+}
+
+enum Tipo_aquisicao {
+  emediata
+  agendada
+}
+enum Tipo_acesso{
+  admin 
+  gestor
+}
