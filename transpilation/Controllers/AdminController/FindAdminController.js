@@ -5,7 +5,7 @@ const client_1 = require("@prisma/client");
 const Prisma = new client_1.PrismaClient();
 const AdminRepositoryInstance = new AdminRepository_1.AdminRepository(Prisma);
 class FindAdminController {
-    async findAdmin(req, res) {
+    static async findAdmin(req, res) {
         try {
             const { id_admin } = req.params;
             if (!id_admin) {

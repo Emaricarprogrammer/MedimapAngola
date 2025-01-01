@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteAdmin = void 0;
+exports.DeleteAdminController = void 0;
 const client_1 = require("@prisma/client");
 const AccountRespository_1 = require("../../Repositories/AccountRepository/AccountRespository");
 const AdminRepository_1 = require("../../Repositories/AdminRepository/AdminRepository");
@@ -8,8 +8,8 @@ const validators_1 = require("../../Utils/Validators/validators/validators");
 const Prisma = new client_1.PrismaClient();
 const AdminRepositoryInstance = new AdminRepository_1.AdminRepository(Prisma);
 const AccountRepositoryInstance = new AccountRespository_1.AccountRepository(Prisma);
-class DeleteAdmin {
-    async DeleteAdminController(req, res) {
+class DeleteAdminController {
+    static async DeleteAdmin(req, res) {
         try {
             const { id_admin } = req.params;
             if (!id_admin) {
@@ -34,4 +34,4 @@ class DeleteAdmin {
         }
     }
 }
-exports.DeleteAdmin = DeleteAdmin;
+exports.DeleteAdminController = DeleteAdminController;

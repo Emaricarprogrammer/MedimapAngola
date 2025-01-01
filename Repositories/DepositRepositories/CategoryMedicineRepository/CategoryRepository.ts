@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client"
+import {Prisma, PrismaClient} from "@prisma/client"
 import CategoryMedicine, { ICategoryMedicine } from "../../../Interfaces/CategoryMedicineInterface/interface";
 
 export class CategoryMedicineRepositories implements ICategoryMedicine
@@ -10,12 +10,13 @@ export class CategoryMedicineRepositories implements ICategoryMedicine
         this.prisma = prisma
     }
 
-    async createMedicineCategory(nomeCategoria: string): Promise<CategoryMedicine | null> {
-        const CategoryQuery = await this.prisma.categoria_Medicamentos.create({data:{nome_categoria_medicamento:nomeCategoria}})
-        console.log(CategoryQuery)
-        return CategoryQuery || null
-    }
-
+    async createMedicineCategory(nomeCategoria: string,tx?: Omit<Prisma.TransactionClient, '$transaction'>): Promise<CategoryMedicine | null> {
+        const prismaCliente = tx || this.prisma;
+        const CategoryQuery = await prismaCliente.categoria_Medicamentos.create({
+          data: { nome_categoria_medicamento: nomeCategoria },
+        });
+        return CategoryQuery || null;
+      }
     async findMedicineCategory(nameCategory: string): Promise<any> {
         const CategoryQuery = await this.prisma.categoria_Medicamentos.findFirst({where:{nome_categoria_medicamento:nameCategory}})
         return CategoryQuery

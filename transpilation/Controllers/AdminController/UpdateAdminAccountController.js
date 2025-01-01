@@ -14,7 +14,7 @@ const Prisma = new client_1.PrismaClient();
 const AdminRepositoryInstance = new AdminRepository_1.AdminRepository(Prisma);
 const AccountRepositoryInstance = new AccountRespository_1.AccountRepository(Prisma);
 class UpdateAdminAccountController {
-    async updateAdminAccount(req, res) {
+    static async updateAdminAccount(req, res) {
         try {
             const { id_admin } = req.params;
             const { username, nivel_acesso, email, password } = req.body;

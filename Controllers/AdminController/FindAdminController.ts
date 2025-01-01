@@ -7,7 +7,7 @@ const Prisma = new PrismaClient();
 const AdminRepositoryInstance = new AdminRepository(Prisma);
 export default class FindAdminController
 {
-  async findAdmin(req: Request, res: Response)
+  static async findAdmin(req: Request, res: Response)
   {
     try
     {

@@ -5,9 +5,11 @@ class CategoryMedicineRepositories {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async createMedicineCategory(nomeCategoria) {
-        const CategoryQuery = await this.prisma.categoria_Medicamentos.create({ data: { nome_categoria_medicamento: nomeCategoria } });
-        console.log(CategoryQuery);
+    async createMedicineCategory(nomeCategoria, tx) {
+        const prismaCliente = tx || this.prisma;
+        const CategoryQuery = await prismaCliente.categoria_Medicamentos.create({
+            data: { nome_categoria_medicamento: nomeCategoria },
+        });
         return CategoryQuery || null;
     }
     async findMedicineCategory(nameCategory) {

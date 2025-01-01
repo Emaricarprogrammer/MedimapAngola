@@ -5,8 +5,9 @@ class AdminRepository {
     constructor(prisma) {
         this.Prisma = prisma;
     }
-    async createAdmin(adminDatas) {
-        const adminData = await this.Prisma.admin.create({ data: { ...adminDatas } });
+    async createAdmin(adminDatas, tx) {
+        const prismaClient = tx || this.Prisma;
+        const adminData = await prismaClient.admin.create({ data: { ...adminDatas } });
         return adminData;
     }
     async findAdmin(id_admin) {

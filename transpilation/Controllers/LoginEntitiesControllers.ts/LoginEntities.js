@@ -8,15 +8,15 @@ const AdminRepository_1 = require("../../Repositories/AdminRepository/AdminRepos
 const client_1 = require("@prisma/client");
 const AccountRespository_1 = require("../../Repositories/AccountRepository/AccountRespository");
 const validators_1 = require("../../Utils/Validators/validators/validators");
+const passwordService_1 = require("../../Utils/PasswordService/passwordService");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 dotenv_1.default.config();
 const prisma = new client_1.PrismaClient();
 const AdminRepositoryInstance = new AdminRepository_1.AdminRepository(prisma);
 const AccountRepositoryInstance = new AccountRespository_1.AccountRepository(prisma);
 class LoginEntity {
-    async LoginEntities(req, res) {
+    static async LoginEntities(req, res) {
         try {
             const { email, password } = req.body;
             if (!email || !password) {
@@ -26,7 +26,7 @@ class LoginEntity {
             if (!AccountExists) {
                 return res.status(401).json({ success: false, message: "Email ou senha inválidos" });
             }
-            const isValidPassword = await bcrypt_1.default.compare(password, AccountExists.password);
+            const isValidPassword = await passwordService_1.PasswordService.PasswordCompare(password, AccountExists.password);
             if (!isValidPassword) {
                 return res.status(401).json({ success: false, message: "Email ou senha inválido" });
             }
@@ -55,7 +55,7 @@ class LoginEntity {
                     };
             }
             const token = jsonwebtoken_1.default.sign({ id_entidade: userInfo.id, role, ...userInfo }, process.env.SUPER_SECRET_KEY);
-            return res.status(200).json({ logged: true, token, reponse: userInfo });
+            return res.status(200).json({ logged: true, token, response: userInfo });
         }
         catch (error) {
             console.error("Houve um erro: ", error.message);

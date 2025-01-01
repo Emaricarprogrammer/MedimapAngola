@@ -9,15 +9,17 @@ const FindAdminController_1 = __importDefault(require("../../Controllers/AdminCo
 const FindAllAdminsController_1 = require("../../Controllers/AdminController/FindAllAdminsController");
 const UpdateAdminAccountController_1 = require("../../Controllers/AdminController/UpdateAdminAccountController");
 const DeleteAdminAccountController_1 = require("../../Controllers/AdminController/DeleteAdminAccountController");
+const Auth_1 = require("../../Controllers/AuthenticationController/Auth");
 const AdminRouter = (0, express_1.Router)();
-const adminController = new CreateAccountAdmincontroller_1.default();
-const findadmin = new FindAdminController_1.default();
-const findAllAdmins = new FindAllAdminsController_1.FindAllAdminsController();
-const updateAdmin = new UpdateAdminAccountController_1.UpdateAdminAccountController();
-const deleteAdmin = new DeleteAdminAccountController_1.DeleteAdmin();
-AdminRouter.route("/signup").post((req, res) => { adminController.CreateAdminAccount(req, res); });
-AdminRouter.route("/:id_admin").post((req, res) => { findadmin.findAdmin(req, res); });
-AdminRouter.route("/admins").get((req, res) => { findAllAdmins.findAllAdmin(req, res); });
-AdminRouter.route("/:id_admin").delete((req, res) => { deleteAdmin.DeleteAdminController(req, res); });
-AdminRouter.route("/edit/:id_admin").put((req, res) => { updateAdmin.updateAdminAccount(req, res); });
+/**
+ * Publics Routes
+ */
+AdminRouter.route("/signup").post((req, res) => { CreateAccountAdmincontroller_1.default.CreateAdminAccount(req, res); });
+AdminRouter.route("/:id_admin").post((req, res) => { FindAdminController_1.default.findAdmin(req, res); });
+/**
+ * Private Routes
+ */
+AdminRouter.route("/admins").get(Auth_1.AuthenticationController.Authentication, (req, res) => { FindAllAdminsController_1.FindAllAdminsController.findAllAdmin(req, res); });
+AdminRouter.route("/:id_admin").delete(Auth_1.AuthenticationController.Authentication, (req, res) => { DeleteAdminAccountController_1.DeleteAdminController.DeleteAdmin(req, res); });
+AdminRouter.route("/edit/:id_admin").put(Auth_1.AuthenticationController.Authentication, (req, res) => { UpdateAdminAccountController_1.UpdateAdminAccountController.updateAdminAccount(req, res); });
 exports.default = AdminRouter;

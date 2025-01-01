@@ -12,7 +12,7 @@ const AccountRepositoryInstance = new AccountRepository(Prisma);
 
 export class UpdateAdminAccountController
 {
-    async updateAdminAccount(req: Request, res: Response)
+    static async updateAdminAccount(req: Request, res: Response)
     {
         try
         {

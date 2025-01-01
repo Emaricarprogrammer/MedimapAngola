@@ -1,7 +1,7 @@
 import { IAdminRespository } from '../../Interfaces/AdminInterface/interface'
 import AdminData from '../../Interfaces/AdminInterface/interface'
 import { AccountData } from '../../Interfaces/AccountInterface/interface';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 export class AdminRepository implements IAdminRespository {
   private Prisma: PrismaClient
@@ -9,8 +9,9 @@ export class AdminRepository implements IAdminRespository {
   constructor(prisma: PrismaClient) {
     this.Prisma = prisma
   }
-  async createAdmin(adminDatas: AdminData): Promise<AdminData> {
-      const adminData = await this.Prisma.admin.create({data:{...adminDatas}})
+  async createAdmin(adminDatas: AdminData, tx?: Omit<Prisma.TransactionClient, '$transaction'>): Promise<AdminData> {
+    const prismaClient = tx || this.Prisma
+      const adminData = await prismaClient.admin.create({data:{...adminDatas}})
       return adminData
   }
   async findAdmin(id_admin: string): Promise<any> {

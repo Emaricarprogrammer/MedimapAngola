@@ -9,10 +9,12 @@ export class AccountRepository implements IAccountRepository
     {
         this.Prisma = prisma
     }
-    async createAccount(AccountDatas: AccountData):Promise<AccountDatasResponse>
+    async createAccount(AccountDatas: AccountData, tx?: Omit<Prisma.TransactionClient, '$transaction'>):Promise<AccountDatasResponse>
     {
         const HashPassword = await PasswordService.hashPassword(AccountDatas.password)
-        const accountData = await this.Prisma.contas.create({data:{...AccountDatas, password: HashPassword}})
+        const prismaClient = tx || this.Prisma
+
+        const accountData = await prismaClient.contas.create({data:{...AccountDatas, password: HashPassword}})
         return{
             id_conta: accountData.id_conta,
             email: accountData.email

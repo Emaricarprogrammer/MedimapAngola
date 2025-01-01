@@ -3,19 +3,20 @@ import CreateAccountAdminController from "../../Controllers/AdminController/Crea
 import FindAdminController from "../../Controllers/AdminController/FindAdminController";
 import {FindAllAdminsController} from "../../Controllers/AdminController/FindAllAdminsController"
 import { UpdateAdminAccountController } from "../../Controllers/AdminController/UpdateAdminAccountController";
-import { DeleteAdmin } from "../../Controllers/AdminController/DeleteAdminAccountController";
+import { DeleteAdminController } from "../../Controllers/AdminController/DeleteAdminAccountController";
+import { AuthenticationController } from '../../Controllers/AuthenticationController/Auth';
 
 const AdminRouter: Router = Router();
+/**
+ * Publics Routes
+ */
+AdminRouter.route("/signup").post((req: Request, res: Response) => {CreateAccountAdminController.CreateAdminAccount(req, res);})
+AdminRouter.route("/:id_admin").post((req:Request, res:Response) => {FindAdminController.findAdmin(req, res)})
+/**
+ * Private Routes
+ */
+AdminRouter.route("/admins").get(AuthenticationController.Authentication, (req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
+AdminRouter.route("/:id_admin").delete(AuthenticationController.Authentication, (req: Request, res: Response) => {DeleteAdminController.DeleteAdmin(req, res)})
+AdminRouter.route("/edit/:id_admin").put(AuthenticationController.Authentication, (req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
 
-const adminController = new CreateAccountAdminController();
-const findadmin = new FindAdminController()
-const findAllAdmins = new FindAllAdminsController()
-const updateAdmin = new UpdateAdminAccountController()
-const deleteAdmin = new DeleteAdmin()
-
-AdminRouter.route("/signup").post((req: Request, res: Response) => {adminController.CreateAdminAccount(req, res);})
-AdminRouter.route("/:id_admin").post((req:Request, res:Response) => {findadmin.findAdmin(req, res)})
-AdminRouter.route("/admins").get((req: Request, res: Response) => {findAllAdmins.findAllAdmin(req, res)})
-AdminRouter.route("/:id_admin").delete((req: Request, res: Response) => {deleteAdmin.DeleteAdminController(req, res)})
-AdminRouter.route("/edit/:id_admin").put((req:Request, res:Response) => {updateAdmin.updateAdminAccount(req, res)})
 export default AdminRouter;

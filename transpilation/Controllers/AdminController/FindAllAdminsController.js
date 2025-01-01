@@ -6,7 +6,7 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const AdminRepositoryInstance = new AdminRepository_1.AdminRepository(prisma);
 class FindAllAdminsController {
-    async findAllAdmin(req, res) {
+    static async findAllAdmin(req, res) {
         try {
             const AdminsDatas = await AdminRepositoryInstance.findAllAdmin();
             if (!AdminsDatas) {

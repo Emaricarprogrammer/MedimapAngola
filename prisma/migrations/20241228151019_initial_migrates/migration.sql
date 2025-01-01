@@ -92,8 +92,10 @@ CREATE TABLE `tbl_medicamentos` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `id_categoria` VARCHAR(191) NOT NULL,
+    `id_entidade_fk` VARCHAR(191) NOT NULL,
 
     INDEX `tbl_medicamentos_id_categoria_fkey`(`id_categoria`),
+    INDEX `tbl_medicamentos_id_entidade_fkey`(`id_entidade_fk`),
     PRIMARY KEY (`id_medicamento`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -139,6 +141,9 @@ ALTER TABLE `tbl_enderecos` ADD CONSTRAINT `tbl_enderecos_id_entidade_fk_fkey` F
 
 -- AddForeignKey
 ALTER TABLE `tbl_medicamentos` ADD CONSTRAINT `tbl_medicamentos_id_categoria_fkey` FOREIGN KEY (`id_categoria`) REFERENCES `tbl_categoria_medicamentos`(`id_categoria_medicamento`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `tbl_medicamentos` ADD CONSTRAINT `tbl_medicamentos_id_entidade_fk_fkey` FOREIGN KEY (`id_entidade_fk`) REFERENCES `tbl_entidades`(`id_entidade`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `tbl_aquisicao` ADD CONSTRAINT `tbl_aquisicao_id_entidade_fk_fkey` FOREIGN KEY (`id_entidade_fk`) REFERENCES `tbl_entidades`(`id_entidade`) ON DELETE RESTRICT ON UPDATE CASCADE;

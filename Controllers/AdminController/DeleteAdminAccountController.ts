@@ -8,9 +8,9 @@ const Prisma = new PrismaClient();
 const AdminRepositoryInstance = new AdminRepository(Prisma);
 const AccountRepositoryInstance = new AccountRepository(Prisma);
 
-export class DeleteAdmin
+export class DeleteAdminController
 {
-    async DeleteAdminController(req: Request, res: Response)
+    static async DeleteAdmin(req: Request, res: Response)
     {
         try {
             const {id_admin} = req.params

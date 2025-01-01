@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateMedicineController = void 0;
-const MedicineRepository_1 = require("../../Repositories/DepositRepositories/MedicineRepository/MedicineRepository");
-const CategoryRepository_1 = require("../../Repositories/DepositRepositories/CategoryMedicineRepository/CategoryRepository");
+const MedicineRepository_1 = require("../../../Repositories/DepositRepositories/MedicineRepository/MedicineRepository");
+const CategoryRepository_1 = require("../../../Repositories/DepositRepositories/CategoryMedicineRepository/CategoryRepository");
 const client_1 = require("@prisma/client");
 // Inicializa o Prisma Client
 const prisma = new client_1.PrismaClient();

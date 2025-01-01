@@ -6,9 +6,10 @@ class AccountRepository {
     constructor(prisma) {
         this.Prisma = prisma;
     }
-    async createAccount(AccountDatas) {
+    async createAccount(AccountDatas, tx) {
         const HashPassword = await passwordService_1.PasswordService.hashPassword(AccountDatas.password);
-        const accountData = await this.Prisma.contas.create({ data: { ...AccountDatas, password: HashPassword } });
+        const prismaClient = tx || this.Prisma;
+        const accountData = await prismaClient.contas.create({ data: { ...AccountDatas, password: HashPassword } });
         return {
             id_conta: accountData.id_conta,
             email: accountData.email

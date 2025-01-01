@@ -15,7 +15,7 @@ const AdminRepositoryInstance = new AdminRepository(prisma)
 const AccountRepositoryInstance = new AccountRepository(prisma)
 export class LoginEntity
 {
-    async  LoginEntities(req: Request, res: Response): Promise<Response>
+    static async  LoginEntities(req: Request, res: Response): Promise<Response>
 {
     try
     {
@@ -31,7 +31,7 @@ export class LoginEntity
             return res.status(401).json({success: false, message: "Email ou senha inválidos"})
         }
 
-        const isValidPassword = await bcrypt.compare(password, AccountExists.password);
+        const isValidPassword = await PasswordService.PasswordCompare(password, AccountExists.password);
 
         if (!isValidPassword)
         {
@@ -68,7 +68,7 @@ export class LoginEntity
         }
 
         const token = JWT.sign({id_entidade: userInfo.id, role, ...userInfo}, process.env.SUPER_SECRET_KEY!)
-        return res.status(200).json({logged: true, token, reponse:userInfo})
+        return res.status(200).json({logged: true, token, response:userInfo})
     }
     catch(error: any)
     {
