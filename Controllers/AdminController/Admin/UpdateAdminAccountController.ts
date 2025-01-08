@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { AdminRepository } from "../../Repositories/AdminRepository/AdminRepository";
+import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository";
 import { PrismaClient } from "@prisma/client";
-import { AccountRepository } from '../../Repositories/AccountRepository/AccountRespository';
-import { ValidatorProps } from '../../Utils/Validators/validators/validators';
+import { AccountRepository } from '../../../Repositories/AccountRepository/AccountRespository';
+import { ValidatorProps } from '../../../Utils/Validators/validators/validators';
 import validator from "validator"
-import { PasswordService } from "../../Utils/PasswordService/passwordService";
+import { PasswordService } from "../../../Utils/PasswordService/passwordService";
 
 const Prisma = new PrismaClient();
 const AdminRepositoryInstance = new AdminRepository(Prisma);

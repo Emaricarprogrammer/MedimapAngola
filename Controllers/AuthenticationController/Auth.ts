@@ -17,12 +17,16 @@ export class AuthenticationController
             if (!token)
             {
                 console.log("Token nao fornecido")
-                return res.status(404).json({success: false, message:"Oooops! Estamos tentando resolver este problema, por favor tente novamente@"})
+                return res.status(404).json({success: false, message:"Oooops! Estamos tentando resolver este problema, por favor tente novamente"})
             }
     
             const decodedToken = await JWT.verify(token, process.env.SUPER_SECRET_KEY!) as JwtPayload
             req.body.user = decodedToken
 
+            if (["gestor"].includes(decodedToken.role))
+            {
+                console.log("Voe esta logado como admin")
+            }
             console.log(decodedToken)
             next()
             

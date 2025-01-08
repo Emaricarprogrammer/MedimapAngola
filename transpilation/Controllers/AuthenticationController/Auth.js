@@ -13,10 +13,13 @@ class AuthenticationController {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
                 console.log("Token nao fornecido");
-                return res.status(404).json({ success: false, message: "Oooops! Estamos tentando resolver este problema, por favor tente novamente@" });
+                return res.status(404).json({ success: false, message: "Oooops! Estamos tentando resolver este problema, por favor tente novamente" });
             }
             const decodedToken = await jsonwebtoken_1.default.verify(token, process.env.SUPER_SECRET_KEY);
             req.body.user = decodedToken;
+            if (["gestor"].includes(decodedToken.role)) {
+                console.log("Voe esta logado como admin");
+            }
             console.log(decodedToken);
             next();
         }

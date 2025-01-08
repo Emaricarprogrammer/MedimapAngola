@@ -24,15 +24,19 @@ class ValidatorProps {
             return false;
         }
     }
-    static EmailExists(email) {
-        const verify = prisma.contas.findUnique({ where: { email: email } });
+    static async EmailExists(email) {
+        const verify = await prisma.contas.findUnique({ where: { email: email } });
         return verify;
     }
     static IsVAlidEmail(email) {
         validator_1.default.isEmail(email);
     }
-    static AdminExists(id_admin) {
-        const verify = prisma.admin.findUnique({ where: { id_admin: id_admin } });
+    static async AdminExists(id_admin) {
+        const verify = await prisma.admin.findUnique({ where: { id_admin: id_admin } });
+        return verify;
+    }
+    static async MedicineExists(id_medicine) {
+        const verify = await prisma.medicamentos.findFirst({ where: { id_medicamento: id_medicine } });
         return verify;
     }
     static sanitizeInput(username, email, password, nivel_acesso) {

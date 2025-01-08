@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express";
-import { AdminRepository } from "../../Repositories/AdminRepository/AdminRepository";
+import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository";
 import { PrismaClient } from "@prisma/client";
 
 const Prisma = new PrismaClient();

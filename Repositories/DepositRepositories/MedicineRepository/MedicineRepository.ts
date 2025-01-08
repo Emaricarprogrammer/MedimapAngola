@@ -60,6 +60,7 @@ export class MedicineRepositories implements IMedicineRepositories
         const totalPages = Math.ceil(totalMedicines/ limit)
 
         const MedicineResults = MedicineQuery.map((medicines => ({
+            id_medicamento: medicines.id_medicamento,
             categoria: medicines.categoria.nome_categoria_medicamento,
             nome_generico: medicines.nome_generico_medicamento,
             nome_comercial: medicines.nome_comercial_medicamento,
@@ -77,7 +78,12 @@ export class MedicineRepositories implements IMedicineRepositories
             return await this.prisma.medicamentos.count()
         }
     async updateMedicine(id_medicine: string, medicineDatas: Partial<MedicineDatas>): Promise<MedicineDatas | any> {
-        const MedicineQuery = await this.prisma.medicamentos.update({where:{id_medicamento:id_medicine}, data:{...medicineDatas}})
+        const MedicineQuery = await this.prisma.medicamentos.update({
+            where: {
+                id_medicamento: id_medicine
+            },
+            data:{...medicineDatas}
+        })
         return MedicineQuery
     }
     async deleteMedicine(id_medicine: string): Promise<any> {

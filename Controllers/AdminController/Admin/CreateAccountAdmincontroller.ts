@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { AdminRepository } from "../../Repositories/AdminRepository/AdminRepository";
-import { AccountRepository } from "../../Repositories/AccountRepository/AccountRespository";
-import { ValidatorProps } from "../../Utils/Validators/validators/validators";
-import { EmailSender } from "../../Utils/providers/SendEmails/SendEmail";
+import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository";
+import { AccountRepository } from "../../../Repositories/AccountRepository/AccountRespository";
+import { ValidatorProps } from "../../../Utils/Validators/validators/validators";
+import { EmailSender } from "../../../Utils/providers/SendEmails/SendEmail";
 import dotenv from "dotenv";
 
 dotenv.config();
