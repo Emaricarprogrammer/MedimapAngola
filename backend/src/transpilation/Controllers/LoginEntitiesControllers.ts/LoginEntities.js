@@ -4,17 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginEntity = void 0;
-const AdminRepository_1 = require("../../Repositories/AdminRepository/AdminRepository");
 const client_1 = require("@prisma/client");
-const AccountRespository_1 = require("../../Repositories/AccountRepository/AccountRespository");
 const validators_1 = require("../../Utils/Validators/validators/validators");
 const passwordService_1 = require("../../Utils/PasswordService/passwordService");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const prisma = new client_1.PrismaClient();
-const AdminRepositoryInstance = new AdminRepository_1.AdminRepository(prisma);
-const AccountRepositoryInstance = new AccountRespository_1.AccountRepository(prisma);
 class LoginEntity {
     static async LoginEntities(req, res) {
         try {

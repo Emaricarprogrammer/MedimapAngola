@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { MedicineRepositories } from '../../../Repositories/DepositRepositories/MedicineRepository/MedicineRepository';
 import { CategoryMedicineRepositories } from '../../../Repositories/DepositRepositories/CategoryMedicineRepository/CategoryRepository';
 import { PrismaClient } from "@prisma/client";
+import validator from "validator"
 
 // Inicializa o Prisma Client
 const prisma: PrismaClient = new PrismaClient();
@@ -24,7 +25,7 @@ export class CreateMedicineController {
         quantidade_disponivel,
         id_entidade_fk
       } = req.body;
-
+      
       // Verificação de campos obrigatórios
       if (
         !categoria_medicamento ||
@@ -37,12 +38,31 @@ export class CreateMedicineController {
           message: "Por favor, verifique se preencheu todos os campos",
         });
       }
-
+      /*
+      if (!validator.isURL(imagem_url))
+        {
+          return res.status(400).json({success: false, message: "Por favor, verifique a URL da imagem"})
+        }
+      */
+        if (!validator.isDate(validade_medicamento))
+        {
+          return res.status(400).json({success: false, message: "Por favor, verifique e preencheu correctamente a data de validade do medicamento"})
+        }
+        
+        if (!validator.isNumeric(preco_medicamento))
+        {
+          return res.status(400).json({success: false, message: "Por favor, verifique e preencheu correctamente o preço deste medicamento"})
+        }
+        
+        if (!validator.isInt(quantidade_disponivel))
+        {
+          return res.status(400).json({success: false, message: "Por favor, verifique se preencheu correctamente a quantidade desejada."})
+        }
       // Início da transação Prisma
       const result = await prisma.$transaction(async (tx) => {
         // Criação da categoria dentro da transação usando o repositório
         const CreatedCategory = await CategoryMedicineRepositoryInstance.createMedicineCategory(
-          categoria_medicamento,
+          validator.escape(categoria_medicamento),
           tx // Passa a transação para o repositório
         );
 
@@ -56,9 +76,9 @@ export class CreateMedicineController {
 
         // Criação do medicamento dentro da transação usando o repositório
         const medicineData = {
-          nome_generico_medicamento: nome_generico,
-          nome_comercial_medicamento: nome_comercial,
-          origem_medicamento: origem_medicamento,
+          nome_generico_medicamento: validator.escape(nome_generico),
+          nome_comercial_medicamento: validator.escape(nome_comercial),
+          origem_medicamento: validator.escape(origem_medicamento),
           validade_medicamento: new Date(validade_medicamento), // Converte para Date
           preco_medicamento: parseFloat(preco_medicamento), // Converte para número decimal
           imagem_url: imagem_url,
@@ -91,7 +111,7 @@ export class CreateMedicineController {
         response: result,
       });
     } catch (error: any) {
-      console.error("Houve um erro: ", error.message);
+      console.error("Houve um erro: ", error);
       return res.status(500).json({
         success: false,
         message: "Estamos tentando resolver este problema, por favor tente novamente.",

@@ -6,13 +6,10 @@ import { ValidatorProps } from '../../Utils/Validators/validators/validators'
 import {PasswordService} from "../../Utils/PasswordService/passwordService"
 import JWT from "jsonwebtoken"
 import dotenv from "dotenv"
-import bcrypt from 'bcrypt';
 
 
 dotenv.config()
 const prisma = new PrismaClient()
-const AdminRepositoryInstance = new AdminRepository(prisma)
-const AccountRepositoryInstance = new AccountRepository(prisma)
 export class LoginEntity
 {
     static async  LoginEntities(req: Request, res: Response): Promise<Response>
