@@ -50,5 +50,18 @@ export class ValidatorProps
       }
       return InputSanitazed
     }
+
+    static MedicineInputsSanitized = (data: any) => {
+      return {
+        categoria_medicamento: validator.escape(data.categoria_medicamento.trim()),
+        nome_generico: validator.escape(data.nome_generico.trim()),
+        nome_comercial: validator.escape(data.nome_comercial.trim()),
+        origem_medicamento: validator.escape(data.origem_medicamento.trim()),
+        validade_medicamento: new Date(data.validade_medicamento),
+        preco_medicamento: parseFloat(data.preco_medicamento),
+        imagem_url: validator.escape(data.imagem_url.trim()),
+        quantidade_disponivel: parseInt(validator.escape(data.quantidade_disponivel), 10)
+      };
       
-}
+    }
+  }

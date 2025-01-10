@@ -50,3 +50,15 @@ class ValidatorProps {
     }
 }
 exports.ValidatorProps = ValidatorProps;
+ValidatorProps.MedicineInputsSanitized = (data) => {
+    return {
+        categoria_medicamento: validator_1.default.escape(data.categoria_medicamento.trim()),
+        nome_generico: validator_1.default.escape(data.nome_generico.trim()),
+        nome_comercial: validator_1.default.escape(data.nome_comercial.trim()),
+        origem_medicamento: validator_1.default.escape(data.origem_medicamento.trim()),
+        validade_medicamento: new Date(data.validade_medicamento),
+        preco_medicamento: parseFloat(data.preco_medicamento),
+        imagem_url: validator_1.default.escape(data.imagem_url.trim()),
+        quantidade_disponivel: parseInt(validator_1.default.escape(data.quantidade_disponivel), 10)
+    };
+};

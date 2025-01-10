@@ -8,7 +8,7 @@ const MedicineRepositoryInstance = new MedicineRepository_1.MedicineRepositories
 class FindMedicineController {
     static async FindMedicine(req, res) {
         try {
-            const { nome_comercial } = req.params;
+            const { nome_comercial, id } = req.params;
             if (!nome_comercial) {
                 return res.status(400).json({ success: false, message: "Ooooops! Estamos tentando encontrar este medicamento, por favor tente novamente" });
             }

@@ -11,10 +11,11 @@ class MedicineRepositories {
         console.log(MedicineQuery);
         return MedicineQuery || null;
     }
-    async findMedicine(generic_name, comercial_name) {
+    async findMedicine(generic_name, comercial_name, id) {
         if (generic_name) {
             const MedicineQuery = await this.prisma.medicamentos.findFirst({ where: { nome_generico_medicamento: generic_name }, include: { categoria: true, deposito: true } });
             const MedicineResult = {
+                id_medicamento: MedicineQuery?.id_medicamento,
                 categoria: MedicineQuery?.categoria.nome_categoria_medicamento,
                 nome_generico: MedicineQuery?.nome_generico_medicamento,
                 nome_comercial: MedicineQuery?.nome_comercial_medicamento,
@@ -29,6 +30,21 @@ class MedicineRepositories {
         }
         else if (comercial_name) {
             const MedicineQuery = await this.prisma.medicamentos.findFirst({ where: { nome_comercial_medicamento: comercial_name }, include: { categoria: true, deposito: true } });
+            const MedicineResult = {
+                categoria: MedicineQuery?.categoria.nome_categoria_medicamento,
+                nome_generico: MedicineQuery?.nome_generico_medicamento,
+                nome_comercial: MedicineQuery?.nome_comercial_medicamento,
+                origem: MedicineQuery?.origem_medicamento,
+                validade: MedicineQuery?.validade_medicamento,
+                quantidade_disponivel: MedicineQuery?.quantidade_disponivel_medicamento,
+                deposito: MedicineQuery?.deposito.firma_entidade,
+                preco: MedicineQuery?.preco_medicamento,
+                imagem: MedicineQuery?.imagem_url
+            };
+            return MedicineResult;
+        }
+        else if (id) {
+            const MedicineQuery = await this.prisma.medicamentos.findFirst({ where: { id_medicamento: id }, include: { categoria: true, deposito: true } });
             const MedicineResult = {
                 categoria: MedicineQuery?.categoria.nome_categoria_medicamento,
                 nome_generico: MedicineQuery?.nome_generico_medicamento,
@@ -62,10 +78,7 @@ class MedicineRepositories {
             preco: medicines.preco_medicamento,
             imagem: medicines.imagem_url
         })));
-        return { MedicineResults };
-    }
-    async CountMedicines() {
-        return await this.prisma.medicamentos.count();
+        return { MedicineResults, totalMedicines, totalPages };
     }
     async updateMedicine(id_medicine, medicineDatas) {
         const MedicineQuery = await this.prisma.medicamentos.update({

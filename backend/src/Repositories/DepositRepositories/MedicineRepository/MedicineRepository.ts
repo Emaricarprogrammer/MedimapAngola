@@ -15,11 +15,12 @@ export class MedicineRepositories implements IMedicineRepositories
         return MedicineQuery || null
         }
 
-    async findMedicine(generic_name: string, comercial_name?:string): Promise<MedicineDatas | any> {
+    async findMedicine(generic_name: string, comercial_name?:string, id?: string): Promise<MedicineDatas | any> {
         if (generic_name)
         {
             const MedicineQuery = await this.prisma.medicamentos.findFirst({where:{nome_generico_medicamento: generic_name}, include:{categoria:true,deposito:true}})
             const MedicineResult = {
+                id_medicamento: MedicineQuery?.id_medicamento,
                 categoria: MedicineQuery?.categoria.nome_categoria_medicamento,
                 nome_generico: MedicineQuery?.nome_generico_medicamento,
                 nome_comercial: MedicineQuery?.nome_comercial_medicamento,
@@ -48,9 +49,25 @@ export class MedicineRepositories implements IMedicineRepositories
             }
             return MedicineResult
         }
-        else{
-            return null
-        }
+        else if(id)
+            {
+                const MedicineQuery = await this.prisma.medicamentos.findFirst({where:{id_medicamento: id}, include:{categoria:true,deposito:true}})
+                const MedicineResult = {
+                    categoria: MedicineQuery?.categoria.nome_categoria_medicamento,
+                    nome_generico: MedicineQuery?.nome_generico_medicamento,
+                    nome_comercial: MedicineQuery?.nome_comercial_medicamento,
+                    origem: MedicineQuery?.origem_medicamento,
+                    validade: MedicineQuery?.validade_medicamento,
+                    quantidade_disponivel: MedicineQuery?.quantidade_disponivel_medicamento,
+                    deposito: MedicineQuery?.deposito.firma_entidade,
+                    preco: MedicineQuery?.preco_medicamento,
+                    imagem: MedicineQuery?.imagem_url
+                }
+                return MedicineResult
+            }
+            else{
+                return null
+            }
         
     }
     async findAllMedicine(skip: number, limit: number): Promise<MedicineDatas | any> {
@@ -71,12 +88,9 @@ export class MedicineRepositories implements IMedicineRepositories
             preco: medicines.preco_medicamento,
             imagem: medicines.imagem_url
         })))
-        return {MedicineResults}
+        return {MedicineResults, totalMedicines, totalPages}
         }
-        async CountMedicines()
-        {
-            return await this.prisma.medicamentos.count()
-        }
+        
     async updateMedicine(id_medicine: string, medicineDatas: Partial<MedicineDatas>): Promise<MedicineDatas | any> {
         const MedicineQuery = await this.prisma.medicamentos.update({
             where: {
