@@ -4,6 +4,8 @@ import { CategoryMedicineRepositories } from '../../../Repositories/DepositRepos
 import { PrismaClient } from "@prisma/client";
 import validator from "validator";
 import { ValidatorProps } from "../../../Utils/Validators/validators/validators";
+import cloudinary from "../../../Utils/providers/CloudinaryConfig";
+import { upload } from "../../../Utils/providers/UploadConfig";
 
 // Inicializa o Prisma Client
 const prisma: PrismaClient = new PrismaClient();
@@ -22,10 +24,11 @@ export class CreateMedicineController {
         origem_medicamento,
         validade_medicamento,
         preco_medicamento,
-        imagem_url,
         quantidade_disponivel,
         id_entidade_fk,
       } = req.body;
+
+      const imagem = req.file
 
       // Verificação de campos obrigatórios
       const missingFields = [
@@ -35,11 +38,11 @@ export class CreateMedicineController {
         "origem_medicamento",
         "validade_medicamento",
         "preco_medicamento",
-        "imagem_url",
         "quantidade_disponivel",
         "id_entidade_fk",
       ].filter((field) => !req.body[field]);
 
+      console.log(req.body)
       if (missingFields.length > 0) {
         return res.status(400).json({
           success: false,
@@ -55,7 +58,7 @@ export class CreateMedicineController {
         });
       }
 
-      if (!validator.isFloat(preco_medicamento.toString(), { min: 0 })) {
+      if (!validator.isFloat(preco_medicamento.toString(), { min: 0})) {
         return res.status(400).json({
           success: false,
           message: "O preço deve ser um número válido maior ou igual a zero.",
@@ -76,6 +79,25 @@ export class CreateMedicineController {
         });
       }
         */
+
+      if (!imagem || !imagem.path) {
+        return res.status(400).json({
+          success: false,
+          message: "O arquivo de imagem é obrigatório.",
+        });
+      }
+      const UploadResults = await cloudinary.uploader.upload(imagem.path,{
+        folder: "medicamentos_imgs",
+        public_id: nome_comercial,
+        resource_type: "image"
+      })
+
+      if (!UploadResults || !UploadResults.secure_url) {
+        return res.status(500).json({
+          success: false,
+          message: "Erro ao fazer o upload da imagem. Por favor, tente novamente.",
+        });
+      }
 
       // Escapar caracteres para evitar XSS
       const sanitizedData = ValidatorProps.MedicineInputsSanitized(req.body)
@@ -102,7 +124,7 @@ export class CreateMedicineController {
           origem_medicamento: sanitizedData.origem_medicamento,
           validade_medicamento: sanitizedData.validade_medicamento,
           preco_medicamento: sanitizedData.preco_medicamento,
-          imagem_url: sanitizedData.imagem_url,
+          imagem_url: UploadResults.secure_url,
           quantidade_disponivel_medicamento: sanitizedData.quantidade_disponivel,
           id_categoria: CreatedCategory.id_categoria_medicamento,
           id_entidade_fk: id_entidade_fk,
@@ -137,7 +159,7 @@ export class CreateMedicineController {
         response: result,
       });
     } catch (error: any) {
-      console.error("Erro durante o cadastro do medicamento:", error.message);
+      console.error("Erro durante o cadastro do medicamento:", error);
 
       // Resposta de erro genérica
       return res.status(500).json({

@@ -9,6 +9,7 @@ const CategoryRepository_1 = require("../../../Repositories/DepositRepositories/
 const client_1 = require("@prisma/client");
 const validator_1 = __importDefault(require("validator"));
 const validators_1 = require("../../../Utils/Validators/validators/validators");
+const CloudinaryConfig_1 = __importDefault(require("../../../Utils/providers/CloudinaryConfig"));
 // Inicializa o Prisma Client
 const prisma = new client_1.PrismaClient();
 // Instância dos Repositórios
@@ -17,7 +18,9 @@ const CategoryMedicineRepositoryInstance = new CategoryRepository_1.CategoryMedi
 class CreateMedicineController {
     static async CreateMedicine(req, res) {
         try {
-            const { categoria_medicamento, nome_generico, nome_comercial, origem_medicamento, validade_medicamento, preco_medicamento, imagem_url, quantidade_disponivel, id_entidade_fk, } = req.body;
+            const { categoria_medicamento, nome_generico, nome_comercial, origem_medicamento, validade_medicamento, preco_medicamento, quantidade_disponivel, id_entidade_fk, } = req.body;
+            const imagem = req.file;
+            console.log("caminho:", req.file);
             // Verificação de campos obrigatórios
             const missingFields = [
                 "categoria_medicamento",
@@ -26,10 +29,10 @@ class CreateMedicineController {
                 "origem_medicamento",
                 "validade_medicamento",
                 "preco_medicamento",
-                "imagem_url",
                 "quantidade_disponivel",
                 "id_entidade_fk",
             ].filter((field) => !req.body[field]);
+            console.log(req.body);
             if (missingFields.length > 0) {
                 return res.status(400).json({
                     success: false,
@@ -63,6 +66,23 @@ class CreateMedicineController {
               });
             }
               */
+            if (!imagem || !imagem.path) {
+                return res.status(400).json({
+                    success: false,
+                    message: "O arquivo de imagem é obrigatório.",
+                });
+            }
+            const UploadResults = await CloudinaryConfig_1.default.uploader.upload(imagem.path, {
+                folder: "medicamentos_imgs",
+                public_id: nome_comercial,
+                resource_type: "image"
+            });
+            if (!UploadResults || !UploadResults.secure_url) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Erro ao fazer o upload da imagem. Por favor, tente novamente.",
+                });
+            }
             // Escapar caracteres para evitar XSS
             const sanitizedData = validators_1.ValidatorProps.MedicineInputsSanitized(req.body);
             // Início da transação Prisma
@@ -82,7 +102,7 @@ class CreateMedicineController {
                     origem_medicamento: sanitizedData.origem_medicamento,
                     validade_medicamento: sanitizedData.validade_medicamento,
                     preco_medicamento: sanitizedData.preco_medicamento,
-                    imagem_url: sanitizedData.imagem_url,
+                    imagem_url: UploadResults.secure_url,
                     quantidade_disponivel_medicamento: sanitizedData.quantidade_disponivel,
                     id_categoria: CreatedCategory.id_categoria_medicamento,
                     id_entidade_fk: id_entidade_fk,

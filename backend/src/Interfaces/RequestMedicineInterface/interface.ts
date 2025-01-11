@@ -8,7 +8,7 @@ export default interface RequestMedicineInterface
     quantidade_aquisicao: number
     data_aquisicao: Date
     tipo_aquisicao: string
-    createdAt: Date
-    updatedAt: Date
+    createdAt?: Date
+    updatedAt?: Date
     id_entidade_fk: string
 }
