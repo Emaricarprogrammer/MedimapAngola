@@ -58,7 +58,7 @@ ValidatorProps.MedicineInputsSanitized = (data) => {
         origem_medicamento: validator_1.default.escape(data.origem_medicamento.trim()),
         validade_medicamento: new Date(data.validade_medicamento),
         preco_medicamento: parseFloat(data.preco_medicamento),
-        imagem_url: validator_1.default.escape(data.imagem_url.trim()),
+        imagem_url: data.imagem_url,
         quantidade_disponivel: parseInt(validator_1.default.escape(data.quantidade_disponivel), 10)
     };
 };

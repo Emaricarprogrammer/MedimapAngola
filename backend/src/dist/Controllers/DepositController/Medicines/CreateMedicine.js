@@ -10,6 +10,7 @@ const client_1 = require("@prisma/client");
 const validator_1 = __importDefault(require("validator"));
 const validators_1 = require("../../../Utils/Validators/validators/validators");
 const CloudinaryConfig_1 = __importDefault(require("../../../Utils/providers/CloudinaryConfig"));
+const fs_1 = __importDefault(require("fs"));
 // Inicializa o Prisma Client
 const prisma = new client_1.PrismaClient();
 // Instância dos Repositórios
@@ -31,7 +32,6 @@ class CreateMedicineController {
                 "quantidade_disponivel",
                 "id_entidade_fk",
             ].filter((field) => !req.body[field]);
-            console.log(req.body);
             if (missingFields.length > 0) {
                 return res.status(400).json({
                     success: false,
@@ -82,6 +82,7 @@ class CreateMedicineController {
                     message: "Erro ao fazer o upload da imagem. Por favor, tente novamente.",
                 });
             }
+            fs_1.default.unlinkSync(imagem.path);
             // Escapar caracteres para evitar XSS
             const sanitizedData = validators_1.ValidatorProps.MedicineInputsSanitized(req.body);
             // Início da transação Prisma
@@ -114,7 +115,7 @@ class CreateMedicineController {
                     });
                 }
                 return CreatedMedicine; // Retorna o medicamento criado para uso fora da transação
-            });
+            }, { timeout: 1000 });
             if (!result) {
                 return res.status(400).json({
                     success: false,

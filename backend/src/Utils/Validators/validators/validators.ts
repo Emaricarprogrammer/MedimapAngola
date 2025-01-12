@@ -59,7 +59,7 @@ export class ValidatorProps
         origem_medicamento: validator.escape(data.origem_medicamento.trim()),
         validade_medicamento: new Date(data.validade_medicamento),
         preco_medicamento: parseFloat(data.preco_medicamento),
-        imagem_url: validator.escape(data.imagem_url.trim()),
+        imagem_url: data.imagem_url,
         quantidade_disponivel: parseInt(validator.escape(data.quantidade_disponivel), 10)
       };
       

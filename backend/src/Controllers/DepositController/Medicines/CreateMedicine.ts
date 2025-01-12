@@ -5,8 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import validator from "validator";
 import { ValidatorProps } from "../../../Utils/Validators/validators/validators";
 import cloudinary from "../../../Utils/providers/CloudinaryConfig";
-import { upload } from "../../../Utils/providers/UploadConfig";
-
+import fs from "fs"
 // Inicializa o Prisma Client
 const prisma: PrismaClient = new PrismaClient();
 
@@ -42,7 +41,6 @@ export class CreateMedicineController {
         "id_entidade_fk",
       ].filter((field) => !req.body[field]);
 
-      console.log(req.body)
       if (missingFields.length > 0) {
         return res.status(400).json({
           success: false,
@@ -99,6 +97,7 @@ export class CreateMedicineController {
         });
       }
 
+      fs.unlinkSync(imagem.path)
       // Escapar caracteres para evitar XSS
       const sanitizedData = ValidatorProps.MedicineInputsSanitized(req.body)
 
@@ -143,7 +142,7 @@ export class CreateMedicineController {
         }
 
         return CreatedMedicine; // Retorna o medicamento criado para uso fora da transação
-      });
+      }, {timeout:1000});
 
       if (!result) {
         return res.status(400).json({
