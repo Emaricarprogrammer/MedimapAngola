@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction} from 'express';
+import { PrismaClient } from "@prisma/client";
+import crypto from "crypto"
 import JWT from "jsonwebtoken"
 import dotenv from "dotenv"
 
@@ -23,10 +25,6 @@ export class AuthenticationController
             const decodedToken = await JWT.verify(token, process.env.SUPER_SECRET_KEY!) as JwtPayload
             req.body.user = decodedToken
 
-            if (["gestor"].includes(decodedToken.role))
-            {
-                console.log("Voe esta logado como admin")
-            }
             console.log(decodedToken)
             next()
             
@@ -35,4 +33,5 @@ export class AuthenticationController
             
         }
     }
-}
+
+    }

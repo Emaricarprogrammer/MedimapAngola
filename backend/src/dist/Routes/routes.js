@@ -3,8 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const LoginEntities_1 = require("../Controllers/LoginEntitiesControllers.ts/LoginEntities");
 const client_1 = require("@prisma/client");
+const ForgotPassword_1 = require("../Controllers/ForgotPassowordController/ForgotPassword");
 const route = (0, express_1.Router)();
-route.route("/sign-in").post((req, res) => { LoginEntities_1.LoginEntity.LoginEntities(req, res); });
+route.route("/login").post((req, res) => { LoginEntities_1.LoginEntity.LoginEntities(req, res); });
+route.route("/forgot_password").post((req, res) => { ForgotPassword_1.ForgotPasswordController.ForgotPassword(req, res); });
+route.route("/reset_password/:authtoken").post((req, res) => { ForgotPassword_1.ForgotPasswordController.ResetPassword(req, res); });
 route.route("/teste").post((req, res) => {
     const { nif, firma, tipo, id } = req.body;
     const prisma = new client_1.PrismaClient();

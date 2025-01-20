@@ -17,9 +17,6 @@ class AuthenticationController {
             }
             const decodedToken = await jsonwebtoken_1.default.verify(token, process.env.SUPER_SECRET_KEY);
             req.body.user = decodedToken;
-            if (["gestor"].includes(decodedToken.role)) {
-                console.log("Voe esta logado como admin");
-            }
             console.log(decodedToken);
             next();
         }

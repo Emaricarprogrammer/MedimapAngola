@@ -30,7 +30,7 @@ export class DeleteAdminController
                 await AdminRepositoryInstance.deleteAdmin(id_admin)
                 const id_account = AdminExists.id_conta_fk
                 await AccountRepositoryInstance.deleteAccount(id_account)
-              });
+              }, {timeout:5000});
 
             return res.status(200).json({success: true, message:"Dados deletados com sucesso"})
         } catch (error) {

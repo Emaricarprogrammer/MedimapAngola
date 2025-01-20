@@ -104,14 +104,7 @@ class CreateAccountAdminController {
                 to: email,
                 html: process.env.HTML,
             });
-            sendEmailInstance
-                .SendEmail()
-                .then(() => {
-                console.log("Email enviado com sucesso");
-            })
-                .catch((err) => {
-                console.log("Erro ao enviar email", err);
-            });
+            await sendEmailInstance.SendEmail();
             // Resposta final após todas as operações bem-sucedidas
             return res.status(201).json({
                 success: true,

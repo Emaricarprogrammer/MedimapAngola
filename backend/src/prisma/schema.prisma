@@ -14,6 +14,7 @@ model Contas{
   updatedAt             DateTime @updatedAt
   admin                 Admin[]
   entidades             Entidades[]
+  recuperacaoSenha      Recuperacao_senha[]
   @@map("tbl_contas")
 }
 
@@ -136,6 +137,15 @@ model Aquisicao_medicamentos {
 
   @@index([id_aquisicao], map: "tbl_aquisicao_medicamentos_id_aquisicao_fkey")
   @@map("tbl_aquisicao_medicamentos")
+}
+
+model Recuperacao_senha {
+  id_recuperacao_senha  String    @id @default(uuid())
+  token                 String    @unique()
+  expiracao             DateTime
+  usado                 Boolean
+  id_conta_fk           String?
+  conta                Contas?   @relation(fields: [id_conta_fk], references: [id_conta])
 }
 
 enum Tipo_entidades {
