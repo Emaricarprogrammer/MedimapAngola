@@ -3,7 +3,7 @@ import { SmtpConfig } from "../../configs/smtp";
 
 /***
  * =========================================================
- *  MediMap.co.ao
+ *  MedimapAngola.ao
  *  Aqui estou criando uma class para lidar com envio de emails
  *  by: Emanuel António.
  * =========================================================

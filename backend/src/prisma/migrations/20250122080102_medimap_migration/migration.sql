@@ -124,6 +124,18 @@ CREATE TABLE `tbl_aquisicao_medicamentos` (
     PRIMARY KEY (`id_aquisicao_medicamento`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Recuperacao_senha` (
+    `id_recuperacao_senha` VARCHAR(191) NOT NULL,
+    `token` VARCHAR(191) NOT NULL,
+    `expiracao` DATETIME(3) NOT NULL,
+    `usado` BOOLEAN NOT NULL,
+    `id_conta_fk` VARCHAR(191) NULL,
+
+    UNIQUE INDEX `Recuperacao_senha_token_key`(`token`),
+    PRIMARY KEY (`id_recuperacao_senha`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `tbl_admin` ADD CONSTRAINT `tbl_admin_id_conta_fk_fkey` FOREIGN KEY (`id_conta_fk`) REFERENCES `tbl_contas`(`id_conta`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -150,3 +162,6 @@ ALTER TABLE `tbl_aquisicao` ADD CONSTRAINT `tbl_aquisicao_id_entidade_fk_fkey` F
 
 -- AddForeignKey
 ALTER TABLE `tbl_aquisicao_medicamentos` ADD CONSTRAINT `tbl_aquisicao_medicamentos_id_aquisicao_fkey` FOREIGN KEY (`id_aquisicao`) REFERENCES `tbl_aquisicao`(`id_aquisicao`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Recuperacao_senha` ADD CONSTRAINT `Recuperacao_senha_id_conta_fk_fkey` FOREIGN KEY (`id_conta_fk`) REFERENCES `tbl_contas`(`id_conta`) ON DELETE SET NULL ON UPDATE CASCADE;

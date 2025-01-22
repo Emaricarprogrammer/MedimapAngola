@@ -17,8 +17,8 @@ AdminRouter.route("/:id_admin").post((req:Request, res:Response) => {FindAdminCo
  * Private Routes
  */
 AdminRouter.route("/admins").get(AuthenticationController.Authentication, (req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
-AdminRouter.route("/:id_admin").delete(AuthenticationController.Authentication, (req: Request, res: Response) => {DeleteAdminController.DeleteAdmin(req, res)})
-AdminRouter.route("/edit/:id_admin").put(AuthenticationController.Authentication, (req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
+AdminRouter.route("/:id_admin").delete((req: Request, res: Response) => {DeleteAdminController.DeleteAdmin(req, res)})
+AdminRouter.route("/:id_admin").put(AuthenticationController.Authentication, (req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
 AdminRouter.route("/private/appUsuarios").get((req: Request, res: Response) => {UsersMagementController.CountUsers(req, res)})
 
 export default AdminRouter;
