@@ -63,6 +63,12 @@ class CreateEntityController {
                     message: "Oooooops! Este NIF já está sendo usado, tente usar outro.",
                 });
             }
+            if (nif.length > 10) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Oooooops! Por favor, o seu NIF deve conter apenas 10 digitos.",
+                });
+            }
             // Verificação se o email já existe
             const emailExists = await validators_1.ValidatorProps.EmailExists(email);
             if (emailExists) {
@@ -76,14 +82,6 @@ class CreateEntityController {
                     success: false,
                     message: "Oooooops! Este número já está sendo usado, tente usar outro.",
                 });
-            }
-            if (!validator_1.default.isAlpha(cidade) || !validator_1.default.isAlpha(pais) || !validator_1.default.isAlpha(rua)) {
-                if (!validator_1.default.isInt(contacto)) {
-                    return res.status(400).json({
-                        success: false,
-                        message: "Oooooops! Verifique se informou correctamente os campos do seu endereço"
-                    });
-                }
             }
             // Validação da senha
             if (validators_1.ValidatorProps.validatePassword(password) == false) {
