@@ -31,7 +31,7 @@ model Admin{
 
 model Entidades {
   id_entidade             String    @id @default(uuid())
-  NIF_entidade            BigInt    @unique
+  NIF_entidade            String    @unique
   firma_entidade          String
   tipo_entidade           Tipo_entidades
   contacto_entidade       Contactos[]

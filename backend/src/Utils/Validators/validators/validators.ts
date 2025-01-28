@@ -27,7 +27,7 @@ export class ValidatorProps
       {
         return await prisma.geolocalizacao.findFirst({where:{latitude: lat}})
       }
-      static async NifExists(number: number)
+      static async NifExists(number: string)
       {
          const verify =  prisma.entidades.findFirst({where:{NIF_entidade: number}})
          return verify

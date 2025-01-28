@@ -6,7 +6,7 @@ type TypeEntity = {
 export default interface EntityDatas
 {
   id_entidade?:string,
-  NIF_entidade:number,
+  NIF_entidade:string,
   firma_entidade:string,
   tipo_entidade:"farmacia" | "deposito",
   createdAt?:Date,

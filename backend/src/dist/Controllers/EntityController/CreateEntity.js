@@ -56,8 +56,7 @@ class CreateEntityController {
                     message: "Oooooops! Este formato de email é inválido.",
                 });
             }
-            const nifExists = await prisma.entidades.findFirst({ where: { NIF_entidade: nif } });
-            console.log("Resultado do nif: ", nifExists);
+            const nifExists = await validators_1.ValidatorProps.NifExists(nif);
             if (nifExists) {
                 return res.status(400).json({
                     success: false,
