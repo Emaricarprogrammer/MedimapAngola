@@ -1,8 +1,11 @@
-import EntityInterface from "../EntityInterface/interface"
-
-export default interface ContactsInterface
+export default interface ContactsDatas
 {
-    id_contacto: string,
-    contacto: number,
-    id_entidade: string
+    id_contacto?: string,
+    contacto: string,
+    id_entidade_fk: string
+}
+export interface IContactsRepositories
+{
+    createContacts(contactsData: ContactsDatas): Promise<ContactsDatas | any>
+    
 }

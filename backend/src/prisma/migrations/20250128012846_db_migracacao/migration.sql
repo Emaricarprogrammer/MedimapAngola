@@ -32,6 +32,7 @@ CREATE TABLE `tbl_entidades` (
     `updatedAt` DATETIME(3) NOT NULL,
     `id_conta_fk` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `tbl_entidades_NIF_entidade_key`(`NIF_entidade`),
     PRIMARY KEY (`id_entidade`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -52,6 +53,7 @@ CREATE TABLE `tbl_contactos` (
     `contacto` VARCHAR(191) NOT NULL,
     `id_entidade_fk` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `tbl_contactos_contacto_key`(`contacto`),
     INDEX `tbl_contactos_id_entidade_fkey`(`id_entidade_fk`),
     PRIMARY KEY (`id_contacto`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -60,6 +62,7 @@ CREATE TABLE `tbl_contactos` (
 CREATE TABLE `tbl_enderecos` (
     `id_endereco` VARCHAR(191) NOT NULL,
     `logradouro` VARCHAR(191) NOT NULL,
+    `rua` VARCHAR(191) NOT NULL,
     `numero` INTEGER NOT NULL,
     `cidade` VARCHAR(191) NOT NULL,
     `pais` VARCHAR(191) NOT NULL DEFAULT 'Angola',

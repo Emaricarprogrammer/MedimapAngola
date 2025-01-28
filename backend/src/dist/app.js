@@ -10,6 +10,7 @@ const routes_2 = __importDefault(require("./Routes/routes"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const routes_3 = __importDefault(require("./Routes/EntitiesRoutes/routes"));
 dotenv_1.default.config();
 const App = (0, express_1.default)();
 App.use(express_1.default.json());
@@ -17,6 +18,7 @@ App.use((0, helmet_1.default)());
 App.use((0, cors_1.default)());
 App.use("/medimapangola.ao/admin", route_1.default);
 App.use("/medimapangola.ao/deposito", routes_1.default);
+App.use("/medimapangola.ao/entidades", routes_3.default);
 App.use("/medimapangola.ao/", routes_2.default);
 App.use((req, res, next) => {
     res.status(404).json({ message: "Esta página não existe" });

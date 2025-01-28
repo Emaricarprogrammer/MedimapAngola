@@ -8,7 +8,6 @@ class MedicineRepositories {
     async createMedicine(medicineDatas, tx) {
         const prismaCliente = tx || this.prisma;
         const MedicineQuery = await prismaCliente.medicamentos.create({ data: { ...medicineDatas } });
-        console.log(MedicineQuery);
         return MedicineQuery || null;
     }
     async findMedicine(generic_name, comercial_name, id) {

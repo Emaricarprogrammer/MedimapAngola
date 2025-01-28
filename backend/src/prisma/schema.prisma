@@ -31,7 +31,7 @@ model Admin{
 
 model Entidades {
   id_entidade             String    @id @default(uuid())
-  NIF_entidade            Int
+  NIF_entidade            BigInt    @unique
   firma_entidade          String
   tipo_entidade           Tipo_entidades
   contacto_entidade       Contactos[]
@@ -60,7 +60,7 @@ model Geolocalizacao {
 
 model Contactos {
   id_contacto      String    @id @default(uuid())
-  contacto         String
+  contacto         String    @unique
   id_entidade_fk   String
   entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
 
@@ -70,7 +70,8 @@ model Contactos {
 
 model Enderecos {
   id_endereco     String    @id @default(uuid())
-  logradouro       String
+  logradouro      String
+  rua             String
   numero          Int
   cidade          String
   pais            String   @default("Angola")
@@ -145,7 +146,7 @@ model Recuperacao_senha {
   expiracao             DateTime
   usado                 Boolean
   id_conta_fk           String?
-  conta                Contas?   @relation(fields: [id_conta_fk], references: [id_conta])
+  conta                 Contas?   @relation(fields: [id_conta_fk], references: [id_conta])
 }
 
 enum Tipo_entidades {

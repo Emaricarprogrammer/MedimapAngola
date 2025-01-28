@@ -11,7 +11,6 @@ export class MedicineRepositories implements IMedicineRepositories
     async createMedicine(medicineDatas: MedicineDatas, tx?: Omit<Prisma.TransactionClient, '$transaction'>): Promise<MedicineDatas | null> {
         const prismaCliente = tx || this.prisma
         const MedicineQuery = await prismaCliente.medicamentos.create({data:{...medicineDatas}})
-        console.log(MedicineQuery)
         return MedicineQuery || null
         }
 

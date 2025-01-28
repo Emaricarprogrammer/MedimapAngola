@@ -18,6 +18,19 @@ class ValidatorProps {
         }
         return true;
     }
+    static async NumberExists(number) {
+        return await prisma.contactos.findFirst({ where: { contacto: number } });
+    }
+    static async LongitudeExists(long) {
+        return await prisma.geolocalizacao.findFirst({ where: { longitude: long } });
+    }
+    static async LatitudeExists(lat) {
+        return await prisma.geolocalizacao.findFirst({ where: { latitude: lat } });
+    }
+    static async NifExists(number) {
+        const verify = prisma.entidades.findFirst({ where: { NIF_entidade: number } });
+        return verify;
+    }
     static validatePassword(password) {
         const RegexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
         if (!RegexPassword.test(password)) {
@@ -60,5 +73,15 @@ ValidatorProps.MedicineInputsSanitized = (data) => {
         preco_medicamento: parseFloat(data.preco_medicamento),
         imagem_url: data.imagem_url,
         quantidade_disponivel: parseInt(validator_1.default.escape(data.quantidade_disponivel), 10)
+    };
+};
+ValidatorProps.EntityInputs = (data) => {
+    return {
+        firma: validator_1.default.escape(validator_1.default.trim(data.firma)),
+        tipo_entidade: validator_1.default.escape(validator_1.default.trim(data.tipo_entidade)),
+        logradouro: validator_1.default.escape(validator_1.default.trim(data.logradouro)),
+        rua: validator_1.default.escape(validator_1.default.trim(data.rua)),
+        cidade: validator_1.default.escape(validator_1.default.trim(data.cidade)),
+        pais: validator_1.default.escape(validator_1.default.trim(data.cidade)),
     };
 };

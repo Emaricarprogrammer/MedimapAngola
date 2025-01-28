@@ -30,10 +30,21 @@ class ForgotPasswordController {
                 subject: "Recuperação de Senha",
                 from: "noreplaymedimapangola@gmail.com",
                 to: email,
-                html: `<a href="${process.env.RESET_URI}/reset_password/${token}" target="_blank">
-                Você solicitou a recuperação de senha. Use o link abaixo para redefinir sua senha:
-                <br/>${process.env.RESET_URI}/reset_password/${token}
-                <br/>Este link expira em 1 hora.</a>`,
+                html: `
+        <p>Olá,</p>
+        <p>Recebemos uma solicitação para redefinir a senha da sua conta. Caso tenha sido você, use o link abaixo para criar uma nova senha:</p>
+        <p>
+            <a href="${process.env.RESET_URI}/reset_password?authtoken=${token}" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold;">
+                Redefinir Senha
+            </a>
+        </p>
+        <p><b>Ou copie e cole o seguinte link no navegador:</b></p>
+        <p>${process.env.RESET_URI}/reset_password?authtoken=${token}</p>
+        <p>Este link é válido por <strong>1 hora</strong>.</p>
+        <p>Se você não solicitou a alteração de senha, ignore este e-mail. Sua conta permanecerá segura.</p>
+        <p>Atenciosamente,</p>
+        <p><b>Equipe MediMap Angola</b></p>
+    `,
             });
             await EmailSent.SendEmail();
             return res.status(200).json({ success: true, message: "Verifique a sua caixa de email" });
@@ -69,13 +80,11 @@ class ForgotPasswordController {
                 console.log(isPasswordValid);
                 return res.status(400).json({ success: false, message: "A senha atual não foi encontrada" });
             }
-            // Agora, o password fornecido é válido, então podemos atualizar a senha com a nova.
             const hashedPassword = await passwordService_1.PasswordService.hashPassword(newPassword);
             await prisma.contas.update({
                 where: { id_conta: reset.id_conta_fk },
                 data: { password: hashedPassword }
             });
-            // Marque o token de reset como "usado"
             await prisma.recuperacao_senha.update({
                 where: { token: authtoken },
                 data: { usado: true }

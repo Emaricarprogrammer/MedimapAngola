@@ -57,3 +57,17 @@ export class EmailSender {
         return mailSent;
     }
 }
+
+async function Emailsent(email: string)
+{
+    const emailSenderInstance = new EmailSender({
+        text: "A equipa da MediMapAngola dá-lhe as boas-vindas.",
+        subject: "Welcome",
+        from: "noreplaymedimapangola@gmail.com",
+        to: email,
+        html: process.env.HTML,
+      });
+      await emailSenderInstance.SendEmail().catch((error)=>{console.log("Erro ao enviar este email: ", error)});
+}
+
+export {Emailsent}

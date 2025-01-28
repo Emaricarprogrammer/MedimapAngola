@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailSender = void 0;
+exports.Emailsent = Emailsent;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const smtp_1 = require("../../configs/smtp");
 class EmailSender {
@@ -38,3 +39,13 @@ class EmailSender {
     }
 }
 exports.EmailSender = EmailSender;
+async function Emailsent(email) {
+    const emailSenderInstance = new EmailSender({
+        text: "A equipa da MediMapAngola dá-lhe as boas-vindas.",
+        subject: "Welcome",
+        from: "noreplaymedimapangola@gmail.com",
+        to: email,
+        html: process.env.HTML,
+    });
+    await emailSenderInstance.SendEmail().catch((error) => { console.log("Erro ao enviar este email: ", error); });
+}

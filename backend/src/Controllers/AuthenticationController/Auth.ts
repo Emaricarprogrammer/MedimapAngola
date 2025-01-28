@@ -25,7 +25,6 @@ export class AuthenticationController
             const decodedToken = await JWT.verify(token, process.env.SUPER_SECRET_KEY!) as JwtPayload
             req.body.user = decodedToken
 
-            console.log(decodedToken)
             next()
             
         } catch (error) {

@@ -15,6 +15,23 @@ export class ValidatorProps
         }
         return true
       }
+      static async NumberExists(number: string)
+      {
+        return await prisma.contactos.findFirst({where:{contacto: number}})
+      }
+      static async LongitudeExists(long: number)
+      {
+        return await prisma.geolocalizacao.findFirst({where:{longitude: long}})
+      }
+      static async LatitudeExists(lat: number)
+      {
+        return await prisma.geolocalizacao.findFirst({where:{latitude: lat}})
+      }
+      static async NifExists(number: number)
+      {
+         const verify =  prisma.entidades.findFirst({where:{NIF_entidade: number}})
+         return verify
+      }
     static validatePassword(password: string){
         const RegexPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/
         if (!RegexPassword.test(password)) {
@@ -64,4 +81,14 @@ export class ValidatorProps
       };
       
     }
+    static EntityInputs = (data: any)=>{
+      return {
+        firma: validator.escape(validator.trim(data.firma)),
+        tipo_entidade: validator.escape(validator.trim(data.tipo_entidade)),
+        logradouro: validator.escape(validator.trim(data.logradouro)),
+        rua: validator.escape(validator.trim(data.rua)),
+        cidade: validator.escape(validator.trim(data.cidade)),
+        pais:  validator.escape(validator.trim(data.cidade)),
+    }
+  }
   }

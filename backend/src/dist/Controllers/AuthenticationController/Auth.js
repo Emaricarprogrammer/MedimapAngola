@@ -17,6 +17,9 @@ class AuthenticationController {
             }
             const decodedToken = await jsonwebtoken_1.default.verify(token, process.env.SUPER_SECRET_KEY);
             req.body.user = decodedToken;
+            if (decodedToken.role == "gestor") {
+                console.log("És um gestor");
+            }
             console.log(decodedToken);
             next();
         }
