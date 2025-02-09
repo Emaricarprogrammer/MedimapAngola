@@ -16,4 +16,15 @@ export class AdressRepositories implements IAdressRepositories
         const adressCreated = await prismaCliente.enderecos.create({data:{...adressDatas}})
         return adressCreated
     }
+
+    async updateAdress(id_entity: string, adressDatas: Partial<AdressDatas>): Promise<AdressDatas | any>
+    {
+        const updatedAdress = await this.prisma.enderecos.updateMany({where: {id_entidade_fk: id_entity}, data:{...adressDatas}})
+        return updatedAdress
+    }
+    async deleteAdress(id_entity: string)
+    {
+        const adressDeleted = await this.prisma.enderecos.deleteMany({where:{id_entidade_fk: id_entity}})
+        return adressDeleted
+    }
 }

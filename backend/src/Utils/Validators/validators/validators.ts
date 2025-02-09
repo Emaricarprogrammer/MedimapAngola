@@ -17,7 +17,12 @@ export class ValidatorProps
       }
       static async NumberExists(number: string)
       {
-        return await prisma.contactos.findFirst({where:{contacto: number}})
+        const verify = await prisma.contactos.findFirst({where:{contacto: number}})
+        return verify
+      }
+      static async passwordExists(p: string)
+      {
+        return await prisma.contas.findFirst({where:{password: p}})
       }
       static async LongitudeExists(long: number)
       {
@@ -51,6 +56,12 @@ export class ValidatorProps
       const verify = await prisma.admin.findUnique({where: {id_admin: id_admin}})
       return verify
     }
+
+    static async EntityExists(id_entity: string)
+    {
+      const verify = await prisma.entidades.findUnique({where: {id_entidade: id_entity}})
+      return verify
+    }
     static async MedicineExists(id_medicine: string)
     {
       const verify = await prisma.medicamentos.findFirst({where:{id_medicamento: id_medicine}})
@@ -60,10 +71,10 @@ export class ValidatorProps
     static sanitizeInput(username: string, email: string, password: string, nivel_acesso:string)
     {
       let InputSanitazed = {
-        username_sanitized: validator.escape(validator.trim(username)),
-        nivel_acesso_sanitized: validator.escape(validator.trim(nivel_acesso)),
+        username_sanitized: validator.escape(username),
+        nivel_acesso_sanitized: validator.escape(nivel_acesso),
         email_sanitized: validator.normalizeEmail(email),
-        password_sanitized: validator.escape(validator.trim(password))
+        password_sanitized: validator.escape(password)
       }
       return InputSanitazed
     }

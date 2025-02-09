@@ -7,5 +7,6 @@ export default interface ContactsDatas
 export interface IContactsRepositories
 {
     createContacts(contactsData: ContactsDatas): Promise<ContactsDatas | any>
+    updateContacts(contactsData: ContactsDatas): Promise<ContactsDatas>
     
 }

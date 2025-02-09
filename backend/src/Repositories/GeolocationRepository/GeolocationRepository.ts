@@ -13,4 +13,9 @@ export class GeolocationRepository implements IGeolocation
         return geolocation
         
     }
+    async deleteGeolocation(id_entity: string)
+    {
+        const geolocationDeleted = await this.prisma.geolocalizacao.deleteMany({where:{id_entidade_fk: id_entity}})
+        return geolocationDeleted
+    }
 }

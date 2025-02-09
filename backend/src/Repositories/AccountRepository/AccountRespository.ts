@@ -20,13 +20,11 @@ export class AccountRepository implements IAccountRepository
             email: accountData.email
         }
     }
-    async updateAccount(id_account: string, datas: Partial<AccountData>): Promise<AccountDatasResponse>
+    async updateAccount(id_account: string, datas: Partial<AccountData>, tx?: Omit<Prisma.TransactionClient, "$transaction">): Promise<AccountDatasResponse>
     {
-        const results = await this.Prisma.contas.update({where:{id_conta: id_account}, data:{...datas}})
-        return {
-            id_conta: results.id_conta,
-            email: results.email
-        }
+        const prismaClient = tx || this.Prisma
+        const results = await prismaClient.contas.update({where:{id_conta: id_account}, data:{...datas}})
+        return results
     }
     async deleteAccount(id_account: string)
     {

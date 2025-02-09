@@ -13,5 +13,6 @@ export default interface AdressDatas
 export interface IAdressRepositories
 {
   createAdress(adressDatas: AdressDatas): Promise<AdressDatas>
+  updateAdress(id_entity: string, adressDatas: Partial<AdressDatas>): Promise<AdressDatas>
 
 }

@@ -15,12 +15,10 @@ class AccountRepository {
             email: accountData.email
         };
     }
-    async updateAccount(id_account, datas) {
-        const results = await this.Prisma.contas.update({ where: { id_conta: id_account }, data: { ...datas } });
-        return {
-            id_conta: results.id_conta,
-            email: results.email
-        };
+    async updateAccount(id_account, datas, tx) {
+        const prismaClient = tx || this.Prisma;
+        const results = await prismaClient.contas.update({ where: { id_conta: id_account }, data: { ...datas } });
+        return results;
     }
     async deleteAccount(id_account) {
         const accountDeleted = await this.Prisma.contas.delete({ where: { id_conta: id_account } });

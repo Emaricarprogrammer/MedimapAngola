@@ -10,5 +10,9 @@ class GeolocationRepository {
         const geolocation = await prismaClient.geolocalizacao.create({ data: { ...geoDatas } });
         return geolocation;
     }
+    async deleteGeolocation(id_entity) {
+        const geolocationDeleted = await this.prisma.geolocalizacao.deleteMany({ where: { id_entidade_fk: id_entity } });
+        return geolocationDeleted;
+    }
 }
 exports.GeolocationRepository = GeolocationRepository;

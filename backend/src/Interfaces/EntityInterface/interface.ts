@@ -17,5 +17,5 @@ export default interface EntityDatas
 export interface IEntityRepositories{
   createEntity(entityDatas: EntityDatas): Promise<EntityDatas | any>
   findEntity(id_entity: string, firma_entity?: string): Promise<EntityDatas | any>
-  //upadateEntity(id_entity: string,entityDatas: Partial<EntityDatas>): Promise<EntityDatas | any>
+  updateEntity(id_entity: string,entityDatas: Partial<EntityDatas>): Promise<EntityDatas | any>
 }

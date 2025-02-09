@@ -17,7 +17,7 @@ class UpdateAdminAccountController {
     static async updateAdminAccount(req, res) {
         try {
             const { id_admin } = req.params;
-            const { username, nivel_acesso, email, password } = req.body;
+            const { username, nivel_acesso, email, password, newPassword } = req.body;
             if (!id_admin) {
                 console.log("ID inválido");
                 return res.status(400).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
@@ -29,8 +29,14 @@ class UpdateAdminAccountController {
             }
             const AdminUpdateData = {};
             const AccountUpdateData = {};
+            if (!username && !nivel_acesso && !email && !password && !newPassword) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Por favor, informe pelo menos um campo para atualização."
+                });
+            }
             if (username) {
-                AdminUpdateData.username = validator_1.default.escape(validator_1.default.trim(username));
+                AdminUpdateData.username = username;
             }
             if (nivel_acesso) {
                 if (!["admin", "gestor"].includes(nivel_acesso.toLowerCase())) {
@@ -48,12 +54,29 @@ class UpdateAdminAccountController {
                 }
                 AccountUpdateData.email = email;
             }
-            if (password) {
-                const HashedPassword = await passwordService_1.PasswordService.hashPassword(password);
-                AccountUpdateData.password = HashedPassword;
-            }
-            else {
-                return res.status(400).json({ success: false, message: "Por favor, informe pelo menos um campo para actualização." });
+            if (password && newPassword) {
+                const returnedDatas = await Prisma.contas.findFirst({
+                    where: { id_conta: AdminExits.id_conta_fk }
+                });
+                if (!returnedDatas) {
+                    return res.status(400).json({ success: false, message: "Conta não encontrada." });
+                }
+                // Comparar senha atual
+                const verifyPassword = await passwordService_1.PasswordService.PasswordCompare(password, returnedDatas.password);
+                if (!verifyPassword) {
+                    return res.status(400).json({ success: false, message: "A sua senha atual está incorreta!" });
+                }
+                // Validar nova senha
+                const validatePassword = validators_1.ValidatorProps.validatePassword(newPassword);
+                if (validatePassword == false) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, um número e um caractere especial.",
+                    });
+                }
+                // Gerar hash da nova senha
+                const hashedPassword = await passwordService_1.PasswordService.hashPassword(newPassword);
+                AccountUpdateData.password = hashedPassword;
             }
             if (Object.keys(AccountUpdateData).length > 0) {
                 const AccountUpdated = await AccountRepositoryInstance.updateAccount(AdminExits.id_conta_fk, AccountUpdateData);
@@ -62,7 +85,7 @@ class UpdateAdminAccountController {
                 }
             }
             if (Object.keys(AdminUpdateData).length > 0) {
-                const AdminUpdated = await AdminRepositoryInstance.updateAdmin(id_admin, { username, nivel_acesso });
+                const AdminUpdated = await AdminRepositoryInstance.updateAdmin(id_admin, { username: validator_1.default.escape(username), nivel_acesso });
                 if (!AdminUpdated) {
                     return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
                 }
