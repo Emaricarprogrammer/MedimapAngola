@@ -7,6 +7,11 @@ exports.EmailSender = void 0;
 exports.Emailsent = Emailsent;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const smtp_1 = require("../../configs/smtp");
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+const htmlpath = path_1.default.join(__dirname, "./Templates/welcome.html");
+const HTML = fs_1.default.readFileSync(htmlpath, "utf-8");
+console.log(HTML);
 class EmailSender {
     constructor(props) {
         this.u_text = props.text;
@@ -45,7 +50,7 @@ async function Emailsent(email) {
         subject: "Welcome",
         from: "noreplaymedimapangola@gmail.com",
         to: email,
-        html: process.env.HTML,
+        html: HTML,
     });
     await emailSenderInstance.SendEmail().catch((error) => { console.log("Erro ao enviar este email: ", error); });
 }

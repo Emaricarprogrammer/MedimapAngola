@@ -16,12 +16,12 @@ const AdminRouter = (0, express_1.Router)();
  * Publics Routes
  */
 AdminRouter.route("/signup").post((req, res) => { CreateAccountAdmincontroller_1.default.CreateAdminAccount(req, res); });
-AdminRouter.route("/:id_admin").post((req, res) => { FindAdminController_1.default.findAdmin(req, res); });
+AdminRouter.route("/:id_admin").get((req, res) => { FindAdminController_1.default.findAdmin(req, res); });
+AdminRouter.route("/:id_admin").delete((req, res) => { DeleteAdminAccountController_1.DeleteAdminController.DeleteAdmin(req, res); });
 /**
  * Private Routes
  */
 AdminRouter.route("/admins").get(Auth_1.AuthenticationController.Authentication, (req, res) => { FindAllAdminsController_1.FindAllAdminsController.findAllAdmin(req, res); });
-AdminRouter.route("/:id_admin").delete((req, res) => { DeleteAdminAccountController_1.DeleteAdminController.DeleteAdmin(req, res); });
 AdminRouter.route("/:id_admin").patch((req, res) => { UpdateAdminAccountController_1.UpdateAdminAccountController.updateAdminAccount(req, res); });
 AdminRouter.route("/private/appUsuarios").get((req, res) => { UsersController_1.UsersMagementController.CountUsers(req, res); });
 exports.default = AdminRouter;

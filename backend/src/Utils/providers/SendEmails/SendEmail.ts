@@ -1,6 +1,11 @@
 import nodemailer from "nodemailer";
 import { SmtpConfig } from "../../configs/smtp";
+import fs from "fs"
+import path from "path"
 
+const htmlpath = path.join(__dirname, "./Templates/welcome.html");
+const HTML = fs.readFileSync(htmlpath, "utf-8");
+console.log(HTML)
 /***
  * =========================================================
  *  MedimapAngola.ao
@@ -65,7 +70,7 @@ async function Emailsent(email: string)
         subject: "Welcome",
         from: "noreplaymedimapangola@gmail.com",
         to: email,
-        html: process.env.HTML,
+        html: HTML,
       });
       await emailSenderInstance.SendEmail().catch((error)=>{console.log("Erro ao enviar este email: ", error)});
 }
