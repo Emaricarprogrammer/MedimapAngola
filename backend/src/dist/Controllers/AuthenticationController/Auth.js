@@ -13,10 +13,11 @@ class AuthenticationController {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
                 console.log("Token nao fornecido");
-                return res.status(404).json({ success: false, message: "Oooops! Estamos tentando resolver este problema, por favor tente novamente" });
+                return res.status(401).json({ success: false, message: "Oooops! parece que você não está autorizado a acessar este recurso, por favor tente novamente." });
             }
             const decodedToken = await jsonwebtoken_1.default.verify(token, process.env.SUPER_SECRET_KEY);
             req.body.user = decodedToken;
+            console.log(decodedToken);
             next();
         }
         catch (error) {

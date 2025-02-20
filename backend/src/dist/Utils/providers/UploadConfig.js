@@ -11,7 +11,6 @@ const pathDir = path_1.default.resolve(__dirname, "../Uploads");
 console.log(pathDir);
 if (!fs_1.default.existsSync(pathDir)) {
     fs_1.default.mkdirSync(pathDir, { recursive: true });
-    console.log("Criada com sucesso");
 }
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {

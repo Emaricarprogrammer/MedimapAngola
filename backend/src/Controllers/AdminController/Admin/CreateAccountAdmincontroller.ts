@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client"
 import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository"
 import { AccountRepository } from "../../../Repositories/AccountRepository/AccountRespository"
 import { ValidatorProps } from "../../../Utils/Validators/validators/validators"
-import { EmailSender } from "../../../Utils/providers/SendEmails/SendEmail"
+import { Emailsent } from "../../../Utils/providers/SendEmails/SendEmail"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -126,16 +126,11 @@ export default class CreateAccountAdminController {
 
         return AdminCreatedResponse
       })
-
-      // Envio de email após o sucesso na transação
-      const sendEmailInstance = new EmailSender({
-        text: "A equipa da MediMapAngola dá-lhe as boas-vindas",
-        subject: "Welcome",
-        from: "noreplaymedimapangola@gmail.com",
-        to: email,
-        html: process.env.HTML,
-      })
-      await sendEmailInstance.SendEmail()
+      
+      /*if (!await Emailsent(email_sanitized))
+      {
+        console.log("Problemas de conexão")
+      }*/
 
       // Resposta final após todas as operações bem-sucedidas
       return res.status(201).json({
@@ -148,7 +143,7 @@ export default class CreateAccountAdminController {
       return res.status(500).json({
         success: false,
         message:
-          "Estamos tentando resolver este problema, por favor tente novamente.",
+          "Estamos tentando resolver este problema por favor, tente novamente mais tarde.",
       })
     }
   }

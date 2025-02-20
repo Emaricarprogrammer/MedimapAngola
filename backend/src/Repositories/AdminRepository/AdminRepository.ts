@@ -19,6 +19,10 @@ export class AdminRepository implements IAdminRespository {
       where:{id_admin: id_admin},
       include:{credenciais_admin:true}
     })
+    if (adminResults == null)
+    {
+      return null
+    }
     const AdminDatasResponse = {
       id_admin: adminResults?.id_admin,
       username: adminResults?.username,
@@ -38,6 +42,10 @@ export class AdminRepository implements IAdminRespository {
         credenciais_admin: true
       }
     })
+    if (AdminsResults == null)
+    {
+      return null
+    }
     return AdminsResults.map(admins => ({
       id_admin: admins.id_admin,
       username: admins.username,

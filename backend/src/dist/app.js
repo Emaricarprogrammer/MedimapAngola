@@ -17,7 +17,8 @@ App.use(express_1.default.json());
 App.use((0, helmet_1.default)());
 App.use((0, cors_1.default)());
 App.use("/medimapangola.ao/admin", route_1.default);
-App.use("/medimapangola.ao/deposito", routes_1.default);
+App.use("/medimapangola.ao/entidade/deposito", routes_1.default);
+//App.use("/medimapangola.ao/entidade/farmacia")
 App.use("/medimapangola.ao/entidades", routes_3.default);
 App.use("/medimapangola.ao/", routes_2.default);
 App.use((req, res, next) => {

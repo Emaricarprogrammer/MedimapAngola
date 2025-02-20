@@ -8,7 +8,6 @@ console.log(pathDir)
 if (!fs.existsSync(pathDir))
 {
   fs.mkdirSync(pathDir, {recursive: true})
-  console.log("Criada com sucesso")
 }
 
 const storage = multer.diskStorage({

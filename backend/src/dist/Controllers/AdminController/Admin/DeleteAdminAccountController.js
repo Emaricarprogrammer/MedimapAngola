@@ -30,7 +30,7 @@ class DeleteAdminController {
         }
         catch (error) {
             console.error("Houve um erro: ", error);
-            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
+            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." });
         }
     }
 }

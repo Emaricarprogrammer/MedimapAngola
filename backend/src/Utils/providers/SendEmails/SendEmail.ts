@@ -5,7 +5,6 @@ import path from "path"
 
 const htmlpath = path.join(__dirname, "./Templates/welcome.html");
 const HTML = fs.readFileSync(htmlpath, "utf-8");
-console.log(HTML)
 /***
  * =========================================================
  *  MedimapAngola.ao
@@ -72,7 +71,7 @@ async function Emailsent(email: string)
         to: email,
         html: HTML,
       });
-      await emailSenderInstance.SendEmail().catch((error)=>{console.log("Erro ao enviar este email: ", error)});
+      return await emailSenderInstance.SendEmail().catch((error)=>{console.log("Erro ao enviar este email: ", error)});
 }
 
 export {Emailsent}

@@ -26,7 +26,7 @@ class DeleteMedicineController {
         }
         catch (error) {
             console.error("Houve um erro: ", error.message);
-            return res.status(500).json({ sucess: false, message: "Ooooops! Estamos tentando resolver este problema, por favor tente novamente." });
+            return res.status(500).json({ sucess: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." });
         }
     }
 }

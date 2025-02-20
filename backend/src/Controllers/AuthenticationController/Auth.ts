@@ -19,12 +19,12 @@ export class AuthenticationController
             if (!token)
             {
                 console.log("Token nao fornecido")
-                return res.status(404).json({success: false, message:"Oooops! Estamos tentando resolver este problema, por favor tente novamente"})
+                return res.status(401).json({success: false, message:"Oooops! parece que você não está autorizado a acessar este recurso, por favor tente novamente."})
             }
     
             const decodedToken = await JWT.verify(token, process.env.SUPER_SECRET_KEY!) as JwtPayload
             req.body.user = decodedToken
-
+            console.log(decodedToken)
             next()
             
         } catch (error) {

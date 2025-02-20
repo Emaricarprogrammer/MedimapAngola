@@ -12,11 +12,14 @@ class FindAllAdminsController {
             if (!AdminsDatas) {
                 return res.status(400).json({ success: false, message: "Ooooooops! Não foi possível encontrar estes usuário, por favor tente novamente" });
             }
+            if (AdminsDatas === null) {
+                return res.status(400).json({ success: false, message: "Não foi possível encontrar estes usuário, por favor tente novamente" });
+            }
             return res.status(200).json({ success: 200, response: AdminsDatas });
         }
         catch (error) {
             console.log("Houve um erro: ", error.message);
-            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
+            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." });
         }
     }
 }

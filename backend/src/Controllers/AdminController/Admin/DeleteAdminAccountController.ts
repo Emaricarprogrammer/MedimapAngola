@@ -35,7 +35,7 @@ export class DeleteAdminController
             return res.status(200).json({success: true, message:"Dados deletados com sucesso"})
         } catch (error) {
             console.error("Houve um erro: ", error)
-            return res.status(500).json({success: false, message:"Estamos tentando resolver este problema, por favor tente novamente."})
+            return res.status(500).json({success: false, message:"Estamos tentando resolver este problema por favor, tente novamente mais tarde."})
         }
     }
 }

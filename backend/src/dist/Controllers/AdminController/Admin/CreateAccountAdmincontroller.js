@@ -7,7 +7,6 @@ const client_1 = require("@prisma/client");
 const AdminRepository_1 = require("../../../Repositories/AdminRepository/AdminRepository");
 const AccountRespository_1 = require("../../../Repositories/AccountRepository/AccountRespository");
 const validators_1 = require("../../../Utils/Validators/validators/validators");
-const SendEmail_1 = require("../../../Utils/providers/SendEmails/SendEmail");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const prisma = new client_1.PrismaClient();
@@ -96,15 +95,10 @@ class CreateAccountAdminController {
                 };
                 return AdminCreatedResponse;
             });
-            // Envio de email após o sucesso na transação
-            const sendEmailInstance = new SendEmail_1.EmailSender({
-                text: "A equipa da MediMapAngola dá-lhe as boas-vindas",
-                subject: "Welcome",
-                from: "noreplaymedimapangola@gmail.com",
-                to: email,
-                html: process.env.HTML,
-            });
-            await sendEmailInstance.SendEmail();
+            /*if (!await Emailsent(email_sanitized))
+            {
+              console.log("Problemas de conexão")
+            }*/
             // Resposta final após todas as operações bem-sucedidas
             return res.status(201).json({
                 success: true,
@@ -116,7 +110,7 @@ class CreateAccountAdminController {
             console.error("Houve um erro: ", error);
             return res.status(500).json({
                 success: false,
-                message: "Estamos tentando resolver este problema, por favor tente novamente.",
+                message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde.",
             });
         }
     }

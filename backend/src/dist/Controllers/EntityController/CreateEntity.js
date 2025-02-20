@@ -165,16 +165,9 @@ class CreateEntityController {
             console.error(error);
             return res.status(500).json({
                 success: false,
-                message: "Estamos tentando resolver este problema, por favor tente novamente.",
+                message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde.",
             });
         }
     }
 }
 exports.CreateEntityController = CreateEntityController;
-/**
- * TypeError: Cannot read properties of null (reading 'id_contacto')
-    at C:\MedimapAngola\Projecto-final\backend\src\dist\Controllers\EntityController\UpdateEntity.js:95:109
-    at async Proxy._transactionWithCallback (C:\MedimapAngola\Projecto-final\backend\src\node_modules\@prisma\client\runtime\library.js:130:7984)
-    at async UpdateEntityController.updateEntity (C:\MedimapAngola\Projecto-final\backend\src\dist\Controllers\EntityController\UpdateEntity.js:78:28)
-
- */ 

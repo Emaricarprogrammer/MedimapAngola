@@ -25,7 +25,7 @@ export class FindAllMedicinesController
             return res.status(200).json({success: true, response: MedicineResult})
     
         } catch (error) {
-            return res.status(500).json({success: false, message: "Estamos tentando solucionar este problema"})
+            return res.status(500).json({success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde."})
         }
     }
 }

@@ -134,7 +134,7 @@ class CreateMedicineController {
             // Resposta de erro genérica
             return res.status(500).json({
                 success: false,
-                message: "Erro interno do servidor. Por favor, tente novamente mais tarde.",
+                message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde.",
             });
         }
     }

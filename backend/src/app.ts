@@ -16,7 +16,8 @@ App.use(helmet())
 App.use(cors())
 
 App.use("/medimapangola.ao/admin", AdminRouter)
-App.use("/medimapangola.ao/deposito", DepositRouter)
+App.use("/medimapangola.ao/entidade/deposito", DepositRouter)
+//App.use("/medimapangola.ao/entidade/farmacia")
 App.use("/medimapangola.ao/entidades", EntityRoute)
 
 App.use("/medimapangola.ao/", route)

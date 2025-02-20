@@ -152,7 +152,7 @@ class UpdateEntityController {
         }
         catch (error) {
             console.error(error);
-            return res.status(500).json({ success: false, message: "Houve um erro interno, por favor tente novamente." });
+            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." });
         }
     }
 }

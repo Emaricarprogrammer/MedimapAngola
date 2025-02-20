@@ -23,12 +23,11 @@ class FindAdminController {
                 id_conta: Results?.id_conta,
                 id_conta_fk: Results?.id_conta_fk
             };
-            console.log("Dados retornados com sucesso: ", AdminDatas);
             return res.status(200).json({ success: true, response: AdminDatas });
         }
         catch (error) {
             console.error("Houve um erro: ", error);
-            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
+            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." });
         }
     }
 }
