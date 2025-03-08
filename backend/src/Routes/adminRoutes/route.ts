@@ -12,13 +12,13 @@ const AdminRouter: Router = Router();
  * Publics Routes
  */
 AdminRouter.route("/signup").post((req: Request, res: Response) => {CreateAccountAdminController.CreateAdminAccount(req, res);})
-AdminRouter.route("/:id_admin").post((req:Request, res:Response) => {FindAdminController.findAdmin(req, res)})
+AdminRouter.route("/:id_admin").post(AuthenticationController.Authentication,(req:Request, res:Response) => {FindAdminController.findAdmin(req, res)})
 AdminRouter.route("/:id_admin").delete(AuthenticationController.Authentication,(req: Request, res: Response) => {DeleteAdminController.DeleteAdmin(req, res)})
 
 /**
  * Private Routes
  */
-AdminRouter.route("/admins").post(AuthenticationController.Authentication, (req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
+AdminRouter.route("/admins/ad").post(AuthenticationController.Authentication,( req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
 AdminRouter.route("/:id_admin").patch((req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
 AdminRouter.route("/private/appUsuarios").get((req: Request, res: Response) => {UsersMagementController.CountUsers(req, res)})
 

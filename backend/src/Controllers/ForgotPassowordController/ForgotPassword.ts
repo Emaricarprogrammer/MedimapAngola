@@ -73,7 +73,7 @@ export class ForgotPasswordController
                 return res.status(400).json({ success: false, message: "Token inválido ou expirado" });
             }
     
-            if (ValidatorProps.validatePassword(password) == false) {
+            if (ValidatorProps.validatePassword(newPassword) == false) {
                 return res.status(400).json({
                     success: false,
                     message: "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, um número e um caractere especial.",

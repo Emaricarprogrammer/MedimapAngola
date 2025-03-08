@@ -1,12 +1,9 @@
 import { Request, Response } from "express"
-import { AdminRepository } from "../../Repositories/AdminRepository/AdminRepository"
 import { PrismaClient, Prisma } from '@prisma/client'
-import { AccountRepository } from '../../Repositories/AccountRepository/AccountRespository'
 import { ValidatorProps } from '../../Utils/Validators/validators/validators'
 import {PasswordService} from "../../Utils/PasswordService/passwordService"
-import JWT from "jsonwebtoken"
 import dotenv from "dotenv"
-
+import { JwtOperation} from "../../Utils/configs/private/JwtOperations"
 
 dotenv.config()
 const prisma = new PrismaClient()
@@ -43,7 +40,6 @@ export class LoginEntity
             role = IsAdmin.nivel_acesso === "admin"?"admin":"gestor"
             userInfo = {
                 id: IsAdmin.id_admin,
-                username_admin: IsAdmin.username,
                 nivel_acesso: IsAdmin.nivel_acesso
             }
         }
@@ -58,14 +54,21 @@ export class LoginEntity
             userInfo =
             {
                 id: IsEntity.id_entidade,
-                firma_entidade: IsEntity.firma_entidade,
                 tipo_entidade: IsEntity.tipo_entidade
             }
-            
         }
+        const accessToken = JwtOperation.generateToken({id_entidade: userInfo.id, role})
+        const refreshToken = JwtOperation.generateRefreshToken({id_entidade: userInfo.id, role})
 
-        const token = JWT.sign({id_entidade: userInfo.id, role, ...userInfo}, process.env.SUPER_SECRET_KEY!)
-        return res.status(200).json({logged: true, token, response:userInfo})
+        res.cookie("newToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge:7*24*60*60*100
+        })
+        console.log("Cookie criado:", res.getHeaders())
+
+        return res.status(200).json({logged: true, accessToken, response:userInfo})
     }
     catch(error: any)
     {

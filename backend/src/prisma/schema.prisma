@@ -106,10 +106,9 @@ model Medicamentos {
   id_categoria                      String
   categoria                         Categoria_Medicamentos @relation(fields: [id_categoria], references: [id_categoria_medicamento])
   id_entidade_fk                    String
+  Aquisicao_medicamentos            Aquisicao_medicamentos[]
   deposito                          Entidades @relation("DepositoMedicamentos", fields: [id_entidade_fk], references: [id_entidade])
 
-  @@index([id_categoria], map: "tbl_medicamentos_id_categoria_fkey")
-  @@index([id_entidade_fk], map: "tbl_medicamentos_id_entidade_fkey") // Índice para FK
   @@map("tbl_medicamentos")
 }
 
@@ -131,12 +130,13 @@ model Aquisicao {
 
 model Aquisicao_medicamentos {
   id_aquisicao_medicamento  String    @id @default(uuid())
+  id_medicamento            String
   id_aquisicao              String
-  aquisicao                 Aquisicao              @relation(fields: [id_aquisicao], references: [id_aquisicao])
+  aquisicao                 Aquisicao[]
+  medicamento               Medicamentos              @relation(fields: [id_medicamento], references: [id_medicamento])
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
 
-  @@index([id_aquisicao], map: "tbl_aquisicao_medicamentos_id_aquisicao_fkey")
   @@map("tbl_aquisicao_medicamentos")
 }
 

@@ -14,6 +14,7 @@ export class FindAllAdminsController
             const AdminsDatas = await AdminRepositoryInstance.findAllAdmin()
             if(!AdminsDatas)
             {
+                console.log(AdminsDatas)
                 return res.status(400).json({success: false, message:"Ooooooops! Não foi possível encontrar estes usuário, por favor tente novamente"})
             }
             if(AdminsDatas === null)

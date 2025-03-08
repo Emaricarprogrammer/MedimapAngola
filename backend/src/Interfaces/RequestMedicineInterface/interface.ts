@@ -2,13 +2,20 @@ type TypeRequest = {
     emediata: null
     pendente: null
 }
-export default interface RequestMedicineInterface
+interface RequestMedicineDatas
 {
-    id_aquisicao: string
+    id_aquisicao?: string
     quantidade_aquisicao: number
     data_aquisicao: Date
-    tipo_aquisicao: string
+    tipo_aquisicao: "emediata" | "agendada"
     createdAt?: Date
     updatedAt?: Date
     id_entidade_fk: string
 }
+
+interface IRequestMedicineRepositories
+{
+    createRequest(requestsDatas: RequestMedicineDatas): Promise<RequestMedicineDatas | any>
+
+}
+export {RequestMedicineDatas, IRequestMedicineRepositories}

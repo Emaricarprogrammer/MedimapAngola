@@ -33,7 +33,7 @@ export default class DeleteEntityController
                 return res.status(404).json({success: false, message: "Ooooops! Não foi possivel encontrar este usuário, por favor tente novamente."})
             }
 
-            await prisma.$transaction(async()=>{
+            await prisma.$transaction(async(tx)=>{
                 await EntitiesRepositoryInstance.deleteEntity(id_entidade)
                 await AccountRepositoryInstance.deleteAccount(EntityExists.id_conta_fk)
                 await ContactsRepositoryInstance.deleteContact(id_entidade)

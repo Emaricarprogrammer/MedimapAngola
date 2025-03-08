@@ -13,7 +13,7 @@ dotenv.config()
 // Instância do Prisma
 const prisma: PrismaClient = new PrismaClient();
 
-export class CreateEntityController {
+export class  CreateEntityController {
   static async create(req: Request, res: Response): Promise<Response> {
     try {
       const { 
@@ -199,7 +199,7 @@ export class CreateEntityController {
             return Datas
       },{timeout:10000});
 
-      await Emailsent(email)
+      //await Emailsent(email)
 
       // Resposta de sucesso
       return res.status(201).json({

@@ -119,6 +119,7 @@ export default class CreateAccountAdminController {
           id_admin: AdminCreated.id_admin,
           username: AdminCreated.username,
           email: AccountCreated.email,
+
           nivel_acesso: AdminCreated.nivel_acesso,
           id_conta_fk: AdminCreated.id_conta_fk,
           createdAt: AdminCreated.createdAt,
@@ -148,3 +149,16 @@ export default class CreateAccountAdminController {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

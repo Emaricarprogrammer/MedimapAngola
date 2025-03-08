@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction} from 'express';
-import { PrismaClient } from "@prisma/client";
-import crypto from "crypto"
 import JWT from "jsonwebtoken"
+import { jwtSecretKey } from '../../Utils/configs/private/secreteKey';
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -22,15 +21,19 @@ export class AuthenticationController
                 return res.status(401).json({success: false, message:"Oooops! parece que você não está autorizado a acessar este recurso, por favor tente novamente."})
             }
     
-            const decodedToken = await JWT.verify(token, process.env.SUPER_SECRET_KEY!) as JwtPayload
+            const decodedToken = await JWT.verify(token, jwtSecretKey.ACCESS_SECRET) as JwtPayload
             req.body.user = decodedToken
             console.log(decodedToken)
             next()
             
-        } catch (error) {
+        } catch (error: any) {
+            if (error.name === "TokenExpiredError")
+            {
+                return res.status(401).json({success: false, message: "Ooooops! Parece que a sua sessão está expirada"})
+            }
+            console.log(error)
             return res.status(401).json({ success: false, message: "Ooooops! Parece que você não tem autorização para acessar esta página." });
             
         }
     }
-
-    }
+}

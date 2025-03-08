@@ -1,6 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import EntityDatas, {IEntityRepositories} from "../../Interfaces/EntityInterface/interface"
-import { EmailSender } from '../../Utils/providers/SendEmails/SendEmail';
 
 export class EntitiesRepositories implements IEntityRepositories
 {
@@ -27,7 +26,10 @@ export class EntitiesRepositories implements IEntityRepositories
             return entityResults
         }
     }
-
+    async findNearDeposits(): Promise<any>
+    {
+        return await this.Prisma.entidades.findFirst({where:{tipo_entidade:"deposito"}, include:{geolocalizacao_entidade: true}})
+    }
     async updateEntity(id_entity: string, entityDatas: Partial<EntityDatas>, tx?: Omit<Prisma.TransactionClient, "$transaction">): Promise<EntityDatas | any> {
         const prismaClient = tx || this.Prisma
         const entityUpdated = await prismaClient.entidades.update({where:{id_entidade: id_entity}, data: entityDatas})
