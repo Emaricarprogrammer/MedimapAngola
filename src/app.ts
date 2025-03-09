@@ -12,10 +12,10 @@ import cookieParser from "cookie-parser"
 dotenv.config()
 
 const App = express()
-
 App.use(express.json())
 App.use(cookieParser())
 App.use(helmet())
+
 App.use(cors({
   origin:"http://localhost:3000",
   credentials: true,
@@ -36,3 +36,4 @@ App.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "Erro interno do servidor. Por favor, tente mais tarde." })
 })
 export default App
+
