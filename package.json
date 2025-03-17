@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node --watch ./dist/server.js",
-    "build": "tsc"
+    "build": "tsc --watch"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

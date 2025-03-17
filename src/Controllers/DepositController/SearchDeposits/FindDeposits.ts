@@ -11,7 +11,6 @@ export default class SearchDepositsController {
         try {
             const { longitude, latitude, distance } = req.query 
 
-            // Verifica se os parâmetros foram fornecidos
             if (!longitude || !latitude || !distance) {
                 return res.status(400).json({
                     success: false,
@@ -19,12 +18,10 @@ export default class SearchDepositsController {
                 }) 
             }
 
-            // Converte os parâmetros para números
             const longitudeNum = parseFloat(longitude as string) 
             const latitudeNum = parseFloat(latitude as string) 
             const distanceNum = parseFloat(distance as string) 
 
-            // Verifica se os parâmetros são números válidos
             if (isNaN(longitudeNum) || isNaN(latitudeNum) || isNaN(distanceNum)) {
                 return res.status(400).json({
                     success: false,
@@ -32,7 +29,6 @@ export default class SearchDepositsController {
                 }) 
             }
 
-            // Verifica se as coordenadas estão dentro dos intervalos válidos
             if (latitudeNum < -90 || latitudeNum > 90 || longitudeNum < -180 || longitudeNum > 180) {
                 return res.status(400).json({
                     success: false,
@@ -40,11 +36,9 @@ export default class SearchDepositsController {
                 }) 
             }
 
-            // Busca todos os depósitos
             const depositsResults = await EntitiesRepositoriesInstance.findNearDeposits() 
             console.log("Depósitos encontrados: ", depositsResults) 
 
-            // Verifica se há depósitos
             if (!depositsResults || depositsResults.length === 0) {
                 return res.status(404).json({
                     success: false,
