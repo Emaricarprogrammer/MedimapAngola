@@ -25,7 +25,7 @@ model Admin{
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   id_conta_fk           String
-  credenciais_admin     Contas @relation(fields: [id_conta_fk], references: [id_conta])
+  credenciais_admin     Contas @relation(fields: [id_conta_fk], references: [id_conta], onDelete: Cascade)
   @@map("tbl_admin")
 }
 
@@ -41,7 +41,7 @@ model Entidades {
   updatedAt               DateTime @updatedAt
   aquisicao_medicamento   Aquisicao[]
   id_conta_fk             String
-  credenciais_entidades                   Contas @relation(fields: [id_conta_fk], references: [id_conta])
+  credenciais_entidades                   Contas @relation(fields: [id_conta_fk], references: [id_conta], onDelete: Cascade)
   medicamentos            Medicamentos[] @relation("DepositoMedicamentos") // Relação nomeada
 
   @@map("tbl_entidades")
@@ -52,7 +52,7 @@ model Geolocalizacao {
   latitude          Float
   longitude         Float
   id_entidade_fk    String
-  entidade          Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
+  entidade          Entidades @relation(fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
 
   @@index([id_entidade_fk], map: "tbl_geolocalizacao_id_entidade_fkey")
   @@map("tbl_geolocalizacao")
@@ -62,7 +62,7 @@ model Contactos {
   id_contacto      String    @id @default(uuid())
   contacto         String    @unique
   id_entidade_fk   String
-  entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
+  entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
 
   @@index([id_entidade_fk], map: "tbl_contactos_id_entidade_fkey")
   @@map("tbl_contactos")
@@ -76,7 +76,7 @@ model Enderecos {
   cidade          String
   pais            String   @default("Angola")
   id_entidade_fk  String
-  entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade])
+  entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
 
   @@index([id_entidade_fk], map: "tbl_enderecos_id_entidade_fkey")
   @@map("tbl_enderecos")
@@ -104,10 +104,10 @@ model Medicamentos {
   createdAt                         DateTime @default(now())
   updatedAt                         DateTime @updatedAt
   id_categoria                      String
-  categoria                         Categoria_Medicamentos @relation(fields: [id_categoria], references: [id_categoria_medicamento])
+  categoria                         Categoria_Medicamentos @relation(fields: [id_categoria], references: [id_categoria_medicamento], onDelete: Cascade)
   id_entidade_fk                    String
   Aquisicao_medicamentos            Aquisicao_medicamentos[]
-  deposito                          Entidades @relation("DepositoMedicamentos", fields: [id_entidade_fk], references: [id_entidade])
+  deposito                          Entidades @relation("DepositoMedicamentos", fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
 
   @@map("tbl_medicamentos")
 }
@@ -121,7 +121,7 @@ model Aquisicao {
   createdAt             DateTime? @default(now())
   updatedAt             DateTime? @updatedAt
   id_entidade_fk        String
-  entidade              Entidades                @relation(fields: [id_entidade_fk], references: [id_entidade])
+  entidade              Entidades                @relation(fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
   aquisicao_medicamento Aquisicao_medicamentos[]
 
   @@index([id_entidade_fk], map: "tbl_aquisicao_id_entidade_fkey")
@@ -133,7 +133,7 @@ model Aquisicao_medicamentos {
   id_medicamento            String
   id_aquisicao              String
   aquisicao                 Aquisicao[]
-  medicamento               Medicamentos              @relation(fields: [id_medicamento], references: [id_medicamento])
+  medicamento               Medicamentos              @relation(fields: [id_medicamento], references: [id_medicamento], onDelete: Cascade)
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
 
@@ -146,7 +146,8 @@ model Recuperacao_senha {
   expiracao             DateTime
   usado                 Boolean
   id_conta_fk           String?
-  conta                 Contas?   @relation(fields: [id_conta_fk], references: [id_conta])
+  conta                 Contas?   @relation(fields: [id_conta_fk], references: [id_conta], onDelete: Cascade)
+  @@map("tbl_recuperacao_senha")
 }
 
 enum Tipo_entidades {

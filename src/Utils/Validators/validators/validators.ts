@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client"
 import validator from "validator"
 import { Request, response, Response } from "express"
 const prisma = new PrismaClient()
+
 export class ValidatorProps
 {
     static validateEmail(email: string){

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { EntitiesRepositories } from "../../Repositories/EntityRepository/EntityRepository";
+import  {EntitiesRepositories}  from "../../Repositories/EntityRepository/EntityRepository";
 import { PrismaClient } from "@prisma/client";
 import { ValidatorProps } from "../../Utils/Validators/validators/validators";
 import { AccountRepository } from "../../Repositories/AccountRepository/AccountRespository";

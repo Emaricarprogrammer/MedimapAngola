@@ -71,7 +71,10 @@ export class MedicineRepositories implements IMedicineRepositories
     }
     async findAllMedicine(skip: number, limit: number): Promise<MedicineDatas | any> {
         const MedicineQuery = await this.prisma.medicamentos.findMany({skip:skip,take:limit,include:{categoria:true, deposito:true}, orderBy:{validade_medicamento:"desc"}})
-        
+        if (MedicineQuery == null)
+        {
+            return null
+        }
         const totalMedicines = await this.prisma.medicamentos.count()
         const totalPages = Math.ceil(totalMedicines/ limit)
 

@@ -2,14 +2,14 @@
   "name": "MedimapAngola",
   "version": "1.0.0",
   "description": "MedimapAngola core",
-  "main": "server.js",
+  "main": ".dist/server.js",
   "engines": {
     "node": "20.17.0"
   },
   "author": "Emanuel Antonio e Armando Antonio",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node --watch ./dist/server.js",
     "build": "tsc"
   },
   "devDependencies": {

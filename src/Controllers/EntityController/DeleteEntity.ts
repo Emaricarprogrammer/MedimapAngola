@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import { ValidatorProps } from "../../Utils/Validators/validators/validators";
 import { AccountRepository } from "../../Repositories/AccountRepository/AccountRespository";
-import { EntitiesRepositories } from '../../Repositories/EntityRepository/EntityRepository';
+import { EntitiesRepositories } from "../../Repositories/EntityRepository/EntityRepository";
 import { ContactsRepository } from '../../Repositories/ContactsRepository/ContactsRepository';
 import { AdressRepositories } from '../../Repositories/AdressRepository/AdressRepository';
 import { GeolocationRepository } from '../../Repositories/GeolocationRepository/GeolocationRepository';

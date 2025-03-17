@@ -11,5 +11,5 @@ const jwtSecretKey = {
     ACCESS_SECRET: process.env.ACCESS_JWT_SECRET as string,
     REFRESH_SECRET: process.env.REFRESH_JWT_SECRET as string
 }
-console.log(jwtSecretKey)
+
 export {jwtSecretKey}

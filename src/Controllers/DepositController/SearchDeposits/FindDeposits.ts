@@ -1,62 +1,108 @@
-import { Request, response, Response } from "express"
-import { PrismaClient } from "@prisma/client"
-import { EntitiesRepositories } from "../../../Repositories/EntityRepository/EntityRepository"
-import { calculateDistance } from "../../../Utils/providers/HaversineAlgorithm/algorithm"
+import { Request, Response } from "express" 
+import { PrismaClient } from "@prisma/client" 
+import { EntitiesRepositories } from "../../../Repositories/EntityRepository/EntityRepository" 
+import { calculateDistance } from "../../../Utils/providers/HaversineAlgorithm/algorithm" 
 
-const prisma: PrismaClient = new PrismaClient()
-const EntitiesRepositoriesInstance: EntitiesRepositories = new EntitiesRepositories(prisma)
+const prisma: PrismaClient = new PrismaClient() 
+const EntitiesRepositoriesInstance: EntitiesRepositories = new EntitiesRepositories(prisma) 
 
-export default class SearchDepositsController
-{
-    static async search(req: Request, res: Response): Promise<Response>
-    {
-        try
-        {
-            const {longitude, latitude, distance} = req.query
-            console.log(longitude)
+export default class SearchDepositsController {
+    static async search(req: Request, res: Response): Promise<Response> {
+        try {
+            const { longitude, latitude, distance } = req.query 
+
+            // Verifica se os parâmetros foram fornecidos
             if (!longitude || !latitude || !distance) {
                 return res.status(400).json({
                     success: false,
                     message: "Os parâmetros longitude, latitude e distance são obrigatórios.",
-                });
+                }) 
             }
 
-            const Longitude = parseFloat(longitude as string);
-            const Latitude = parseFloat(latitude as string);
-            const Distance = parseFloat(distance as string);
+            // Converte os parâmetros para números
+            const longitudeNum = parseFloat(longitude as string) 
+            const latitudeNum = parseFloat(latitude as string) 
+            const distanceNum = parseFloat(distance as string) 
 
-            if (isNaN(Longitude) || isNaN(Latitude) || isNaN(Distance)) {
+            // Verifica se os parâmetros são números válidos
+            if (isNaN(longitudeNum) || isNaN(latitudeNum) || isNaN(distanceNum)) {
                 return res.status(400).json({
                     success: false,
                     message: "Os parâmetros longitude, latitude e distance devem ser números válidos.",
-                });
+                }) 
             }
-            const depositsResults = await EntitiesRepositoriesInstance.findNearDeposits()
-            if (depositsResults == null)
-            {
-                return res.status(400).json({ success: false, message: "Não conseguimos encontrar nenhum depósito, por favor recarregar a página." })    
+
+            // Verifica se as coordenadas estão dentro dos intervalos válidos
+            if (latitudeNum < -90 || latitudeNum > 90 || longitudeNum < -180 || longitudeNum > 180) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Os valores de latitude e longitude são inválidos.",
+                }) 
             }
-            const nearDeposits = []
 
-            for (const depoist of depositsResults)
-            {
-                const geolocation = depoist.geolocalizacao_entidade[0]
-                if (!geolocation) continue
+            // Busca todos os depósitos
+            const depositsResults = await EntitiesRepositoriesInstance.findNearDeposits() 
+            console.log("Depósitos encontrados: ", depositsResults) 
 
-                const depositDistance = calculateDistance(Latitude, Longitude, geolocation.latitude, geolocation.longitude)
-                if (depositDistance<=Distance)
-                {
+            // Verifica se há depósitos
+            if (!depositsResults || depositsResults.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Não conseguimos encontrar nenhum depósito, por favor recarregue a página.",
+                }) 
+            }
+
+            const nearDeposits = [] 
+
+            for (const deposit of depositsResults) {
+                // Verifica se a geolocalização é válida
+                if (
+                    !deposit.geolocalizacao_entidade ||
+                    typeof deposit.geolocalizacao_entidade.latitude !== "number" ||
+                    typeof deposit.geolocalizacao_entidade.longitude !== "number" ||
+                    deposit.geolocalizacao_entidade.latitude < -90 ||
+                    deposit.geolocalizacao_entidade.latitude > 90 ||
+                    deposit.geolocalizacao_entidade.longitude < -180 ||
+                    deposit.geolocalizacao_entidade.longitude > 180
+                ) {
+                    console.log(`Depósito ${deposit.firma_entidade} tem geolocalização inválida.`) 
+                    continue 
+                }
+
+                // Calcula a distância
+                const depositDistance = calculateDistance(
+                    latitudeNum,
+                    longitudeNum,
+                    deposit.geolocalizacao_entidade.latitude,
+                    deposit.geolocalizacao_entidade.longitude
+                )
+                console.log(depositDistance)
+
+                // Verifica se o depósito está dentro da distância especificada
+                if (depositDistance <= distanceNum) {
                     nearDeposits.push({
-                        ...depoist,
-                        distance: depositDistance
-                    })
+                        ...deposit,
+                        distance: depositDistance,
+                    }) 
                 }
             }
 
-            return res.status(200).json({success: true, response: nearDeposits})
+            console.log("Depósitos próximos: ", nearDeposits) 
+
+            if (nearDeposits.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Nenhum depósito encontrado no raio especificado.",
+                }) 
+            }
+
+            return res.status(200).json({ success: true, response: nearDeposits }) 
         } catch (error) {
-            console.error(error)
-            return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." }) 
+            console.error("Erro ao buscar depósitos próximos: ", error) 
+            return res.status(500).json({
+                success: false,
+                message: "Estamos tentando resolver este problema, por favor tente novamente mais tarde.",
+            }) 
         }
     }
 }

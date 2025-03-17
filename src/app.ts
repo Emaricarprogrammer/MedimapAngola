@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express"
+import express, {Request, Response, NextFunction} from "express"
 import AdminRouter from "./Routes/adminRoutes/route"
 import DepositRouter from "./Routes/DepositRoutes/routes"
 import { PharmacyRoute } from "./Routes/PharmacyRoutes/routes"
@@ -16,10 +16,19 @@ App.use(express.json())
 App.use(cookieParser())
 App.use(helmet())
 
+if (process.env.NODE_ENV == "dev")
+{ 
+  App.use(cors({
+    //origin:"http://localhost:3000",
+    credentials: true,
+  }))
+}
+/*
 App.use(cors({
   origin:"http://localhost:3000",
   credentials: true,
 }))
+*/
 
 App.use("/medimapangola.ao/admin", AdminRouter)
 App.use("/medimapangola.ao/entidade/deposito", DepositRouter)
@@ -36,4 +45,3 @@ App.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "Erro interno do servidor. Por favor, tente mais tarde." })
 })
 export default App
-

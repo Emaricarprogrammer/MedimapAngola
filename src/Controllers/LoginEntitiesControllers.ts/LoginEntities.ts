@@ -62,10 +62,11 @@ export class LoginEntity
 
         res.cookie("newToken", refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: process.env.NODE_ENV == "dev" ? false : true,
             sameSite: "lax",
             maxAge:7*24*60*60*100
         })
+        console.log(process.env.NODE_ENV)
         console.log("Cookie criado:", res.getHeaders())
 
         return res.status(200).json({logged: true, accessToken, response:userInfo})
