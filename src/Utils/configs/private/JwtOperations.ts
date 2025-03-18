@@ -5,7 +5,7 @@ dotenv.config()
 
 class JwtOperation {
     static generateToken(payload: Record<string, any>): string {
-        return jwt.sign(payload, jwtSecretKey.ACCESS_SECRET, {expiresIn: "1min"});
+        return jwt.sign(payload, jwtSecretKey.ACCESS_SECRET, {expiresIn: "15min"});
     }
 
     static generateRefreshToken(payload: Record<string, any>): string {
