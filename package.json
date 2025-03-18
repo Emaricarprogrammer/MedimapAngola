@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./dist/server.js",
-    "build": "yarn cache clean && yarn install --force && yarn build yarn remove node_modules/node-base64"
+    "build": "tsc "
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
