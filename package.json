@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./dist/server.js",
-    "build": "yarn cache clean && yarn install --force && yarn build"
+    "build": "yarn cache clean && yarn install --force && yarn build yarn remove node_modules/node-base64"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -36,7 +36,6 @@
     "express-validator": "^7.2.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "jwt": "^0.2.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "tsx": "^4.19.1",
