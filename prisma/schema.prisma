@@ -60,7 +60,7 @@ model Geolocalizacao {
 
 model Contactos {
   id_contacto      String    @id @default(uuid())
-  contacto         String    @unique
+  contacto         Int    @unique
   id_entidade_fk   String
   entidade     Entidades @relation(fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
 

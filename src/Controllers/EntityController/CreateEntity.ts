@@ -134,7 +134,6 @@ export class  CreateEntityController {
           return res.status(400).json({success: false, message:"Estamos tentando resolver este problema, por favor tente novamente."})
         }
 
-        // Criação da entidade
         const createdEntity = await EntitiesRepositoriesInstance.createEntity(
           {
             NIF_entidade: nif,

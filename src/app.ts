@@ -23,12 +23,11 @@ if (process.env.NODE_ENV == "dev")
     credentials: true,
   }))
 }
-/*
+
 App.use(cors({
   origin:"http://localhost:3000",
   credentials: true,
 }))
-*/
 
 App.use("/medimapangola.ao/admin", AdminRouter)
 App.use("/medimapangola.ao/entidade/deposito", DepositRouter)

@@ -1,7 +1,7 @@
 export default interface ContactsDatas
 {
     id_contacto?: string,
-    contacto: string,
+    contacto: number,
     id_entidade_fk: string
 }
 export interface IContactsRepositories
