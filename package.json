@@ -7,8 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./dist/server.js",
-    "clean-install": "yarn cache clean && yarn install",
-    "build": "yarn run clean-install && yarn run build && npx prisma migrate deploy"
+    "build": "yarn cache clean && yarn install --force && yarn build"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -43,5 +42,5 @@
     "tsx": "^4.19.1",
     "validator": "^13.12.0"
   },
-  "repository": "https://github.com/Emaricarprogrammer/Projecto-final.git"
+  "repository": "https://github.com/Emaricarprogrammer/MedimapAngola.git"
 }
