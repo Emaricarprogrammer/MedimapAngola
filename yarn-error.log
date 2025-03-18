@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: ENOSPC: no space left on device, copyfile 'E:\MedimapAngola\node_modules\body-parser\HISTORY.md' -> 'C:\Users\emari\AppData\Local\Yarn\Cache\v6\npm-edimap-ngola-1.0.0-caef96c4-549c-4e8d-8a20-4235007893f7-1742294170462\node_modules\MedimapAngola\node_modules\body-parser\HISTORY.md'
+  Error: ENOENT: no such file or directory, copyfile 'E:\MedimapAngola\prisma\migrations\20250318110744_dev\migration.sql' -> 'C:\Users\emari\AppData\Local\Yarn\Cache\v6\npm-edimap-ngola-1.0.0-0e617983-e10b-4069-816d-1984a38e8df8-1742296330410\node_modules\MedimapAngola\prisma\migrations\20250318110744_dev\migration.sql'
 
 npm manifest: 
   {
@@ -25,8 +25,8 @@ npm manifest:
     "author": "Emanuel Antonio e Armando Antonio",
     "license": "MIT",
     "scripts": {
-      "start": "node ./dist/server.js",
-      "build": "yarn cache clean && yarn install --force && yarn build yarn remove node_modules/node-base64"
+      "start": "node --watch ./dist/server.js",
+      "build": "tsc --watch"
     },
     "devDependencies": {
       "@types/bcrypt": "^5.0.2",

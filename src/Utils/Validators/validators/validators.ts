@@ -16,15 +16,15 @@ export class ValidatorProps
         }
         return true
       }
-      static async NumberExists(number: string)
+      static async NumberExists(number: number)
       {
         const verify = await prisma.contactos.findFirst({where:{contacto: number}})
         return verify
       }
 
-      static async passwordExists(p: string)
+      static async passwordExists(password: string)
       {
-        return await prisma.contas.findFirst({where:{password: p}})
+        return await prisma.contas.findFirst({where:{password: password}})
       }
       static async LongitudeExists(long: number)
       {
