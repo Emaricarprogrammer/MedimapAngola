@@ -43,7 +43,7 @@ export class LoginEntity
                 nivel_acesso: IsAdmin.nivel_acesso
             }
         }
-        else 
+        else
         {
             const IsEntity = await prisma.entidades.findFirst({where:{id_conta_fk: AccountExists.id_conta}})
             if(!IsEntity)
@@ -66,10 +66,8 @@ export class LoginEntity
             sameSite: "lax",
             maxAge:7*24*60*60*100
         })
-        console.log(process.env.NODE_ENV)
-        console.log("Cookie criado:", res.getHeaders())
 
-        return res.status(200).json({logged: true, accessToken, response:userInfo})
+        return res.status(200).json({success: true, logged: true, accessToken})
     }
     catch(error: any)
     {

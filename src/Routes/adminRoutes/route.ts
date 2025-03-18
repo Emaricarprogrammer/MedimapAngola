@@ -11,16 +11,17 @@ const AdminRouter: Router = Router()
 /**
  * Publics Routes
  */
-AdminRouter.route("/signup").post((req: Request, res: Response) => {CreateAccountAdminController.CreateAdminAccount(req, res) })
-AdminRouter.route("/:id_admin").get((req:Request, res:Response) => {FindAdminController.findAdmin(req, res)})
-AdminRouter.route("/:id_admin").delete((req: Request, res: Response) => {DeleteAdminController.DeleteAdmin(req, res)})
+AdminRouter.route("/signup").post((req: Request, res: Response) => {CreateAccountAdminController.CreateAdminAccount(req, res)})
 
 /**
  * Private Routes
  */
-AdminRouter.route("/admins/ad").post(AuthenticationController.Authentication,( req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
-AdminRouter.route("/:id_admin").patch((req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
-AdminRouter.route("/appControll/ad").get((req: Request, res: Response) => {UsersMagementController.CountUsers(req, res)})
-AdminRouter.route("/appControll/ads").get((req: Request, res: Response) => {UsersMagementController.EntitiesAccounts(req, res)})
+AdminRouter.route("/:id_admin").get(AuthenticationController.Authentication,(req:Request, res:Response) => {FindAdminController.findAdmin(req, res)})
+AdminRouter.route("/:id_admin").delete(AuthenticationController.Authentication,(req: Request, res: Response) => {DeleteAdminController.DeleteAdmin(req, res)})
+AdminRouter.route("/admins").post(AuthenticationController.Authentication,( req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
+AdminRouter.route("/:id_admin").patch(AuthenticationController.Authentication,(req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
+AdminRouter.route("/appControll/users").get(AuthenticationController.Authentication,(req: Request, res: Response) => {UsersMagementController.CountUsers(req, res)})
+AdminRouter.route("/appControll/all/users").get(AuthenticationController.Authentication,(req: Request, res: Response) => {UsersMagementController.AllEntities(req, res)})
+AdminRouter.route("/appControll/delete/users").delete(AuthenticationController.Authentication,(req: Request, res: Response) => {UsersMagementController.DeleteAllAccountsEntities(req, res)})
 
 export default AdminRouter 

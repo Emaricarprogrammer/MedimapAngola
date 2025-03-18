@@ -9,7 +9,7 @@ class JwtOperation {
     }
 
     static generateRefreshToken(payload: Record<string, any>): string {
-        return jwt.sign(payload, jwtSecretKey.REFRESH_SECRET, {expiresIn: "2min"});
+        return jwt.sign(payload, jwtSecretKey.REFRESH_SECRET, {expiresIn: "7d"});
     }
 
     static verifyToken(token: string, jwtSecretKey: string)

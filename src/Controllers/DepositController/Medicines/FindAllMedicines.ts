@@ -9,12 +9,12 @@ export class FindAllMedicinesController
 {
     static async FindMedicines(req: Request, res: Response): Promise<Response>
     {
-        try {
+        try
+        {
             const {page = 1, limit = 10} = req.query
             const pageNumer = parseInt(page as string, 10)
             const pageSize = parseInt(limit as string, 10)
             const skip = (pageNumer - 1) * pageSize
-            
             
             const MedicineResult = await MedicineRepositoryInstance.findAllMedicine(skip, pageSize)
             if (!MedicineResult)

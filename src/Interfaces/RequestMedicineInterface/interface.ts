@@ -1,7 +1,4 @@
-type TypeRequest = {
-    emediata: null
-    pendente: null
-}
+
 interface RequestMedicineDatas
 {
     id_aquisicao?: string
@@ -11,6 +8,7 @@ interface RequestMedicineDatas
     createdAt?: Date
     updatedAt?: Date
     id_entidade_fk: string
+
 }
 
 interface IRequestMedicineRepositories

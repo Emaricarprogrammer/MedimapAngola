@@ -23,7 +23,7 @@ class UsersMagementController
         }       
     }
 
-    static async EntitiesAccounts(req: Request, res: Response):Promise<Response>
+    static async AllEntities(req: Request, res: Response):Promise<Response>
     {
         try
         {
@@ -48,12 +48,33 @@ class UsersMagementController
                 createdAt: entities.createdAt,
                 updatedAt: entities.updatedAt,
                 id_conta_fk: entities.id_conta_fk,
-
             }))
             return res.status(200).json({success: true, response: entitiesResults})
         } catch (error: any)
         {
             console.error("Houve um erro: ", error.message)
+            return res.status(500).json({success: false, message: "Estamos tentando resolver este problema, tente novamente"})    
+        }
+    }
+
+    static async DeleteAllAccountsEntities(req: Request, res: Response): Promise<Response>
+    {
+        try
+        {
+            const allEntities = await prisma.entidades.findMany()
+            console.log(allEntities)
+            if (!allEntities || allEntities === null)
+            {
+                return res.status(400).json({success: false, message: "Oooops! De momento ainda não existem contas."})
+            }
+            const result = await prisma.entidades.deleteMany()
+            if (!result)
+            {
+                return res.status(400).json({success: false, message: "Ocorreu um erro, tente novamente"})    
+            }
+            return res.status(200).json({success: false, message:"Usúarios deletados com sucesso!"})
+        } catch (error) {
+            console.error("Houve um erro: ", error)
             return res.status(500).json({success: false, message: "Estamos tentando resolver este problema, tente novamente"})    
         }
     }

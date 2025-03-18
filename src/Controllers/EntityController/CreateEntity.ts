@@ -81,7 +81,7 @@ export class  CreateEntityController {
             });
         }
 
-        if (nif.length > 10)
+        if (nif.length != 10)
         {
                     
           return res.status(400).json({

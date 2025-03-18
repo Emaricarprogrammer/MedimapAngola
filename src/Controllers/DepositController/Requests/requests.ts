@@ -16,14 +16,16 @@ class RequestsMedicineController
                 quantidade_aquisicao,
                 data_aquisicao,
                 tipo_aquisicao,
-                id_entidade_fk
+                id_entidade_fk,
+                id_medicamento
             } = req.body
             const fields =
             [
                 "quantidade_aquisicao",
                 "data_aquisicao",
                 "tipo_aquisicao",
-                "id_entidade_fk"
+                "id_entidade_fk",
+                "id_medicamento"
             ].filter((field) => !req.body[field])
 
             if (fields.length > 0)
@@ -48,22 +50,39 @@ class RequestsMedicineController
                 })
             }
 
-            const request = await RequestsRepositoriesInstane.createRequest(
+            const result = await prisma.$transaction(async(tx) => {
+                const requestMedicine = await RequestsRepositoriesInstane.createRequest(
+                    {
+                        quantidade_aquisicao: quantidade_aquisicao,
+                        data_aquisicao: data_aquisicao,
+                        tipo_aquisicao: tipo_aquisicao,
+                        id_entidade_fk: id_entidade_fk
+                    }, tx
+                )
+                if (!requestMedicine)
                 {
-                    quantidade_aquisicao: quantidade_aquisicao,
-                    data_aquisicao: data_aquisicao,
-                    tipo_aquisicao: tipo_aquisicao,
-                    id_entidade_fk: id_entidade_fk
+                    return res.status(400).json({
+                        success: false,
+                        message: "Ocorreu um problema ao realizar esta operação, por favor tente novamente..",
+                    })
                 }
-            )
-            if (!request)
-            {
-                return res.status(400).json({
-                    success: false,
-                    message: "Ocorreu um problema ao realizar esta operação, por favor tente novamente..",
-                })
-            }
-            return res.status(201).json({success: true, message:"A sua solicitação foi processada com sucesso"})
+
+                const requestMedicines = await RequestsRepositoriesInstane.createRequestsMedicines({
+                    id_aquisicao: requestMedicine.id_aquisicao,
+                    id_medicamento: id_medicamento
+                }, tx)
+
+                if (!requestMedicines)
+                {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Ocorreu um problema ao realizar esta operação, por favor tente novamente..",
+                        })
+                }
+                return {success: true, message: "A sua solicitação foi processada com sucesso"}
+            })
+
+            return res.status(201).json(result)
         } catch (error) {
             console.error(error)
             return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." }) 

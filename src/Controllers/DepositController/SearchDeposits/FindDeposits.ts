@@ -76,7 +76,7 @@ export default class SearchDepositsController {
                 if (depositDistance <= distanceNum) {
                     nearDeposits.push({
                         ...deposit,
-                        distance: depositDistance,
+                        distance: depositDistance.toFixed(2),
                     }) 
                 }
             }
