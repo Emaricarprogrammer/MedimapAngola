@@ -6,8 +6,8 @@
   "author": "Emanuel Antonio e Armando Antonio",
   "license": "MIT",
   "scripts": {
-    "start": "node --watch ./dist/server.js",
-    "build": "tsc --watch"
+    "start": "node ./dist/server.js",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
