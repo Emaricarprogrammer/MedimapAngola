@@ -1,6 +1,6 @@
 import App from "./app"
 
-const portURI = process.env.PORT_URI_SERVER || 5000
+const portURI = process.env.PORT || 5000
 const runServer = async () => {
   try {
     App.listen(portURI, () => {

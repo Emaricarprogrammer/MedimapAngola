@@ -12,6 +12,7 @@ import cookieParser from "cookie-parser"
 dotenv.config()
 
 const App = express()
+const allowdDomains = ["http://localhost:3000", "*"]    
 App.use(express.json())
 App.use(cookieParser())
 App.use(helmet())
@@ -25,15 +26,15 @@ if (process.env.NODE_ENV == "dev")
 }
 
 App.use(cors({
-  origin:"http://localhost:3000",
+  //origin:"http://localhost:3000",
   credentials: true,
 }))
 
-App.use("/medimapangola.ao/admin", AdminRouter)
-App.use("/medimapangola.ao/entidade/deposito", DepositRouter)
-App.use("/medimapangola.ao/entidade/farmacia", PharmacyRoute)
-App.use("/medimapangola.ao/entidades", EntityRoute)
-App.use("/medimapangola.ao", route)
+App.use("/medmapangola.ao/admin", AdminRouter)
+App.use("/medmapangola.ao/entidade/deposito", DepositRouter)
+App.use("/medmapangola.ao/entidade/farmacia", PharmacyRoute)
+App.use("/medmapangola.ao/entidades", EntityRoute)
+App.use("/medmapangola.ao", route)
 
 App.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({ message: "Esta página não existe" })

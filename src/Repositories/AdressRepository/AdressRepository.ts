@@ -13,7 +13,7 @@ export class AdressRepositories implements IAdressRepositories
     async createAdress(adressDatas: AdressDatas, tx?: Omit<Prisma.TransactionClient, '$transaction'>): Promise<AdressDatas> {
         const prismaCliente = tx || this.prisma
         console.log(adressDatas)
-        const adressCreated = await prismaCliente.enderecos.create({data:{...adressDatas}})
+        const adressCreated = await prismaCliente.enderecos.create({data:{...adressDatas, pais:"Angola"}})
         return adressCreated
     }
 

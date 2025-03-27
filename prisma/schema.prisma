@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 model Contas{
@@ -115,12 +115,13 @@ model Medicamentos {
 
 model Aquisicao {
   id_aquisicao          String    @id @default(uuid())
-  quantidade_aquisicao  Int
+  quantidade_aquisicao  String
   data_aquisicao        DateTime
   tipo_aquisicao        Tipo_aquisicao
   createdAt             DateTime? @default(now())
   updatedAt             DateTime? @updatedAt
   id_entidade_fk        String
+  status                StatusAquisicao?
   entidade              Entidades                @relation(fields: [id_entidade_fk], references: [id_entidade], onDelete: Cascade)
   aquisicao_medicamento Aquisicao_medicamentos[]
 
@@ -132,7 +133,7 @@ model Aquisicao_medicamentos {
   id_aquisicao_medicamento  String    @id @default(uuid())
   id_medicamento            String
   id_aquisicao              String
-  aquisicao                 Aquisicao[]
+  aquisicao                 Aquisicao @relation(fields: [id_aquisicao], references: [id_aquisicao], onDelete: Cascade)
   medicamento               Medicamentos              @relation(fields: [id_medicamento], references: [id_medicamento], onDelete: Cascade)
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
@@ -154,10 +155,14 @@ enum Tipo_entidades {
   farmacia
   deposito
 }
+enum StatusAquisicao{
+  pendente
+  concluido
+  cancelado
+}
 
 enum Tipo_aquisicao {
   emediata
-  agendada
 }
 enum Tipo_acesso{
   admin 

@@ -1,17 +1,6 @@
 import nodemailer from "nodemailer";
 import { SmtpConfig } from "../../configs/smtp";
-import fs from "fs"
-import path from "path"
 
-const htmlpath = path.join(__dirname, "./Templates/welcome.html");
-const HTML = fs.readFileSync(htmlpath, "utf-8");
-/***
- * =========================================================
- *  MedimapAngola.ao
- *  Aqui estou criando uma class para lidar com envio de emails
- *  by: Emanuel António.
- * =========================================================
- * ***/
 type EmailProps =
 {
     text: string;
@@ -62,14 +51,14 @@ export class EmailSender {
     }
 }
 
-async function Emailsent(email: string)
+async function Emailsent(email: string, HtmlTemplate: string)
 {
     const emailSenderInstance = new EmailSender({
         text: "A equipa da MediMapAngola dá-lhe as boas-vindas.",
-        subject: "Welcome",
+        subject: "Bem-vindo à MediMapAngola",
         from: "noreplaymedimapangola@gmail.com",
         to: email,
-        html: HTML,
+        html: HtmlTemplate,
       });
       return await emailSenderInstance.SendEmail().catch((error)=>{console.log("Erro ao enviar este email: ", error)});
 }

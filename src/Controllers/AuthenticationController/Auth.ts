@@ -17,13 +17,11 @@ export class AuthenticationController
             const token = req.headers.authorization?.split(' ')[1]
             if (!token)
             {
-                console.log("Token nao fornecido")
                 return res.status(401).json({success: false, message:"Oooops! parece que você não está autorizado a acessar este recurso, por favor tente novamente."})
             }
     
             const decodedToken = await JWT.verify(token, jwtSecretKey.ACCESS_SECRET) as JwtPayload
             req.body.user = decodedToken
-            console.log(decodedToken)
             next()
             
         } catch (error: any) {
@@ -31,9 +29,36 @@ export class AuthenticationController
             {
                 return res.status(401).json({success: false, message: "Ooooops! Parece que a sua sessão está expirada"})
             }
-            console.log(error)
+            console.log(error.message)
             return res.status(401).json({ success: false, message: "Ooooops! Parece que você não tem autorização para acessar esta página." });
-            
         }
+    }
+
+    static async AdminAuthentication(req: Request, res: Response, next: NextFunction): Promise<any>
+    {
+        if (req.body.user.role != "admin")
+        {
+            console.log(req.body.user)
+            return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
+        }
+        next()
+    }
+
+    static async PharmacyAuthentication(req: Request, res: Response, next: NextFunction): Promise<any>
+    {
+        if (req.body.user.role != "farmacia")
+        {
+            return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
+        }
+        next()
+    }
+
+    static async DepositAuthentication(req: Request, res: Response, next: NextFunction): Promise<any>
+    {
+        if (req.body.user.role != "deposito")
+        {
+            return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
+        }
+        next()
     }
 }

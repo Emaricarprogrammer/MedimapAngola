@@ -64,7 +64,7 @@ export class LoginEntity
             httpOnly: true,
             secure: process.env.NODE_ENV == "dev" ? false : true,
             sameSite: "lax",
-            maxAge:7*24*60*60*100
+            maxAge: 7*24*60*60*100
         })
 
         return res.status(200).json({success: true, logged: true, accessToken})

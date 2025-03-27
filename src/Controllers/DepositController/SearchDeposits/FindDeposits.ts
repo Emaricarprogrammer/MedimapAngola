@@ -37,7 +37,6 @@ export default class SearchDepositsController {
             }
 
             const depositsResults = await EntitiesRepositoriesInstance.findNearDeposits() 
-            console.log("Depósitos encontrados: ", depositsResults) 
 
             if (!depositsResults || depositsResults.length === 0) {
                 return res.status(404).json({
@@ -70,7 +69,6 @@ export default class SearchDepositsController {
                     deposit.geolocalizacao_entidade.latitude,
                     deposit.geolocalizacao_entidade.longitude
                 )
-                console.log(depositDistance)
 
                 // Verifica se o depósito está dentro da distância especificada
                 if (depositDistance <= distanceNum) {
@@ -80,9 +78,6 @@ export default class SearchDepositsController {
                     }) 
                 }
             }
-
-            console.log("Depósitos próximos: ", nearDeposits) 
-
             if (nearDeposits.length === 0) {
                 return res.status(404).json({
                     success: false,

@@ -21,7 +21,7 @@ export class ForgotPasswordController
             const user = await prisma.contas.findUnique({where:{email:email}})
             if (!user)
             {
-                return res.status(400).json({success:false, message: "E-mail não encontrado"})
+                return res.status(400).json({success:false, message: "Não conseguimos encontrar esta conta"})
             }
             const token = crypto.randomBytes(32).toString("hex")
             await prisma.recuperacao_senha.create({data:{token, expiracao: new Date(Date.now() + 3600000), id_conta_fk: user.id_conta, usado:false}})
@@ -34,12 +34,12 @@ export class ForgotPasswordController
         <p>Olá,</p>
         <p>Recebemos uma solicitação para redefinir a senha da sua conta. Caso tenha sido você, use o link abaixo para criar uma nova senha:</p>
         <p>
-            <a href="${process.env.RESET_URI}/reset_password?authtoken=${token}" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold;">
+            <a href="${process.env.RESET_URI}/reset_password?t=${token}" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold;">
                 Redefinir Senha
             </a>
         </p>
         <p><b>Ou copie e cole o seguinte link no navegador:</b></p>
-        <p>${process.env.RESET_URI}/reset_password?authtoken=${token}</p>
+        <p>${process.env.RESET_URI}/reset_password?t=${token}</p>
         <p>Este link é válido por <strong>1 hora</strong>.</p>
         <p>Se você não solicitou a alteração de senha, ignore este e-mail. Sua conta permanecerá segura.</p>
         <p>Atenciosamente,</p>
@@ -59,13 +59,13 @@ export class ForgotPasswordController
     {
         try {
             const { password, newPassword } = req.body;
-            const { authtoken } = req.query as { authtoken: string };
+            const { t } = req.query as { t: string };
                 
-            if (!authtoken || !password || !newPassword) {
+            if (!t || !password || !newPassword) {
                 return res.status(400).json({ success: false, message: "Por favor, verifique se preencheu todos os campos" });
             }
             const reset = await prisma.recuperacao_senha.findUnique({
-                where: { token: authtoken },
+                where: { token: t },
                 include: { conta: true }
             });
     
@@ -94,7 +94,7 @@ export class ForgotPasswordController
             });
     
             await prisma.recuperacao_senha.update({
-                where: { token: authtoken },
+                where: { token: t },
                 data: { usado: true }
             });
     

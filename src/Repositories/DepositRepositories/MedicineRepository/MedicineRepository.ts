@@ -70,7 +70,7 @@ export class MedicineRepositories implements IMedicineRepositories
         
     }
     async findAllMedicine(skip: number, limit: number): Promise<MedicineDatas | any> {
-        const MedicineQuery = await this.prisma.medicamentos.findMany({skip:skip,take:limit,include:{categoria:true, deposito:true}, orderBy:{validade_medicamento:"desc"}})
+        const MedicineQuery = await this.prisma.medicamentos.findMany({skip:skip,take:limit,include:{categoria:true, deposito:{include:{endereco_entidade:true}}}, orderBy:{validade_medicamento:"desc"}})
         if (MedicineQuery == null)
         {
             return null
@@ -86,7 +86,13 @@ export class MedicineRepositories implements IMedicineRepositories
             origem: medicines.origem_medicamento,
             validade: medicines.validade_medicamento,
             quantidade_disponivel: medicines.quantidade_disponivel_medicamento,
-            deposito: medicines.deposito.firma_entidade,
+            deposito:{
+                firma_deposito: medicines.deposito.firma_entidade,
+                logradouro: medicines.deposito.endereco_entidade[0].logradouro,
+                rua: medicines.deposito.endereco_entidade[0].rua,
+                numero_rua: medicines.deposito.endereco_entidade[0].numero,
+                cidade: medicines.deposito.endereco_entidade[0].cidade,
+            },
             preco: medicines.preco_medicamento,
             imagem: medicines.imagem_url
         })))
@@ -106,4 +112,5 @@ export class MedicineRepositories implements IMedicineRepositories
         const MedicineQuery = await this.prisma.medicamentos.delete({where:{id_medicamento: id_medicine}})
         return MedicineQuery
     }
+
 }

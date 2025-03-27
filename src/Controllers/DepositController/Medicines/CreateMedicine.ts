@@ -84,6 +84,7 @@ export class CreateMedicineController {
           message: "O arquivo de imagem é obrigatório.",
         });
       }
+      
       const UploadResults = await cloudinary.uploader.upload(imagem.path,{
         folder: "medicamentos_imgs",
         public_id: nome_comercial,
@@ -142,7 +143,7 @@ export class CreateMedicineController {
         }
 
         return CreatedMedicine; // Retorna o medicamento criado para uso fora da transação
-      }, {timeout:1000});
+      }, {timeout:10000});
 
       if (!result) {
         return res.status(400).json({

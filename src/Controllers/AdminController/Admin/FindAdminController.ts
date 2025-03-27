@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository";
 import { PrismaClient } from "@prisma/client";
+import dayjs from 'dayjs';
 
 const Prisma = new PrismaClient();
 const AdminRepositoryInstance = new AdminRepository(Prisma);
@@ -28,13 +29,15 @@ export default class FindAdminController
         nivel_acesso: Results?.nivel_acesso,
         email: Results?.email,
         id_conta: Results?.id_conta,
-        id_conta_fk: Results?.id_conta_fk
+        id_conta_fk: Results?.id_conta_fk,
+        createdAt: dayjs(Results?.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+        updatedAt: dayjs(Results?.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
       }
       return res.status(200).json({ success: true, response: AdminDatas });
 
-    } catch (error:any)
+    } catch (error: any)
     {
-      console.error("Houve um erro: ", error);
+      console.error("Houve um erro: ", error.message);
       return res.status(500).json({ success: false, message:"Estamos tentando resolver este problema por favor, tente novamente mais tarde." });
     }
   }

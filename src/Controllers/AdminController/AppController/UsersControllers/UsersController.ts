@@ -1,5 +1,6 @@
 import { Request, response, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import dayjs from 'dayjs';
 
 const prisma: PrismaClient = new PrismaClient()
 
@@ -45,8 +46,8 @@ class UsersMagementController
                 pais: entities.endereco_entidade[0].pais,
                 latitude: entities.geolocalizacao_entidade[0].latitude,
                 longitude: entities.geolocalizacao_entidade[0].longitude,
-                createdAt: entities.createdAt,
-                updatedAt: entities.updatedAt,
+                createdAt: dayjs(entities.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+                updatedAt: dayjs(entities.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
                 id_conta_fk: entities.id_conta_fk,
             }))
             return res.status(200).json({success: true, response: entitiesResults})

@@ -9,9 +9,15 @@ import { ContactsRepository } from '../../Repositories/ContactsRepository/Contac
 import { AdressRepositories } from '../../Repositories/AdressRepository/AdressRepository';
 import { GeolocationRepository } from '../../Repositories/GeolocationRepository/GeolocationRepository';
 import validator from "validator"
+import fs from "fs"
+import path from "path"
+import dayjs from "dayjs";
+
 dotenv.config()
-// Instância do Prisma
+
 const prisma: PrismaClient = new PrismaClient();
+const htmlpath = path.join(__dirname, "../../Utils/providers/SendEmails/Templates/Welcome.html")
+const HTML = fs.readFileSync(htmlpath, "utf-8")
 
 export class  CreateEntityController {
   static async create(req: Request, res: Response): Promise<Response> {
@@ -27,7 +33,6 @@ export class  CreateEntityController {
         rua,
         numero,
         cidade,
-        pais,
         latitude,
         longitude
       } = req.body;
@@ -42,7 +47,6 @@ export class  CreateEntityController {
         "rua",
         "numero",
         "cidade",
-        "pais",
         "latitude",
         "longitude"
       ].filter((field) => !req.body[field]);
@@ -167,7 +171,7 @@ export class  CreateEntityController {
             rua: sanitizedData.rua,
             cidade: sanitizedData.cidade,
             numero:numero,
-            pais: sanitizedData.pais,
+            pais: "Angola",
             id_entidade_fk: createdEntity.id_entidade
           },
           tx
@@ -192,13 +196,13 @@ export class  CreateEntityController {
             pais: adressCreated.pais,
             latitude: geolocationCreated.latitude,
             longitude: geolocationCreated.longitude,
-            createdAt: createdEntity.createdAt,
+            createdAt: dayjs(createdEntity.createdAt).format("DD/MM/YY: HH:mm:ss"),
             id_conta_fk: accountCreated.id_conta
           }
             return Datas
       },{timeout:10000});
 
-      //await Emailsent(email)
+      await Emailsent(email, HTML)
 
       // Resposta de sucesso
       return res.status(201).json({
