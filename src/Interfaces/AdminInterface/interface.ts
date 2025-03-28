@@ -2,7 +2,7 @@ export default interface AdminData
 {
     id_admin?: string 
     username: string,
-    nivel_acesso: "admin" | "gestor",
+    nivel_acesso: "admin",
     id_conta_fk: string,
     createdAt?: Date,
     updatedAt?: Date

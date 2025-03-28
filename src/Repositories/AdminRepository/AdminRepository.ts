@@ -1,7 +1,7 @@
 import { IAdminRespository } from '../../Interfaces/AdminInterface/interface'
 import AdminData from '../../Interfaces/AdminInterface/interface'
-import { AccountData } from '../../Interfaces/AccountInterface/interface';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { AccountData } from '../../Interfaces/AccountInterface/interface'
+import { PrismaClient, Prisma } from '@prisma/client'
 
 export class AdminRepository implements IAdminRespository {
   private Prisma: PrismaClient

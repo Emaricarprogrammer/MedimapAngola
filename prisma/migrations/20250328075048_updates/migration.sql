@@ -14,7 +14,7 @@ CREATE TABLE `tbl_contas` (
 CREATE TABLE `tbl_admin` (
     `id_admin` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
-    `nivel_acesso` ENUM('admin', 'gestor') NOT NULL,
+    `nivel_acesso` ENUM('admin') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `id_conta_fk` VARCHAR(191) NOT NULL,
@@ -109,6 +109,7 @@ CREATE TABLE `tbl_aquisicao` (
     `createdAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NULL,
     `id_entidade_fk` VARCHAR(191) NOT NULL,
+    `status` ENUM('pendente', 'concluido', 'cancelado') NULL,
 
     INDEX `tbl_aquisicao_id_entidade_fkey`(`id_entidade_fk`),
     PRIMARY KEY (`id_aquisicao`)

@@ -87,6 +87,7 @@ export class MedicineRepositories implements IMedicineRepositories
             validade: medicines.validade_medicamento,
             quantidade_disponivel: medicines.quantidade_disponivel_medicamento,
             deposito:{
+                id_deposito: medicines.deposito.id_entidade,
                 firma_deposito: medicines.deposito.firma_entidade,
                 logradouro: medicines.deposito.endereco_entidade[0].logradouro,
                 rua: medicines.deposito.endereco_entidade[0].rua,

@@ -79,5 +79,6 @@ class UsersMagementController
             return res.status(500).json({success: false, message: "Estamos tentando resolver este problema, tente novamente"})    
         }
     }
+
 }
 export {UsersMagementController}

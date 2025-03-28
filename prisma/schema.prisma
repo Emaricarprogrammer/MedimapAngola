@@ -166,5 +166,5 @@ enum Tipo_aquisicao {
 }
 enum Tipo_acesso{
   admin 
-  gestor
+  
 }

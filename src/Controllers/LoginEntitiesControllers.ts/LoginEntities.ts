@@ -60,14 +60,14 @@ export class LoginEntity
         const accessToken = JwtOperation.generateToken({id_entidade: userInfo.id, role})
         const refreshToken = JwtOperation.generateRefreshToken({id_entidade: userInfo.id, role})
 
-        res.cookie("newToken", refreshToken, {
+        res.cookie("newToken", refreshToken,{
             httpOnly: true,
             secure: process.env.NODE_ENV == "dev" ? false : true,
             sameSite: "lax",
             maxAge: 7*24*60*60*100
         })
 
-        return res.status(200).json({success: true, logged: true, accessToken})
+        return res.status(200).json({success: true, logged: true, accessToken, page: process.env.TESTE})
     }
     catch(error: any)
     {
