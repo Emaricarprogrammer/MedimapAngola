@@ -135,15 +135,15 @@ export class UpdateEntityController {
 
             if (logradouro)
             {
-                AdressUpdateData.logradouro = logradouro
+                AdressUpdateData.logradouro = validator.escape(logradouro)
             }
             if (rua)
             {
-                AdressUpdateData.rua = rua
+                AdressUpdateData.rua = validator.escape(rua)
             }
             if (cidade)
             {
-                AdressUpdateData.cidade = cidade
+                AdressUpdateData.cidade = validator.escape(cidade)
             }
             if (numero)
             {
@@ -151,10 +151,9 @@ export class UpdateEntityController {
             }
             if (pais)
             {
-                AdressUpdateData.pais = pais
+                AdressUpdateData.pais = validator.escape(pais)
             }
 
-                
             if (Object.keys(AccountUpdateData).length > 0) {
                 const AccountUpdated = await AccountRepositoriesInstance.updateAccount(EntityExists.id_conta_fk, AccountUpdateData) 
                 if (!AccountUpdated) {

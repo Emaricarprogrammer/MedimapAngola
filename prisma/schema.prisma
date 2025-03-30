@@ -118,6 +118,7 @@ model Aquisicao {
   quantidade_aquisicao  String
   data_aquisicao        DateTime
   tipo_aquisicao        Tipo_aquisicao
+  total_compra          Float
   createdAt             DateTime? @default(now())
   updatedAt             DateTime? @updatedAt
   id_entidade_fk        String

@@ -18,7 +18,7 @@ class DepositsOrders
              {
                 return res.status(500).json({ success: false, message: "Sem pedidos de momento." })
              }
-             return res.status(200).json({success: true, response: detailsOrders})
+             return res.status(200).json({success: true, response: detailsOrders.allRequests, pagination: detailsOrders.pagination})
         } catch (error)
         {
             console.error("Houve um erro: ", error)

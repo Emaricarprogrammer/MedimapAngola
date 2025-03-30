@@ -14,7 +14,6 @@ export class DeleteMedicineController
             const {id_medicamento} = req.params
             if (!id_medicamento)
             {
-                console.log("ID nao fornecido")
                 return res.status(400).json({success: false, message: "Estamos tentando revolver este problema, por favor tente novamente."})
             }
             const VerifyMedicine = await ValidatorProps.MedicineExists(id_medicamento)

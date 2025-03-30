@@ -11,18 +11,14 @@ export class FindAllMedicinesController
     {
         try
         {
-            const {page = 1, limit = 10} = req.query
-            const pageNumer = parseInt(page as string, 10)
-            const pageSize = parseInt(limit as string, 10)
-            const skip = (pageNumer - 1) * pageSize
-            
-            const MedicineResult = await MedicineRepositoryInstance.findAllMedicine(skip, pageSize)
-            if (!MedicineResult)
+
+            const MedicineResult = await MedicineRepositoryInstance.findAllMedicine()
+            if (!MedicineResult || MedicineResult == null)
             {
-                return res.status(404).json({success: false, message: "Ooooops! Infelizmente não conseguimos encontrar este medicamento"})
+                return res.status(404).json({success: false, message: "Ooooops! Infelizmente não conseguimos retornar estes medicamento"})
             }
           
-            return res.status(200).json({success: true, response: MedicineResult})
+            return res.status(200).json({success: true, response: MedicineResult.MedicineResults, pagination: MedicineResult.pagination})
     
         } catch (error) {
             return res.status(500).json({success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde."})

@@ -1,15 +1,16 @@
 import { Request, Response } from "express" 
 import { PrismaClient } from "@prisma/client" 
-import { EntitiesRepositories } from "../../../Repositories/EntityRepository/EntityRepository" 
 import { calculateDistance } from "../../../Utils/providers/HaversineAlgorithm/algorithm" 
+import { GeneralDepositsRepositories } from "../../../Repositories/DepositRepositories/generalRepositories"
 
 const prisma: PrismaClient = new PrismaClient() 
-const EntitiesRepositoriesInstance: EntitiesRepositories = new EntitiesRepositories(prisma) 
+const DepositsRepositoriesInstance: GeneralDepositsRepositories = new GeneralDepositsRepositories(prisma) 
+
 
 export default class SearchDepositsController {
     static async search(req: Request, res: Response): Promise<Response> {
         try {
-            const { longitude, latitude, distance } = req.query 
+            let { longitude, latitude, distance } = req.query 
 
             if (!longitude || !latitude || !distance) {
                 return res.status(400).json({
@@ -32,22 +33,22 @@ export default class SearchDepositsController {
             if (latitudeNum < -90 || latitudeNum > 90 || longitudeNum < -180 || longitudeNum > 180) {
                 return res.status(400).json({
                     success: false,
-                    message: "Os valores de latitude e longitude são inválidos.",
+                    message: "Os seus valores de coordenada são inválidos.",
                 }) 
             }
 
-            const depositsResults = await EntitiesRepositoriesInstance.findNearDeposits() 
+            const depositsResults = await DepositsRepositoriesInstance.findDeposits() 
 
-            if (!depositsResults || depositsResults.length === 0) {
+            if (!depositsResults || !depositsResults.data || depositsResults.data.length === 0) {
                 return res.status(404).json({
                     success: false,
                     message: "Não conseguimos encontrar nenhum depósito, por favor recarregue a página.",
-                }) 
+                });
             }
 
             const nearDeposits = [] 
 
-            for (const deposit of depositsResults) {
+            for (const deposit of depositsResults.data) {
                 // Verifica se a geolocalização é válida
                 if (
                     !deposit.geolocalizacao_entidade ||
@@ -85,7 +86,7 @@ export default class SearchDepositsController {
                 }) 
             }
 
-            return res.status(200).json({ success: true, response: nearDeposits }) 
+            return res.status(200).json({ success: true, response: nearDeposits, pagination: depositsResults.pagination }) 
         } catch (error) {
             console.error("Erro ao buscar depósitos próximos: ", error) 
             return res.status(500).json({

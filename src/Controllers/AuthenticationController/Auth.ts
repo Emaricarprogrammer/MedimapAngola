@@ -7,14 +7,14 @@ dotenv.config()
 
 type JwtPayload = {
     id_entidade: string;
-    role: string;
+    access_level: string;
 }
 export class AuthenticationController
 {
     static async Authentication(req: Request, res: Response, next: NextFunction): Promise<any>
     {
         try {
-            const token = req.headers.authorization?.split(' ')[1]
+            const token = req.headers.authorization?.split(' ')[1] || req.cookies.acessToken
             if (!token)
             {
                 return res.status(401).json({success: false, message:"Oooops! parece que você não está autorizado a acessar este recurso, por favor tente novamente."})
@@ -29,14 +29,13 @@ export class AuthenticationController
             {
                 return res.status(401).json({success: false, message: "Ooooops! Parece que a sua sessão está expirada"})
             }
-            console.log(error.message)
             return res.status(401).json({ success: false, message: "Ooooops! Parece que você não tem autorização para acessar esta página." });
         }
     }
 
     static async AdminAuthentication(req: Request, res: Response, next: NextFunction): Promise<any>
     {
-        if (req.body.user.role != "admin")
+        if (req.body.user.access_level != "admin")
         {
             console.log(req.body.user)
             return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
@@ -46,7 +45,7 @@ export class AuthenticationController
 
     static async PharmacyAuthentication(req: Request, res: Response, next: NextFunction): Promise<any>
     {
-        if (req.body.user.role != "farmacia")
+        if (req.body.user.access_level != "farmacia")
         {
             return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
         }
@@ -55,7 +54,7 @@ export class AuthenticationController
 
     static async DepositAuthentication(req: Request, res: Response, next: NextFunction): Promise<any>
     {
-        if (req.body.user.role != "deposito")
+        if (req.body.user.access_level != "deposito")
         {
             return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
         }

@@ -21,7 +21,6 @@ export class ValidatorProps
         const verify = await prisma.contactos.findFirst({where:{contacto: number}})
         return verify
       }
-
       static async passwordExists(password: string)
       {
         return await prisma.contas.findFirst({where:{password: password}})

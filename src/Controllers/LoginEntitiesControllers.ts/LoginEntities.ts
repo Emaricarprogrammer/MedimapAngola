@@ -32,12 +32,12 @@ export class LoginEntity
             return res.status(401).json({success: false, message: "Email ou senha inválido"})
         }
         let userInfo: any
-        let role: any
+        let access_level: any
 
         const IsAdmin = await prisma.admin.findFirst({where:{id_conta_fk: AccountExists.id_conta}})
         if (IsAdmin)
         {
-            role = IsAdmin.nivel_acesso === "admin"?"admin":"gestor"
+            access_level = IsAdmin.nivel_acesso === "admin"?"admin":"gestor"
             userInfo = {
                 id: IsAdmin.id_admin,
                 nivel_acesso: IsAdmin.nivel_acesso
@@ -50,24 +50,31 @@ export class LoginEntity
             {
                 return res.status(404).json({sucess: false, message: "Estamos com problemas em encontrar a sua conta, por favor verifique as suas crédenciais"})
             }
-            role = IsEntity.tipo_entidade === "farmacia"?"farmacia":"deposito"
+            access_level = IsEntity.tipo_entidade === "farmacia"?"farmacia":"deposito"
             userInfo =
             {
                 id: IsEntity.id_entidade,
                 tipo_entidade: IsEntity.tipo_entidade
             }
         }
-        const accessToken = JwtOperation.generateToken({id_entidade: userInfo.id, role})
-        const refreshToken = JwtOperation.generateRefreshToken({id_entidade: userInfo.id, role})
+        const accessToken = JwtOperation.generateToken({id_entidade: userInfo.id, access_level})
+        const refreshToken = JwtOperation.generateRefreshToken({id_entidade: userInfo.id, access_level})
 
+        res.cookie("acessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV == "dev" ? false : true,
+            sameSite: "lax",
+            maxAge: 15*60*1000
+
+        }),
         res.cookie("newToken", refreshToken,{
             httpOnly: true,
             secure: process.env.NODE_ENV == "dev" ? false : true,
             sameSite: "lax",
-            maxAge: 7*24*60*60*100
+            maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
-        return res.status(200).json({success: true, logged: true, accessToken, page: process.env.TESTE})
+        return res.status(200).json({success: true, logged: true, access_level: access_level})
     }
     catch(error: any)
     {
@@ -75,4 +82,27 @@ export class LoginEntity
         return res.status(500).json({ success: false, message:"Estamos tentando resolver este problema por favor, tente novamente mais tarde." })
     }
 }
+
+    static async Logout(req: Request, res: Response):Promise<Response>
+    {
+        try
+        {
+            const {newToken} = req.cookies
+            console.log(res.getHeaders())
+            if (!newToken)
+            {
+                return res.status(400).json({success: false, message: "Ocorreu um erro ao terminar esta sessão"})
+            }
+            res.clearCookie("newToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV == "dev" ? false : true,
+                sameSite:"lax"
+            })
+            return res.status(200).json({success: true, message: "Sessão terminada com sucesso!"})
+        } catch (error: any)
+        {
+            console.error("Houve um erro: ", error.message)
+        return res.status(500).json({ success: false, message:"Estamos tentando resolver este problema por favor, tente novamente mais tarde." })    
+        }
+    }
 }

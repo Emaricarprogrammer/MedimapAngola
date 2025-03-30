@@ -16,7 +16,7 @@ async function main() {
 
     try {
         const ipAddresses = await resolveDNS(domain);
-        console.log(`Endereços IP para ${domain}:`, ipAddresses);
+        console.log(`Endereços IP paa ${domain}:`, ipAddresses);
     } catch (error) {
         console.error('Erro ao resolver o DNS:', error);
     }

@@ -14,6 +14,7 @@ const EntitiesRepositoryInstance: EntitiesRepositories = new EntitiesRepositorie
 const ContactsRepositoryInstance: ContactsRepository = new ContactsRepository(prisma)
 const AdressRepositoryInstance: AdressRepositories = new AdressRepositories(prisma)
 const GeolocationRepositoryInstance: GeolocationRepository = new GeolocationRepository(prisma)
+
 export default class DeleteEntityController
 {
     static async deleteEntity(req: Request, res: Response): Promise<Response>
@@ -22,14 +23,12 @@ export default class DeleteEntityController
             const {id_entidade} = req.params
             if (!id_entidade)
             {
-                console.log("Id invalido")
                 return res.status(400).json({success: false, message: "Estamos tentando resolver este problema, por favor tente novamente."})
             }
 
             const EntityExists = await ValidatorProps.EntityExists(id_entidade)
             if (!EntityExists)
             {
-                console.log("Usuário não encontrado")
                 return res.status(404).json({success: false, message: "Ooooops! Não foi possivel encontrar este usuário, por favor tente novamente."})
             }
 

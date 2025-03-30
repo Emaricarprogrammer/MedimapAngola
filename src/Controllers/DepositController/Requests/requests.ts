@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client"
 import { RequestsRepositories } from "../../../Repositories/PharmacyRepository/requestsRepositories"
 import validator from "validator"
 import dayjs, { Dayjs } from "dayjs"
+import { ValidatorProps } from "../../../Utils/Validators/validators/validators"
 
 const prisma: PrismaClient = new PrismaClient()
 const RequestsRepositoriesInstane: RequestsRepositories = new RequestsRepositories(prisma)
@@ -15,14 +16,14 @@ class RequestsMedicineController
         {
             const {
                 quantidade_aquisicao,
+                total_compra,
                 id_entidade_fk,
                 id_medicamento
             } = req.body
-            console.log(req.body)
-            const fields =
-            [
+            const fields=[
                 "quantidade_aquisicao",
                 "id_entidade_fk",
+                "total_compra",
                 "id_medicamento"
             ].filter((field) => !req.body[field])
             if (fields.length > 0)
@@ -34,19 +35,34 @@ class RequestsMedicineController
             }
             if (!validator.isInt(quantidade_aquisicao))
             {
-                console.log("aqui")
                 return res.status(400).json({
                     success: false,
                     message: "Por favor, verifique se informou correctamente a quantidade de medicamento desejado.",
                 })   
             }
-            const result = await prisma.$transaction(async(tx) => {
+            if (!await ValidatorProps.EntityExists(id_entidade_fk))
+            {
+                return res.status(400).json({
+                    success: false,
+                    message: "Não conseguimos encontrar este depósito.",
+                })  
+            }
+            if (!await ValidatorProps.MedicineExists(id_medicamento))
+            {
+                return res.status(400).json({
+                    success: false,
+                    message: "Não conseguimos encontrar este medicamento.",
+                })
+            }
+
+            const result = await prisma.$transaction(async(tx) => { 
                 const requestMedicine = await RequestsRepositoriesInstane.createRequest(
                     {
                         quantidade_aquisicao: quantidade_aquisicao,
                         data_aquisicao: new Date,
                         tipo_aquisicao: "emediata",
-                        id_entidade_fk: id_entidade_fk
+                        id_entidade_fk: id_entidade_fk,
+                        total_compra: total_compra
                     }, tx
                 )
                 if (!requestMedicine)

@@ -7,7 +7,6 @@ const runServer = async () => {
       console.log(`Servidor online, ouvindo a porta: ${portURI}`)
     })
   } catch (error) {
-    console.error("Erro ao iniciar o servidor:", error)
     process.exit(1)
   }
 }

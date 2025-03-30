@@ -20,9 +20,10 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
         return await prismaClient.aquisicao_medicamentos.create({data:{...requestsDatas}})
     }
 
-    async getOrdersDetails() {
+    async getOrdersDetails()
+    {
         const pages = 1 
-        const limit = 8 
+        const limit = 4
     
         const skip = (pages - 1) * limit 
         const totalRequests = await this.prisma.aquisicao_medicamentos.count() 
@@ -44,7 +45,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
                     }
                 },
                 medicamento: true
-            }
+            }, orderBy:{createdAt: "desc"}
         })
 
         const allOrders = await this.prisma.aquisicao_medicamentos.findMany({
@@ -71,7 +72,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
             }
         }) 
     
-        return orders.map(order => ({
+        const allRequests = orders.map(order => ({
             id_farmacia: order.aquisicao.entidade.id_entidade,
             firma_farmacia: order.aquisicao.entidade.firma_entidade,
             contacto: order.aquisicao.entidade.contacto_entidade[0].contacto,
@@ -82,18 +83,25 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
                 cidade: order.aquisicao.entidade.endereco_entidade[0].cidade,
                 numero: order.aquisicao.entidade.endereco_entidade[0].numero
             },
-
-            Pedidos_farmacia: {
-                pedidos: allOrders.map(pedido => ({
+            pedidos_farmacia: allOrders.map(pedido => ({
                     id_aquisicao: pedido.aquisicao.id_aquisicao,
                     total_medicamentos: pedido.aquisicao.quantidade_aquisicao,
                     nome_medicamento: pedido.medicamento.nome_comercial_medicamento,
                     preco: pedido.medicamento.preco_medicamento + "kz",
-                    validade: pedido.medicamento.validade_medicamento,
+                    validade: dayjs(pedido.medicamento.validade_medicamento).format("DD/MM/YY"),
                     status: pedido.aquisicao.status
-                }))
+            }))
+        }))
+
+        return {
+            allRequests,
+            pagination: {
+                totalPages,
+                totalItems: totalRequests,
+                itemsPerPage: limit,
+                currentPage: pages
             }
-        })) 
+        }
     }
 
     async setStatus(status: "concluido" | "cancelado", id_aquisicao: string): Promise<any> {
@@ -104,32 +112,51 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
     async getOrdersDetailsPharmacy(id_farmacia: string)
     {
         const pharmacyOrders = await this.prisma.entidades.findMany({where:{id_entidade:id_farmacia}, include:{aquisicao_medicamento: true}})
+        const pages = 1 
+        const limit = 9 
+    
+        const skip = (pages - 1) * limit 
+        const totalRequests = await this.prisma.aquisicao_medicamentos.count({where:{aquisicao:{id_entidade_fk: id_farmacia}}, orderBy:{createdAt:"desc"}}) 
+        const totalPages = Math.ceil(totalRequests / limit)
+
         if (pharmacyOrders.length == 0)
         {
             return null
         }
 
-        const allOrders = await this.prisma.aquisicao.findMany({where:{id_entidade_fk: id_farmacia}, include:{aquisicao_medicamento:{include:{medicamento: true}}}})
+        const allOrders = await this.prisma.aquisicao.findMany({where:{id_entidade_fk: id_farmacia}, include:{aquisicao_medicamento:{include:{medicamento: true}}}, skip: skip, take: limit})
         const totalOrders = await this.prisma.aquisicao.count({where:{id_entidade_fk: id_farmacia}})
         if (totalOrders == 0)
         {
             return null
         }
-        return pharmacyOrders.map(order => ({
+
+        const allPharmacyOrders =  pharmacyOrders.map(order => ({
             pedidos: allOrders.map(pedido => ({
                 data_aquisicao: dayjs(pedido.data_aquisicao).format("DD:MM:YY: HH:MM:ss"),
                 quantidade_medicamentos: pedido.quantidade_aquisicao,
                 id_aquisicao: pedido.id_aquisicao,
+                status: pedido.status,
                 medicamento: pedido.aquisicao_medicamento.map(medicamento => ({
                 id_medicamento: medicamento.medicamento.id_medicamento,
                 nome_medicamento: medicamento.medicamento.nome_comercial_medicamento,
                 preco: medicamento.medicamento.preco_medicamento + "kz",
-                validade: medicamento.medicamento.validade_medicamento,
-                status: true
+                validade: dayjs(medicamento.medicamento.validade_medicamento).format("DD/MM/YY"),
+                total_compra: pedido.total_compra
             }))
-                }))
-            ,
-            totalPedidos: totalOrders
+                })),
+            totalPedidos: totalOrders,
         }))
+
+        return {
+            allPharmacyOrders,
+            pagination: {
+                totalPages,
+                totalItems: totalRequests,
+                itemsPerPage: limit,
+                currentPage: pages
+            }
+        }
     } 
 }
+
