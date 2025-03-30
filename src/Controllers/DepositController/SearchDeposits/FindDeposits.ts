@@ -70,7 +70,7 @@ export default class SearchDepositsController {
                     deposit.geolocalizacao_entidade.latitude,
                     deposit.geolocalizacao_entidade.longitude
                 )
-
+                
                 // Verifica se o depósito está dentro da distância especificada
                 if (depositDistance <= distanceNum) {
                     nearDeposits.push({

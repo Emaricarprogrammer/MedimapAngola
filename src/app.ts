@@ -35,7 +35,7 @@ if (process.env.NODE_ENV == "dev")
 if (process.env.NODE_ENV == "dev")
 { 
   App.use(cors({
-    //origin:"http://localhost:3000",
+    origin:"*",
     credentials: true,
   }))
 }
