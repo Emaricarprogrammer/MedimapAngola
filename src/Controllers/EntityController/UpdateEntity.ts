@@ -89,7 +89,12 @@ export class UpdateEntityController {
                 AccountUpdateData.email = email 
             }
 
-            if (password && newPassword) {
+            if (password) {
+            if (!newPassword)
+            {
+                return res.status(400).json({ success: false, message: "Por favor, informe a nova senha." }) 
+
+            }
                 const returnedDatas = await prisma.contas.findFirst({
                     where: { id_conta: EntityExists.id_conta_fk }
                 });

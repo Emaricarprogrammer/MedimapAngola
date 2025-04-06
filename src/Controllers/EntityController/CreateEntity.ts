@@ -186,8 +186,16 @@ export class CreateEntityController {
 
         const accessToken = await JwtOperation.generateToken({
           id_entidade: createdEntity.id_entidade,
-          role: createdEntity.tipo_entidade 
+          id_conta: accountCreated.id_conta,
+          access_level: createdEntity.tipo_entidade 
         })
+        res.cookie("acessToken", accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV == "dev" ? false : true,
+          sameSite: "lax",
+          maxAge: 15*60*1000
+
+      })
         // Dados para retorno
         return {
           id_entidade: createdEntity.id_entidade,
@@ -203,11 +211,10 @@ export class CreateEntityController {
           pais: adressCreated.pais,
           latitude: geolocationCreated.latitude,
           longitude: geolocationCreated.longitude,
-          createdAt: dayjs(createdEntity.createdAt).format("DD/MM/YY: HH:mm:ss"),
-          id_conta_fk: accountCreated.id_conta,
-          acessToken: accessToken
+          createdAt: dayjs(createdEntity.createdAt).format("DD-MM-YY: HH:mm:ss"),
+          id_conta_fk: accountCreated.id_conta
         } 
-      }, { timeout: 10000 }) 
+      }, { timeout: 20000 }) 
 
       // Envio de email de boas-vindas
       await Emailsent(email, HTML) 
@@ -216,8 +223,8 @@ export class CreateEntityController {
       console.log(result)
       return res.status(201).json({
         success: true,
-        message: "Entidade criada com sucesso!",
-        data: result,
+        message: `conta ${tipo_entidade} criada com sucesso!`,
+        response: result,
       }) 
     } catch (error) {
       console.error("Erro ao criar entidade:", error) 

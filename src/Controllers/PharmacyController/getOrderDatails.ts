@@ -22,7 +22,7 @@ class PharmacyOrders
              const detailsOrders = await RequestsRepositoriesInstane.getOrdersDetailsPharmacy(id_farmacia)
              if (detailsOrders == null || !detailsOrders)
              {
-                return res.status(500).json({ success: false, message: "Sem pedidos de momento." })
+                return res.status(200).json({ success: false, message: "Sem pedidos de momento." })
              }
              return res.status(200).json({success: true, response: detailsOrders})
         } catch (error)

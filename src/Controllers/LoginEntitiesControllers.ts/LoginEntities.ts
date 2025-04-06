@@ -34,18 +34,19 @@ export class LoginEntity
         let userInfo: any
         let access_level: any
 
-        const IsAdmin = await prisma.admin.findFirst({where:{id_conta_fk: AccountExists.id_conta}})
+        const IsAdmin = await prisma.admin.findFirst({where:{id_conta_fk: AccountExists.id_conta}, include:{credenciais_admin: true}})
         if (IsAdmin)
         {
             access_level = IsAdmin.nivel_acesso === "admin"?"admin":"gestor"
             userInfo = {
                 id: IsAdmin.id_admin,
+                id_conta_fk: IsAdmin.id_conta_fk,
                 nivel_acesso: IsAdmin.nivel_acesso
-            }
+            } 
         }
         else
         {
-            const IsEntity = await prisma.entidades.findFirst({where:{id_conta_fk: AccountExists.id_conta}})
+            const IsEntity = await prisma.entidades.findFirst({where:{id_conta_fk: AccountExists.id_conta}, include:{credenciais_entidades:true}})
             if(!IsEntity)
             {
                 return res.status(404).json({sucess: false, message: "Estamos com problemas em encontrar a sua conta, por favor verifique as suas crédenciais"})
@@ -54,27 +55,36 @@ export class LoginEntity
             userInfo =
             {
                 id: IsEntity.id_entidade,
+                id_conta_fk: IsEntity.id_conta_fk,
                 tipo_entidade: IsEntity.tipo_entidade
             }
         }
-        const accessToken = JwtOperation.generateToken({id_entidade: userInfo.id, access_level})
-        const refreshToken = JwtOperation.generateRefreshToken({id_entidade: userInfo.id, access_level})
+        const accessToken = JwtOperation.generateToken({id_entidade: userInfo.id,id_conta: userInfo.id_conta_fk, access_level})
+        const refreshToken = JwtOperation.generateRefreshToken({id_entidade: userInfo.id,id_conta: userInfo.id_conta_fk, access_level})
+        const expireDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 
-        res.cookie("acessToken", accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV == "dev" ? false : true,
-            sameSite: "lax",
-            maxAge: 15*60*1000
-
-        }),
-        res.cookie("newToken", refreshToken,{
+        res.cookie("refreshToken", refreshToken,{
             httpOnly: true,
             secure: process.env.NODE_ENV == "dev" ? false : true,
             sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
-        return res.status(200).json({success: true, logged: true, access_level: access_level})
+        const existingToken = await prisma.refreshTokens.findFirst({where:{id_conta_fk: AccountExists.id_conta}})
+        if(existingToken)
+        {
+            await prisma.refreshTokens.delete({where:{id_refreshToken: existingToken.id_refreshToken}})
+        }
+       await prisma.refreshTokens.create({
+            data:{
+                token: refreshToken,
+                id_conta_fk: AccountExists.id_conta,
+                expiracao: expireDate,
+                usado: false
+            }
+        })
+
+        return res.status(200).json({success: true, logged: true, accessToken: accessToken})
     }
     catch(error: any)
     {
@@ -87,22 +97,23 @@ export class LoginEntity
     {
         try
         {
-            const {newToken} = req.cookies
-            console.log(res.getHeaders())
-            if (!newToken)
+            const {refreshToken} = req.cookies
+
+            if (!refreshToken)
             {
                 return res.status(400).json({success: false, message: "Ocorreu um erro ao terminar esta sessão"})
             }
-            res.clearCookie("newToken", {
+
+            res.clearCookie("refreshToken",{
                 httpOnly: true,
                 secure: process.env.NODE_ENV == "dev" ? false : true,
-                sameSite:"lax"
+                 sameSite: "lax"
             })
             return res.status(200).json({success: true, message: "Sessão terminada com sucesso!"})
         } catch (error: any)
         {
             console.error("Houve um erro: ", error.message)
-        return res.status(500).json({ success: false, message:"Estamos tentando resolver este problema por favor, tente novamente mais tarde." })    
+            return res.status(500).json({ success: false, message:"Estamos tentando resolver este problema por favor, tente novamente mais tarde." })    
         }
     }
 }

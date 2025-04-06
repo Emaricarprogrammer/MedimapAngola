@@ -51,7 +51,7 @@ export class DeleteAdminController {
           // Deleção da conta associada
           await AccountRepositoryInstance.deleteAccount(id_account) 
         },
-        { timeout: 10000 } // Timeout de 5 segundos para a transação
+        { timeout: 20000 } // Timeout de 5 segundos para a transação
       ) 
 
       // Resposta de sucesso após a deleção

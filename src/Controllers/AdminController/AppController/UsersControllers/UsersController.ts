@@ -9,13 +9,25 @@ class UsersMagementController
     static async CountUsers(req: Request, res: Response):Promise<Response>
     {
         try {
-            const Users: number = await prisma.entidades.count()
-            if (!Users)
+            const allUsers: number = await prisma.entidades.count()
+            if (!allUsers)
             {
                 return res.status(400).json({success: false, message: "Oooops! Não foi possível retornar estes dados, por favor tente novamente."})
             }
 
-            return res.status(200).json({success: true,message:"Total de contas no sistema",response: Users})
+            const allPharmacy : number = await prisma.entidades.count({where:{tipo_entidade: "farmacia"}})
+            if (!allPharmacy)
+            {
+                return res.status(400).json({success: false, message: "Oooops! Não foi possível retornar os dados das farmácias, por favor tente novamente."})
+            }
+
+            const allDeposits: number = await prisma.entidades.count({where:{tipo_entidade:"deposito"}})
+            if (!allDeposits)
+            {
+                return res.status(400).json({success: false, message: "Oooops! Não foi possível retornar os dados dos depósitos, por favor tente novamente."})
+            }
+
+            return res.status(200).json({success: true,message:"Total de contas no sistema",response: `Usuários: ${allUsers}, farmácias: ${allPharmacy}, depósitos: ${allDeposits}`})
 
         } catch (error: any)
         {

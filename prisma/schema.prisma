@@ -15,6 +15,7 @@ model Contas{
   admin                 Admin[]
   entidades             Entidades[]
   recuperacaoSenha      Recuperacao_senha[]
+  refreshTokens         RefreshTokens[]
   @@map("tbl_contas")
 }
 
@@ -144,13 +145,23 @@ model Aquisicao_medicamentos {
 
 model Recuperacao_senha {
   id_recuperacao_senha  String    @id @default(uuid())
-  token                 String    @unique()
+  token                 String    @db.Text
   expiracao             DateTime
   usado                 Boolean
   id_conta_fk           String?
   conta                 Contas?   @relation(fields: [id_conta_fk], references: [id_conta], onDelete: Cascade)
   @@map("tbl_recuperacao_senha")
 }
+
+model RefreshTokens{
+  id_refreshToken       String    @id @default(uuid())
+  token                 String    @db.Text
+  expiracao             DateTime
+  usado                 Boolean?
+  id_conta_fk           String
+  conta                 Contas?   @relation(fields: [id_conta_fk], references: [id_conta], onDelete: Cascade)
+  @@map("tbl_refreshTokens")
+} 
 
 enum Tipo_entidades {
   farmacia

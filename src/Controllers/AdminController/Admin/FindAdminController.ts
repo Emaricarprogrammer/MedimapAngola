@@ -24,14 +24,13 @@ export default class FindAdminController
         return res.status(400).json({ success: false, message: "Ooooops! Não conseguimos encontrar este usário, por favor tente novamente." });
       }
       const AdminDatas = {
-        id_admin: Results?.id_admin,
-        username: Results?.username,
-        nivel_acesso: Results?.nivel_acesso,
-        email: Results?.email,
-        id_conta: Results?.id_conta,
-        id_conta_fk: Results?.id_conta_fk,
-        createdAt: dayjs(Results?.createdAt).format("YYYY-MM-DD HH:mm:ss"),
-        updatedAt: dayjs(Results?.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+        id_admin: Results.id_admin,
+        username: Results.username,
+        nivel_acesso: Results.nivel_acesso,
+        email: Results.email,
+        id_conta_fk: Results.id_conta_fk,
+        createdAt: dayjs(Results.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+        updatedAt: dayjs(Results.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
       }
       return res.status(200).json({ success: true, response: AdminDatas });
 

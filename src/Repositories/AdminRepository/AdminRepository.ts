@@ -19,18 +19,18 @@ export class AdminRepository implements IAdminRespository {
       where:{id_admin: id_admin},
       include:{credenciais_admin:true}
     })
-    if (adminResults == null)
+    if (!adminResults)
     {
       return null
     }
     const AdminDatasResponse = {
-      id_admin: adminResults?.id_admin,
-      username: adminResults?.username,
-      email: adminResults?.credenciais_admin.email,
-      nivel_acesso: adminResults?.nivel_acesso,
-      id_conta_fk: adminResults?.id_conta_fk,
-      createdAt: adminResults?.createdAt,
-      updatedAt: adminResults?.updatedAt
+      id_admin: adminResults.id_admin,
+      username: adminResults.username,
+      email: adminResults.credenciais_admin.email,
+      nivel_acesso: adminResults.nivel_acesso,
+      id_conta_fk: adminResults.id_conta_fk,
+      createdAt: adminResults.createdAt,
+      updatedAt: adminResults.updatedAt
     }
     return AdminDatasResponse
     
@@ -42,10 +42,6 @@ export class AdminRepository implements IAdminRespository {
         credenciais_admin: true
       }
     })
-    if (AdminsResults == null)
-    {
-      return null
-    }
     return AdminsResults.map(admins => ({
       id_admin: admins.id_admin,
       username: admins.username,

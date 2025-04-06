@@ -70,41 +70,40 @@ export class UpdateAdminAccountController
             AccountUpdateData.email = email
           }
     
-        if (password  && newPassword) {
-                const returnedDatas = await Prisma.contas.findFirst({
-                    where: { id_conta: AdminExits.id_conta_fk }
-                });
-            
-                if (!returnedDatas) {
-                    return res.status(400).json({ success: false, message: "Conta não encontrada." });
-                }
-            
-                // Comparar senha atual
-                const verifyPassword = await PasswordService.PasswordCompare(password , returnedDatas.password);
-                if (!verifyPassword) {
-                    return res.status(400).json({ success: false, message: "A sua senha atual está incorreta!" });
-                }
-            
-                // Validar nova senha
-                const validatePassword = ValidatorProps.validatePassword(newPassword);
-                if (validatePassword == false) {
-                    return res.status(400).json({
-                        success: false,
-                        message: "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, um número e um caractere especial.",
-                    });
-                }
-            
-                // Gerar hash da nova senha
-                const hashedPassword = await PasswordService.hashPassword(newPassword);
-                AccountUpdateData.password = hashedPassword;
+          if (password) {
+            if (!newPassword) {
+              return res.status(400).json({
+                success: false,
+                message: "Por favor informe a sua nova senha.",
+              });
             }
-          if (Object.keys(AccountUpdateData).length > 0)
-          {
-            const AccountUpdated = await AccountRepositoryInstance.updateAccount(AdminExits.id_conta_fk, AccountUpdateData);
-            if (!AccountUpdated)
-            {
-              return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
+          
+            const returnedDatas = await Prisma.contas.findFirst({
+              where: { id_conta: AdminExits.id_conta_fk },
+            });
+          
+            if (!returnedDatas) {
+              return res.status(400).json({ success: false, message: "Conta não encontrada." });
             }
+          
+            // Comparar senha atual
+            const verifyPassword = await PasswordService.PasswordCompare(password, returnedDatas.password);
+            if (!verifyPassword) {
+              return res.status(400).json({ success: false, message: "A sua senha atual está incorreta!" });
+            }
+          
+            // Validar nova senha
+            const validatePassword = ValidatorProps.validatePassword(newPassword);
+            if (await validatePassword == false) {
+              return res.status(400).json({
+                success: false,
+                message: "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, um número e um caractere especial.",
+              });
+            }
+          
+            // Gerar hash da nova senha
+            const hashedPassword = await PasswordService.hashPassword(newPassword);
+            AccountUpdateData.password = hashedPassword;
           }
     
           if (Object.keys(AdminUpdateData).length > 0)

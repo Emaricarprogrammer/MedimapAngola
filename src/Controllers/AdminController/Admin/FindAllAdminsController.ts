@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express"
+import { AdminRepository } from "../../../Repositories/AdminRepository/AdminRepository"
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 const AdminRepositoryInstance = new AdminRepository(prisma)
@@ -12,14 +12,9 @@ export class FindAllAdminsController
         try
         {
             const AdminsDatas = await AdminRepositoryInstance.findAllAdmin()
-            if(!AdminsDatas)
+            if(AdminsDatas.length == 0)
             {
-                console.log(AdminsDatas)
-                return res.status(400).json({success: false, message:"Ooooooops! Não foi possível encontrar estes usuário, por favor tente novamente"})
-            }
-            if(AdminsDatas === null)
-            {
-                return res.status(400).json({success: false, message:"Não foi possível encontrar estes usuário, por favor tente novamente"})
+                return res.status(400).json({success: false, message:"Ooooooops! Sem administradores por enquanto."})
             }
             return res.status(200).json({success: 200, response: AdminsDatas})
         }

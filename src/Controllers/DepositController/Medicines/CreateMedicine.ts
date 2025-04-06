@@ -59,14 +59,14 @@ export class CreateMedicineController {
       if (!validator.isFloat(preco_medicamento.toString(), { min: 0})) {
         return res.status(400).json({
           success: false,
-          message: "O preço deve ser um número válido maior ou igual a zero.",
+          message: "Por favor verifique se informou correctamente o preço.",
         });
       }
 
       if (!validator.isInt(quantidade_disponivel.toString(), { min: 0 })) {
         return res.status(400).json({
           success: false,
-          message: "A quantidade deve ser um número inteiro maior ou igual a zero.",
+          message: "Por favor verifique se informou correctamente a quantidade de medicamento.",
         });
       }
       /*
@@ -87,7 +87,7 @@ export class CreateMedicineController {
       
       const UploadResults = await cloudinary.uploader.upload(imagem.path,{
         folder: "medicamentos_imgs",
-        public_id: nome_comercial,
+        public_id: "medicamento",
         resource_type: "image"
       })
 
@@ -101,6 +101,14 @@ export class CreateMedicineController {
       fs.unlinkSync(imagem.path)
       // Escapar caracteres para evitar XSS
       const sanitizedData = ValidatorProps.MedicineInputsSanitized(req.body)
+
+      if (!await ValidatorProps.EntityExists(id_entidade_fk))
+      {
+        return res.status(400).json({
+          success: false,
+          message: "Não conseguimos encontrar uma conta associada .",
+        });
+      }
 
       // Início da transação Prisma
       const result = await prisma.$transaction(async (tx) => {

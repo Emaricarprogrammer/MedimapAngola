@@ -6,11 +6,11 @@ import { GeneralDepositsRepositories } from "../../Repositories/DepositRepositor
 
 const prisma: PrismaClient = new PrismaClient()
 
-class MyProfileController
+class GetDepositController
 {
     private static DepositsRepositoriesInstance: GeneralDepositsRepositories = new GeneralDepositsRepositories(prisma)
 
-    static async myProfile(req: Request, res: Response): Promise<Response>
+    static async getDeposit(req: Request, res: Response): Promise<Response>
     {
         try
         {
@@ -37,4 +37,4 @@ class MyProfileController
     }
 }
 
-export {MyProfileController}
+export {GetDepositController}

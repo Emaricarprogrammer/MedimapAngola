@@ -27,4 +27,4 @@ AdminRouter.route("/appControll/delete/users").delete(AuthenticationController.A
 AdminRouter.route("/appControll/delete/:id_entidade").delete(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,(req: Request, res: Response) => {DeleteEntityController.deleteEntity(req, res)})
 
 
-export default AdminRouter 
+export default AdminRouter

@@ -142,13 +142,13 @@ class GeneralDepositsRepositories
                 nome_generico: medicine.nome_generico_medicamento,
                 nome_comercial: medicine.nome_comercial_medicamento,
                 origem: medicine.origem_medicamento,
-                validade: dayjs(medicine.validade_medicamento).format("DD/MM/YY"),
+                validade: dayjs(medicine.validade_medicamento).format("DD-MM-YY"),
                 quantidade_disponivel: medicine.quantidade_disponivel_medicamento,
                 preco: medicine.preco_medicamento + "kz",
                 imagem: medicine.imagem_url
             })) ?? [],
-            createdAt: dayjs(deposit.createdAt).format("DD/MM/YY HH:MM:ss"),
-            updatedAt: dayjs(deposit.updatedAt).format("DD/MM/YY HH:MM:ss"),
+            createdAt: dayjs(deposit.createdAt).format("DD-MM-YY HH:MM:ss"),
+            updatedAt: dayjs(deposit.updatedAt).format("DD-MM-YY HH:MM:ss"),
             id_conta_fk: deposit.id_conta_fk
         })) 
     
@@ -177,12 +177,12 @@ class GeneralDepositsRepositories
             nome_generico: medicine.nome_generico_medicamento,
             nome_comercial: medicine.nome_comercial_medicamento,
             origem: medicine.origem_medicamento,
-            validade: dayjs(medicine.validade_medicamento).format("DD/MM/YY"),
+            validade: dayjs(medicine.validade_medicamento).format("DD-MM-YY"),
             quantidade_disponivel: medicine.quantidade_disponivel_medicamento,
             preco: medicine.preco_medicamento,
             imagem: medicine.imagem_url,
-            createdAt: dayjs(medicine.createdAt).format("DD/MM/YY HH:MM:ss"),
-            updatedAt: dayjs(medicine.updatedAt).format("DD/MM/YY HH:MM:ss"),
+            createdAt: dayjs(medicine.createdAt).format("DD-MM-YY HH:MM:ss"),
+            updatedAt: dayjs(medicine.updatedAt).format("DD-MM-YY HH:MM:ss"),
             }))
         return {
             medicines,

@@ -14,34 +14,31 @@ import path from "path"
 dotenv.config()
 
 const App = express()
-const allowdDomains = ["http://localhost:3000", "*"]    
+const allowdDomains = ["http://localhost:5173", "*", 'file://']    
+
 App.use(express.json())
 App.use(cookieParser())
 App.use(helmet())
+
 App.use(morgan("dev", {
   stream: fs.createWriteStream(
-    path.join(__dirname, 'access_logs'), {flags: 'a'}
+    path.join(__dirname, 'access_logs'), { flags: 'a' }
   )
-}))
+}));
 
-if (process.env.NODE_ENV == "dev")
-{
-  console.log = (...args)=>{
-    const message = `${new Date().toISOString()}-${args.join(' ')}\``
-    fs.appendFileSync(path.join(__dirname, 'app.log'), message)
-
-  }
-}
-if (process.env.NODE_ENV == "dev")
-{ 
-  App.use(cors({
-    origin:"*",
-    credentials: true,
-  }))
+if (process.env.NODE_ENV === "dev") {
+  console.log = (...args) => {
+    const message = `${new Date().toISOString()} - ${args.join(' ')}\n`;
+    try {
+      fs.appendFileSync(path.join(__dirname, 'app.log'), message);
+    } catch (err){
+      console.error("Erro ao escrever no log:", err);
+    }
+  } 
 }
 
 App.use(cors({
-  //origin:"http://localhost:3000",
+  origin: true,
   credentials: true,
 }))
 
@@ -56,7 +53,11 @@ App.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 App.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error("Erro interno:", err)
-  res.status(500).json({ message: "Estámos tentando resolver este prolema. Por favor, tente mais tarde ou contacte ao suporte." })
-})
+  console.error("Erro interno:", err);
+  res.status(500).json({
+    message: "Estamos tentando resolver este problema. Por favor, tente mais tarde ou contacte o suporte.",
+    ...(process.env.NODE_ENV === "dev" && { error: err.message })
+  });
+});
+
 export default App

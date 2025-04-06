@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { ValidatorProps } from "../../../Utils/Validators/validators/validators";
 import validator from "validator";
 import { CategoryMedicineRepositories } from "../../../Repositories/DepositRepositories/CategoryMedicineRepository/CategoryRepository";
+import dayjs from "dayjs"
 
 const prisma: PrismaClient = new PrismaClient();
 const MedicineRepositoryInstance: MedicineRepositories = new MedicineRepositories(prisma);
@@ -54,11 +55,15 @@ export class UpdateMedicineController {
                 Medicines.origem_medicamento = validator.escape(origem_medicamento);
             }
             if (validade_medicamento) {
-                Medicines.validade_medicamento = validade_medicamento;
+                Medicines.validade_medicamento = validade_medicamento
             }
             if (preco_medicamento) {
                 if (!validator.isNumeric(preco_medicamento.toString())) {
-                    return res.status(400).json({ success: false, message: "Preço inválido." });
+                    return res.status(400).json({ success: false, message: "Preço inválido, por favor insira um valor válido." });
+                }
+                if (preco_medicamento < 0 || preco_medicamento == 0)
+                {
+                    return res.status(400).json({ success: false, message: "Preço inválido, por favor insira um valor válido." });
                 }
                 Medicines.preco_medicamento = parseFloat(preco_medicamento);
             }
@@ -72,11 +77,16 @@ export class UpdateMedicineController {
                 if (!validator.isInt(quantidade_disponivel_medicamento.toString())) {
                     return res.status(400).json({ success: false, message: "Quantidade inválida." });
                 }
+                if (quantidade_disponivel_medicamento < 0 || quantidade_disponivel_medicamento == 0)
+                {
+                    return res.status(400).json({ success: false, message: "Quantidade inválida, por favor insira um valor válido." });
+                }
+
                 Medicines.quantidade_disponivel_medicamento = parseInt(quantidade_disponivel_medicamento);
             }
 
             if (Object.keys(CategoryMedicine).length > 0) {
-                const CategoryUpdated = await CategoryMedicineRepositoryInstance.updateMedicineCategory(MedicineExists.id_categoria, categoria_medicamento);
+                const CategoryUpdated = await CategoryMedicineRepositoryInstance.updateMedicineCategory(MedicineExists.id_categoria, validator.escape(categoria_medicamento));
                 if (!CategoryUpdated) {
                     return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema, por favor tente novamente." });
                 }

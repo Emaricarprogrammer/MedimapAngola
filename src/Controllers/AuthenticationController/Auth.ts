@@ -7,6 +7,7 @@ dotenv.config()
 
 type JwtPayload = {
     id_entidade: string;
+    id_conta: string
     access_level: string;
 }
 export class AuthenticationController
@@ -14,7 +15,7 @@ export class AuthenticationController
     static async Authentication(req: Request, res: Response, next: NextFunction): Promise<any>
     {
         try {
-            const token = req.headers.authorization?.split(' ')[1] || req.cookies.acessToken
+            const token = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken
             if (!token)
             {
                 return res.status(401).json({success: false, message:"Oooops! parece que você não está autorizado a acessar este recurso, por favor tente novamente."})
@@ -37,7 +38,6 @@ export class AuthenticationController
     {
         if (req.body.user.access_level != "admin")
         {
-            console.log(req.body.user)
             return res.status(401).json({success: false, message:"Ooooops! Parece que você não tem autorização para acessar este recurso."})
         }
         next()

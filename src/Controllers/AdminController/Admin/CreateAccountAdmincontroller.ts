@@ -58,7 +58,8 @@ export default class CreateAccountAdminController {
       }
 
       // Validação do nível de acesso (deve ser "admin" ou "gestor")
-      if (!["admin", "gestor"].includes(nivel_acesso.toLowerCase())) {
+      if (!["admin"].includes(nivel_acesso))
+      {
         return res.status(400).json({
           success: false,
           message: "Ooooops! Parece que seu nível de acesso está incorreto.",
@@ -66,7 +67,7 @@ export default class CreateAccountAdminController {
       }
 
       // Validação do formato do e-mail
-      if (!ValidatorProps.IsVAlidEmail) {
+      if (!ValidatorProps.IsVAlidEmail(email_sanitized)) {
         return res.status(400).json({
           success: false,
           message: "Oooooops! Este formato de email é inválido.",
@@ -159,7 +160,7 @@ export default class CreateAccountAdminController {
       console.error("Houve um erro: ", error.message) 
       return res.status(500).json({
         success: false,
-        message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde.",
+        message: "Estamos tentando resolver este problema por favor, tente novamente mais tardesss.",
       }) 
     }
   }

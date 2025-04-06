@@ -50,7 +50,11 @@ export class ValidatorProps
     }
     static IsVAlidEmail(email: string)
     {
-      validator.isEmail(email)
+      if (validator.isEmail(email))
+      {
+        return true
+      }
+      false
     }
     static async AdminExists(id_admin: string)
     {
