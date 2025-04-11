@@ -1,4 +1,4 @@
-<h1>Bem-vindo(a) à MedMap Angola! 🌟</h1>
+const htmlTemplate: string = `<h1>Bem-vindo(a) à MedMap Angola! 🌟</h1>
 <p>Olá! 👋</p>
 <p>É com muita alegria que damos as boas-vindas à MedMap Angola! 🎉</p>
 <p>
@@ -10,4 +10,6 @@
   fazer com que sua experiência seja a melhor possível.
 </p>
 <p>✨ <em>Explore, descubra e faça parte dessa mudança incrível!</em> ✨</p>
-<p>Com carinho,<br><strong>Equipe MedMap Angola</strong> 💚</p>
+<p>Com carinho,<br><strong>Equipe MedMap Angola</strong> 💚</p>`
+
+export {htmlTemplate}

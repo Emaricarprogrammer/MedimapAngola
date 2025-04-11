@@ -5,14 +5,7 @@ import { AccountRepository } from "../../../Repositories/AccountRepository/Accou
 import { ValidatorProps } from "../../../Utils/Validators/validators/validators" 
 import { Emailsent } from "../../../Utils/providers/SendEmails/SendEmail" 
 import dotenv from "dotenv" 
-import fs from "fs" 
-import path from "path" 
 import dayjs from "dayjs"
-
-// Configuração do caminho para o arquivo HTML de template de e-mail
-const htmlpath = path.join(__dirname, "../../../Utils/providers/SendEmails/Templates/Welcome.html") 
-// Leitura do conteúdo do arquivo HTML
-const HTML = fs.readFileSync(htmlpath, "utf-8") 
 
 // Carregamento das variáveis de ambiente
 dotenv.config() 
@@ -147,7 +140,7 @@ export default class CreateAccountAdminController {
       }, { timeout: 10000 }) 
 
       // Envio de e-mail de boas-vindas para o novo administrador
-      await Emailsent(email_sanitized, HTML) 
+      await Emailsent(email_sanitized) 
 
       // Resposta final após todas as operações bem-sucedidas
       return res.status(201).json({

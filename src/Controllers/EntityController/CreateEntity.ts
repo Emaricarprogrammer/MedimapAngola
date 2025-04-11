@@ -9,16 +9,12 @@ import { ContactsRepository } from '../../Repositories/ContactsRepository/Contac
 import { AdressRepositories } from '../../Repositories/AdressRepository/AdressRepository' 
 import { GeolocationRepository } from '../../Repositories/GeolocationRepository/GeolocationRepository' 
 import validator from "validator" 
-import fs from "fs" 
-import path from "path" 
 import dayjs from "dayjs" 
 import { JwtOperation } from "../../Utils/configs/private/JwtOperations" 
 
 dotenv.config() 
 
 const prisma: PrismaClient = new PrismaClient() 
-const htmlpath = path.join(__dirname, "../../Utils/providers/SendEmails/Templates/Welcome.html") 
-const HTML = fs.readFileSync(htmlpath, "utf-8") 
 
 export class CreateEntityController {
   static async create(req: Request, res: Response): Promise<Response> {
@@ -217,7 +213,7 @@ export class CreateEntityController {
       }, { timeout: 20000 }) 
 
       // Envio de email de boas-vindas
-      await Emailsent(email, HTML) 
+      await Emailsent(email) 
 
       // Resposta de sucesso
       console.log(result)

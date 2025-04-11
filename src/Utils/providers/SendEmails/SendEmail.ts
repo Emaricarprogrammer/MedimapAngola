@@ -1,5 +1,6 @@
-import nodemailer from "nodemailer";
-import { SmtpConfig } from "../../configs/smtp";
+import nodemailer from "nodemailer"
+import { SmtpConfig } from "../../configs/smtp"
+import {htmlTemplate} from "./Templates/welcome"
 
 type EmailProps =
 {
@@ -51,14 +52,14 @@ export class EmailSender {
     }
 }
 
-async function Emailsent(email: string, HtmlTemplate: string)
+async function Emailsent(email: string)
 {
     const emailSenderInstance = new EmailSender({
         text: "A equipa da MediMapAngola dá-lhe as boas-vindas.",
         subject: "Bem-vindo à MediMapAngola",
         from: "noreplaymedimapangola@gmail.com",
         to: email,
-        html: HtmlTemplate,
+        html: htmlTemplate,
       });
       return await emailSenderInstance.SendEmail().catch((error)=>{console.log("Erro ao enviar este email: ", error)});
 }
