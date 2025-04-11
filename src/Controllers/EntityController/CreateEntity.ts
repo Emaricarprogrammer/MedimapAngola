@@ -49,8 +49,7 @@ export class CreateEntityController {
       if (camposFaltantes.length > 0) {
         return res.status(400).json({
           success: false,
-          message: "Por favor, preencha todos os campos obrigatórios",
-          camposFaltantes: camposFaltantes
+          message: "Por favor, preencha todos os campos obrigatórios"
         }) 
       }
 

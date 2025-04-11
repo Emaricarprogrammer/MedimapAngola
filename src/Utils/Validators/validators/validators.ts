@@ -76,7 +76,7 @@ export class ValidatorProps
     static sanitizeInput(username: string, email: string, password: string, nivel_acesso: string) {
       return {
         username_sanitized: validator.trim(validator.escape(username)), // Remove espaços extras
-        nivel_acesso_sanitized: nivel_acesso.toLowerCase(), // Normaliza para evitar problemas
+        nivel_acesso_sanitized: nivel_acesso, // Normaliza para evitar problemas
         email_sanitized: validator.normalizeEmail(email) || "", // Garante que seja um e-mail válido
         password_sanitized: password.trim() // Senhas não devem ser alteradas, apenas hashadas depois
       };

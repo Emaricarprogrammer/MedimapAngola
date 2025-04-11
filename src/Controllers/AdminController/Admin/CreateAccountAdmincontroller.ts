@@ -51,7 +51,7 @@ export default class CreateAccountAdminController {
       }
 
       // Validação do nível de acesso (deve ser "admin" ou "gestor")
-      if (!["admin"].includes(nivel_acesso))
+      if (!["admin"].includes(nivel_acesso_sanitized))
       {
         return res.status(400).json({
           success: false,
@@ -153,7 +153,7 @@ export default class CreateAccountAdminController {
       console.error("Houve um erro: ", error.message) 
       return res.status(500).json({
         success: false,
-        message: "Estamos tentando resolver este problema por favor, tente novamente mais tardesss.",
+        message: "Estamos tentando resolver este problema por favor, tente novamente mais tardes.",
       }) 
     }
   }
