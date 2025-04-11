@@ -62,7 +62,7 @@ class GeneralDepositsRepositories
                     nome_generico: medicine.nome_generico_medicamento,
                     nome_comercial: medicine.nome_comercial_medicamento,
                     origem: medicine.origem_medicamento,
-                    validade: dayjs(medicine.validade_medicamento).format("DD/MM/YY"),
+                    validade: dayjs(medicine.validade_medicamento).format("DD-MM-YY"),
                     quantidade_disponivel: medicine.quantidade_disponivel_medicamento,
                     preco: medicine.preco_medicamento,
                     imagem: medicine.imagem_url

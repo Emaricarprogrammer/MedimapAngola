@@ -24,7 +24,7 @@ class PharmacyOrders
              {
                 return res.status(200).json({ success: false, message: "Sem pedidos de momento." })
              }
-             return res.status(200).json({success: true, response: detailsOrders})
+             return res.status(200).json({success: true, response: detailsOrders.orders, pagination: detailsOrders.pagination})
         } catch (error)
         {
             console.error("Houve um erro: ", error)

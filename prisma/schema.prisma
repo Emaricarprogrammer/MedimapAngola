@@ -116,7 +116,7 @@ model Medicamentos {
 
 model Aquisicao {
   id_aquisicao          String    @id @default(uuid())
-  quantidade_aquisicao  String
+  quantidade_aquisicao  Int
   data_aquisicao        DateTime
   tipo_aquisicao        Tipo_aquisicao
   total_compra          Float
@@ -145,7 +145,7 @@ model Aquisicao_medicamentos {
 
 model Recuperacao_senha {
   id_recuperacao_senha  String    @id @default(uuid())
-  token                 String    @db.Text
+  token                 String    @unique
   expiracao             DateTime
   usado                 Boolean
   id_conta_fk           String?

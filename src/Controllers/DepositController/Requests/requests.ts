@@ -33,13 +33,15 @@ class RequestsMedicineController
                     message: "Por favor, verifique se preencheu todos os campos",
                 })
             }
+
             if (!validator.isInt(quantidade_aquisicao))
             {
                 return res.status(400).json({
                     success: false,
-                    message: "Por favor, verifique se informou correctamente a quantidade de medicamento desejado.",
-                })   
+                    message: "Por favor, verifique se preencheu correctamente a quantidade da sua aquisição",
+                })
             }
+
             if (!await ValidatorProps.EntityExists(id_entidade_fk))
             {
                 return res.status(400).json({
@@ -88,7 +90,7 @@ class RequestsMedicineController
                 const result = {
                     id_aquisicao: requestMedicine.id_aquisicao,
                     quantidade_aquisicao: requestMedicine.quantidade_aquisicao,
-                    data_aquisicao: dayjs(requestMedicine.data_aquisicao).format("DD:MM:YY: HH:MM:ss"),
+                    data_aquisicao: dayjs(requestMedicine.data_aquisicao).format("DD-MM-YY: HH:MM:ss"),
                     id_entidade_fk: requestMedicine.id_entidade_fk,
                     id_medicamento: requestMedicines.id_medicamento
 

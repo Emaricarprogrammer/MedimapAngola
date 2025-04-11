@@ -34,12 +34,12 @@ export class ForgotPasswordController
         <p>Olá,</p>
         <p>Recebemos uma solicitação para redefinir a senha da sua conta. Caso tenha sido você, use o link abaixo para criar uma nova senha:</p>
         <p>
-            <a href="${process.env.RESET_URI}/reset_password?t=${token}" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold;">
+            <a href="${process.env.RESET_URI}/reset_password?auth=${token}" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold;">
                 Redefinir Senha
             </a>
         </p>
         <p><b>Ou copie e cole o seguinte link no navegador:</b></p>
-        <p>${process.env.RESET_URI}/reset_password?t=${token}</p>
+        <p>${process.env.RESET_URI}/reset_password?auth=${token}</p>
         <p>Este link é válido por <strong>1 hora</strong>.</p>
         <p>Se você não solicitou a alteração de senha, ignore este e-mail. Sua conta permanecerá segura.</p>
         <p>Atenciosamente,</p>
@@ -58,14 +58,14 @@ export class ForgotPasswordController
     static async ResetPassword(req: Request, res: Response): Promise<Response>
     {
         try {
-            const { password, newPassword } = req.body;
-            const { t } = req.query as { t: string };
+            const { newPassword } = req.body;
+            const { auth } = req.query as { auth: string };
                 
-            if (!t || !password || !newPassword) {
+            if (!auth || !newPassword) {
                 return res.status(400).json({ success: false, message: "Por favor, verifique se preencheu todos os campos" });
             }
             const reset = await prisma.recuperacao_senha.findUnique({
-                where: { token: t },
+                where: { token: auth },
                 include: { conta: true }
             });
     
@@ -79,12 +79,10 @@ export class ForgotPasswordController
                     message: "A senha deve ter pelo menos 8 caracteres, conter uma letra maiúscula, um número e um caractere especial.",
                 });
             }
-            const conta = reset.conta;  
-            const isPasswordValid = await PasswordService.PasswordCompare(password, conta?.password!);
-    
-            if (!isPasswordValid) {
-                console.log(isPasswordValid)
-                return res.status(400).json({ success: false, message: "A senha atual não foi encontrada" });
+            const conta = reset.conta
+            if (!conta)
+            {
+                return res.status(400).json({ success: false, message: "Credenciais não encontradas" });
             }
     
             const hashedPassword = await PasswordService.hashPassword(newPassword);
@@ -94,7 +92,7 @@ export class ForgotPasswordController
             });
     
             await prisma.recuperacao_senha.update({
-                where: { token: t },
+                where: { token: auth },
                 data: { usado: true }
             });
     

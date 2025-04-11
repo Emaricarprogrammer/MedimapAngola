@@ -30,7 +30,8 @@ class GetDepositController
                 return res.status(400).json({success: false, message: "Ocorreu um erro ao retornar este usúario."})
              }
              return res.status(200).json({success: true, response: result.depositDatas, pagination: result.pagination})
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error)
             return res.status(500).json({ success: false, message: "Estamos tentando resolver este problema por favor, tente novamente mais tarde." })
         }

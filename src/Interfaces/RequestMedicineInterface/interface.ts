@@ -2,7 +2,7 @@
 interface RequestMedicineDatas
 {
     id_aquisicao?: string
-    quantidade_aquisicao: string
+    quantidade_aquisicao: number
     data_aquisicao: Date
     tipo_aquisicao: "emediata",
     total_compra: number,

@@ -88,7 +88,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
                     total_medicamentos: pedido.aquisicao.quantidade_aquisicao,
                     nome_medicamento: pedido.medicamento.nome_comercial_medicamento,
                     preco: pedido.medicamento.preco_medicamento + "kz",
-                    validade: dayjs(pedido.medicamento.validade_medicamento).format("DD/MM/YY"),
+                    validade: dayjs(pedido.medicamento.validade_medicamento).format("DD-MM-YY"),
                     status: pedido.aquisicao.status
             }))
         }))
@@ -133,7 +133,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
 
         const allPharmacyOrders =  pharmacyOrders.map(order => ({
             pedidos: allOrders.map(pedido => ({
-                data_aquisicao: dayjs(pedido.data_aquisicao).format("DD:MM:YY: HH:MM:ss"),
+                data_aquisicao: dayjs(pedido.data_aquisicao).format("DD-MM-YY: HH:MM:ss"),
                 quantidade_medicamentos: pedido.quantidade_aquisicao,
                 id_aquisicao: pedido.id_aquisicao,
                 status: pedido.status,
@@ -141,7 +141,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
                 id_medicamento: medicamento.medicamento.id_medicamento,
                 nome_medicamento: medicamento.medicamento.nome_comercial_medicamento,
                 preco: medicamento.medicamento.preco_medicamento + "kz",
-                validade: dayjs(medicamento.medicamento.validade_medicamento).format("DD/MM/YY"),
+                validade: dayjs(medicamento.medicamento.validade_medicamento).format("DD-MM-YY"),
                 total_compra: pedido.total_compra
             }))
                 })),
@@ -149,7 +149,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
         }))
 
         return {
-            allPharmacyOrders,
+            orders: allPharmacyOrders,
             pagination: {
                 totalPages,
                 totalItems: totalRequests,
