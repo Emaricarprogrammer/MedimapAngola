@@ -17,8 +17,15 @@ class PharmacyOrders
             const {id_farmacia} = req.params
             if (!await ValidatorProps.EntityExists(id_farmacia))
             {
-                return res.status(400).json({ success: false, message: "Farmácia não encontrada." })
+                return res.status(400).json({ success: false, message: "Desculpe, mas não conseguimos encontar esta fármcia." })
             }
+            if (req.body.user.id_entidade != id_farmacia)
+                {
+                    return res.status(401).json({
+                        success: false,
+                        message: "Desculpe, mas não podemos realizar está acção detetamos uma falha. Por favor faça login novamente ou tente mais tarde",
+                    })
+                }
              const detailsOrders = await RequestsRepositoriesInstane.getOrdersDetailsPharmacy(id_farmacia)
              if (detailsOrders == null || !detailsOrders)
              {

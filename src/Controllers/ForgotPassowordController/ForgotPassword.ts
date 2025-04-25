@@ -5,6 +5,7 @@ import { EmailSender } from "../../Utils/providers/SendEmails/SendEmail";
 import dotenv from "dotenv"
 import { PasswordService } from '../../Utils/PasswordService/passwordService';
 import { ValidatorProps } from "../../Utils/Validators/validators/validators";
+import { ResetPasswordTemplate } from "../../Utils/providers/SendEmails/Templates/resetPasswordTemplate";
 dotenv.config()
 
 const prisma: PrismaClient = new PrismaClient()
@@ -30,21 +31,7 @@ export class ForgotPasswordController
                 subject: "Recuperação de Senha",
                 from:"noreplaymedimapangola@gmail.com",
                 to: email,
-                html: `
-        <p>Olá,</p>
-        <p>Recebemos uma solicitação para redefinir a senha da sua conta. Caso tenha sido você, use o link abaixo para criar uma nova senha:</p>
-        <p>
-            <a href="${process.env.RESET_URI}/reset_password?auth=${token}" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold;">
-                Redefinir Senha
-            </a>
-        </p>
-        <p><b>Ou copie e cole o seguinte link no navegador:</b></p>
-        <p>${process.env.RESET_URI}/reset_password?auth=${token}</p>
-        <p>Este link é válido por <strong>1 hora</strong>.</p>
-        <p>Se você não solicitou a alteração de senha, ignore este e-mail. Sua conta permanecerá segura.</p>
-        <p>Atenciosamente,</p>
-        <p><b>Equipe MediMap Angola</b></p>
-    `,
+                html: ResetPasswordTemplate(token),
             })
             
             await EmailSent.SendEmail()

@@ -13,6 +13,12 @@ export class GeolocationRepository implements IGeolocation
         return geolocation
         
     }
+
+    async findGeolocation(id_entity: string): Promise<GeolocationDatas | any> {
+        const geolocation = await this.prisma.geolocalizacao.findFirst({where:{id_entidade_fk: id_entity}})
+        return geolocation
+    }
+
     async deleteGeolocation(id_entity: string)
     {
         const geolocationDeleted = await this.prisma.geolocalizacao.deleteMany({where:{id_entidade_fk: id_entity}})

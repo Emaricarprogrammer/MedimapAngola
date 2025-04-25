@@ -23,12 +23,13 @@ export class AuthenticationController
     
             const decodedToken = await JWT.verify(token, jwtSecretKey.ACCESS_SECRET) as JwtPayload
             req.body.user = decodedToken
+            console.log("Decoded Token: ", decodedToken)
             next()
             
         } catch (error: any) {
             if (error.name === "TokenExpiredError")
             {
-                return res.status(401).json({success: false, message: "Ooooops! Parece que a sua sessão está expirada"})
+                return res.status(401).json({success: false, message: "Ooooops! Parece que a sua sessão está expirada, por favor faça login novamente", exp: true})
             }
             return res.status(401).json({ success: false, message: "Ooooops! Parece que você não tem autorização para acessar esta página." });
         }

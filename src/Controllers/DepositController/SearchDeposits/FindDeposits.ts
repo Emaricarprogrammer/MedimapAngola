@@ -10,7 +10,8 @@ const DepositsRepositoriesInstance: GeneralDepositsRepositories = new GeneralDep
 export default class SearchDepositsController {
     static async search(req: Request, res: Response): Promise<Response> {
         try {
-            let { longitude, latitude, distance } = req.query 
+            let { longitude, latitude, distance } = req.query
+            const {id_entidade} = req.body.user
 
             if (!longitude || !latitude || !distance) {
                 return res.status(400).json({
@@ -36,7 +37,15 @@ export default class SearchDepositsController {
                     message: "Os seus valores de coordenada são inválidos.",
                 }) 
             }
+            const existsLocation =  await prisma.geolocalizacao.findFirst({where:{id_entidade_fk: id_entidade}})
 
+            if (longitudeNum != existsLocation?.longitude || latitudeNum != existsLocation?.latitude)
+            {
+                return res.status(400).json({
+                    success: false,
+                    message: "Descuple, mas não conseguimos encontar coordenadas associadas a esta conta.",
+                }) 
+            }
             const depositsResults = await DepositsRepositoriesInstance.findDeposits() 
 
             if (!depositsResults || !depositsResults.data || depositsResults.data.length === 0) {

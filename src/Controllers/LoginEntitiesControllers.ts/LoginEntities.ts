@@ -4,7 +4,7 @@ import { ValidatorProps } from '../../Utils/Validators/validators/validators'
 import {PasswordService} from "../../Utils/PasswordService/passwordService"
 import dotenv from "dotenv"
 import { JwtOperation} from "../../Utils/configs/private/JwtOperations"
-
+import jwt from "jsonwebtoken"
 dotenv.config()
 const prisma = new PrismaClient()
 export class LoginEntity

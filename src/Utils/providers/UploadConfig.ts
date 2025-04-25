@@ -1,6 +1,6 @@
 import multer from "multer"
 import path from "path"
-import { Request} from "express"
+import { Request, Response} from "express"
 import fs from "fs"
 
 const pathDir = path.resolve(__dirname, "../Uploads")

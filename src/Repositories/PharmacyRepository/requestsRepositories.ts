@@ -20,90 +20,117 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
         return await prismaClient.aquisicao_medicamentos.create({data:{...requestsDatas}})
     }
 
-    async getOrdersDetails()
-    {
-        const pages = 1 
-        const limit = 4
-    
-        const skip = (pages - 1) * limit 
-        const totalRequests = await this.prisma.aquisicao_medicamentos.count() 
-        const totalPages = Math.ceil(totalRequests / limit) 
-    
+    async getOrdersDetails(id_deposito: string){
+        const page = 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+      
+        const totalRequests = await this.prisma.aquisicao_medicamentos.count({where:{aquisicao:{id_entidade_fk:id_deposito}}, orderBy:{createdAt:"desc"}});
+        const totalPages = Math.ceil(totalRequests / limit);
+      
         const orders = await this.prisma.aquisicao_medicamentos.findMany({
-            skip: skip,
-            take: limit,
-            include: {
-                aquisicao: {
-                    include: {
-                        entidade: {
-                            include: {
-                                contacto_entidade: true,
-                                credenciais_entidades: true,
-                                endereco_entidade: true
-                            }
-                        }
-                    }
-                },
-                medicamento: true
-            }, orderBy:{createdAt: "desc"}
-        })
-
-        const allOrders = await this.prisma.aquisicao_medicamentos.findMany({
-            where: {
-                aquisicao: {
-                    entidade: {
-                        id_entidade: orders[0].aquisicao.entidade.id_entidade
-                    }
+          skip,
+          take: limit,
+          where:{
+            aquisicao:{id_entidade_fk:id_deposito}
+          },
+          include: {
+            aquisicao: {
+              include: {
+                entidade: {
+                  include: {
+                    contacto_entidade: true,
+                    credenciais_entidades: true,
+                    endereco_entidade: true
+                  }
                 }
+              }
             },
-            include: {
-                aquisicao: {
-                    include: {
-                        entidade: {
-                            include: {
-                                contacto_entidade: true,
-                                credenciais_entidades: true,
-                                endereco_entidade: true
-                            }
-                        }
-                    }
-                },
-                medicamento: true
+            medicamento: true
+          },
+          orderBy: { createdAt: "desc" }
+        });
+      
+        // Se não houver pedidos, retorna vazio
+        if (!orders.length || !orders[0]?.aquisicao?.entidade?.id_entidade) {
+          return {
+            allRequests: [],
+            pagination: {
+              totalPages,
+              totalItems: totalRequests,
+              itemsPerPage: limit,
+              currentPage: page
             }
-        }) 
-    
-        const allRequests = orders.map(order => ({
-            id_farmacia: order.aquisicao.entidade.id_entidade,
-            firma_farmacia: order.aquisicao.entidade.firma_entidade,
-            contacto: order.aquisicao.entidade.contacto_entidade[0].contacto,
-            email: order.aquisicao.entidade.credenciais_entidades.email,
+          };
+        }
+      
+        const entidadeId = orders[0].aquisicao.entidade.id_entidade;
+      
+        // Busca todos os pedidos da mesma farmácia da primeira entrada
+        const allOrders = await this.prisma.aquisicao_medicamentos.findMany({
+          where: {
+            aquisicao: {
+              entidade: {
+                id_entidade: entidadeId
+              }
+            }
+          },
+          include: {
+            aquisicao: {
+              include: {
+                entidade: {
+                  include: {
+                    contacto_entidade: true,
+                    credenciais_entidades: true,
+                    endereco_entidade: true
+                  }
+                }
+              }
+            },
+            medicamento: true
+          }
+        });
+      
+        const allRequests = orders.map(order => {
+          const entidade = order.aquisicao.entidade;
+          const endereco = entidade.endereco_entidade?.[0] || {};
+          const contacto = entidade.contacto_entidade?.[0]?.contacto || "";
+          const email = entidade.credenciais_entidades?.email || "";
+      
+          return {
+            id_farmacia: entidade.id_entidade,
+            firma_farmacia: entidade.firma_entidade,
+            contacto,
+            email,
             endereco: {
-                rua: order.aquisicao.entidade.endereco_entidade[0].rua,
-                logradouro: order.aquisicao.entidade.endereco_entidade[0].logradouro,
-                cidade: order.aquisicao.entidade.endereco_entidade[0].cidade,
-                numero: order.aquisicao.entidade.endereco_entidade[0].numero
+              rua: endereco.rua || "",
+              logradouro: endereco.logradouro || "",
+              cidade: endereco.cidade || "",
+              numero: endereco.numero || ""
             },
             pedidos_farmacia: allOrders.map(pedido => ({
-                    id_aquisicao: pedido.aquisicao.id_aquisicao,
-                    total_medicamentos: pedido.aquisicao.quantidade_aquisicao,
-                    nome_medicamento: pedido.medicamento.nome_comercial_medicamento,
-                    preco: pedido.medicamento.preco_medicamento + "kz",
-                    validade: dayjs(pedido.medicamento.validade_medicamento).format("DD-MM-YY"),
-                    status: pedido.aquisicao.status
+              id_aquisicao: pedido.aquisicao.id_aquisicao,
+              total_medicamentos: pedido.aquisicao.quantidade_aquisicao,
+              nome_medicamento: pedido.medicamento.nome_comercial_medicamento,
+              preco: `${pedido.medicamento.preco_medicamento} kz`,
+              imagem_url: pedido.medicamento.imagem_url,
+              validade: dayjs(pedido.medicamento.validade_medicamento).format("DD-MM-YY"),
+              status: pedido.aquisicao.status
             }))
-        }))
-
+          };
+        });
+      
         return {
-            allRequests,
-            pagination: {
-                totalPages,
-                totalItems: totalRequests,
-                itemsPerPage: limit,
-                currentPage: pages
-            }
-        }
-    }
-
+          allRequests,
+          pagination: {
+            totalPages,
+            totalItems: totalRequests,
+            itemsPerPage: limit,
+            currentPage: page
+          }
+        };
+      }
+      
     async setStatus(status: "concluido" | "cancelado", id_aquisicao: string): Promise<any> {
          const statusUpdated = await this.prisma.aquisicao.update({where:{id_aquisicao: id_aquisicao}, data:{status: status}})
          return statusUpdated

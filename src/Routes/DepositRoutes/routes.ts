@@ -20,11 +20,11 @@ DepositRouter.route("/medicines").get((req:Request, res:Response) => {FindAllMed
 /**
  * Private Routes
  */
-DepositRouter.route("/medicines").post(upload.single("imagem"),(req:Request, res:Response) => {CreateMedicineController.CreateMedicine(req, res)})
+DepositRouter.route("/medicines").post(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication, upload.single("imagem"),(req:Request, res:Response) => {CreateMedicineController.CreateMedicine(req, res)})
 DepositRouter.route("/medicine/:nome_comercial").get((req:Request, res:Response) => {FindMedicineController.FindMedicine(req, res)})
 DepositRouter.route("/medicine/:id_medicamento").patch(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req:Request, res:Response) => {UpdateMedicineController.UpdateMedicine(req, res)})
 DepositRouter.route("/medicine/:id_medicamento").delete(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DeleteMedicineController.DeleteMedicine(req, res)})
-DepositRouter.route("/medicines/requests").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DepositsOrders.getOrders(req, res)})
+DepositRouter.route("/medicines/my/requests/:id_deposito").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DepositsOrders.getOrders(req, res)})
 DepositRouter.route("/myMedicines/:id_deposito").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {FindAllMyMedicinesController.FindMedicines(req, res)})
 DepositRouter.route("/medicines/requests/:id_aquisicao/status").patch(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DepositsOrders.OrdersStatus(req, res)})
 DepositRouter.route("/profile/:id_entidade").get((req: Request, res: Response) => {FindEntityController.findEntity(req, res)})

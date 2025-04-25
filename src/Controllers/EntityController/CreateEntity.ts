@@ -179,18 +179,7 @@ export class CreateEntityController {
           id_entidade_fk: createdEntity.id_entidade
         }, tx) 
 
-        const accessToken = await JwtOperation.generateToken({
-          id_entidade: createdEntity.id_entidade,
-          id_conta: accountCreated.id_conta,
-          access_level: createdEntity.tipo_entidade 
-        })
-        res.cookie("acessToken", accessToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV == "dev" ? false : true,
-          sameSite: "lax",
-          maxAge: 15*60*1000
 
-      })
         // Dados para retorno
         return {
           id_entidade: createdEntity.id_entidade,
@@ -212,10 +201,7 @@ export class CreateEntityController {
       }, { timeout: 20000 }) 
 
       // Envio de email de boas-vindas
-      await Emailsent(email) 
-
-      // Resposta de sucesso
-      console.log(result)
+      await Emailsent(email, firma) 
       return res.status(201).json({
         success: true,
         message: `conta ${tipo_entidade} criada com sucesso!`,

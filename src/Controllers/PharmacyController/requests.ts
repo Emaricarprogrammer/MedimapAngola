@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { PrismaClient } from "@prisma/client"
-import { RequestsRepositories } from "../../../Repositories/PharmacyRepository/requestsRepositories"
+import { RequestsRepositories } from "../../Repositories/PharmacyRepository/requestsRepositories"
 import validator from "validator"
 import dayjs, { Dayjs } from "dayjs"
-import { ValidatorProps } from "../../../Utils/Validators/validators/validators"
+import { ValidatorProps } from "../../Utils/Validators/validators/validators"
 
 const prisma: PrismaClient = new PrismaClient()
 const RequestsRepositoriesInstane: RequestsRepositories = new RequestsRepositories(prisma)
@@ -17,15 +17,23 @@ class RequestsMedicineController
             const {
                 quantidade_aquisicao,
                 total_compra,
-                id_entidade_fk,
                 id_medicamento
             } = req.body
+            const {id_farmacia} = req.params
+            if (!id_farmacia)
+            {
+                return res.status(400).json({
+                    success: false,
+                    message: "Por favor, informe todos os campos",
+                })
+            }
             const fields=[
                 "quantidade_aquisicao",
-                "id_entidade_fk",
                 "total_compra",
                 "id_medicamento"
             ].filter((field) => !req.body[field])
+            const medicineExists = await ValidatorProps.MedicineExists(id_medicamento)
+
             if (fields.length > 0)
             {
                 return res.status(400).json({
@@ -34,37 +42,42 @@ class RequestsMedicineController
                 })
             }
 
-            if (!validator.isInt(quantidade_aquisicao))
-            {
-                return res.status(400).json({
-                    success: false,
-                    message: "Por favor, verifique se preencheu correctamente a quantidade da sua aquisição",
-                })
-            }
-
-            if (!await ValidatorProps.EntityExists(id_entidade_fk))
+            if (!await ValidatorProps.EntityExists(id_farmacia))
             {
                 return res.status(400).json({
                     success: false,
                     message: "Não conseguimos encontrar este depósito.",
                 })  
             }
-            if (!await ValidatorProps.MedicineExists(id_medicamento))
+            if (!medicineExists)
             {
                 return res.status(400).json({
                     success: false,
                     message: "Não conseguimos encontrar este medicamento.",
                 })
             }
-
+            if (quantidade_aquisicao > medicineExists.quantidade_disponivel_medicamento )
+            {
+                return res.status(400).json({
+                    success: false,
+                    message: "Desculpe, mas a quantidade solicitada é superior a quantidade disponível, tente procurar por outro depósito ou diminua a qauntidade desejada.",
+                })
+            }
+            if (req.body.user.id_entidade != id_farmacia)
+            {
+                return res.status(401).json({
+                    success: false,
+                    message: "Desculpe, mas não podemos realizar está acção detetamos uma falha. Por favor faça login novamente ou tente mais tarde",
+                })
+            }
             const result = await prisma.$transaction(async(tx) => { 
                 const requestMedicine = await RequestsRepositoriesInstane.createRequest(
                     {
-                        quantidade_aquisicao: quantidade_aquisicao,
+                        quantidade_aquisicao: Number(quantidade_aquisicao),
                         data_aquisicao: new Date,
                         tipo_aquisicao: "emediata",
-                        id_entidade_fk: id_entidade_fk,
-                        total_compra: total_compra
+                        id_entidade_fk: id_farmacia,
+                        total_compra: Number(total_compra)
                     }, tx
                 )
                 if (!requestMedicine)

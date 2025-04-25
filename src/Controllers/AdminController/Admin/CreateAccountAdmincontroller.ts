@@ -51,7 +51,7 @@ export default class CreateAccountAdminController {
       }
 
       // Validação do nível de acesso (deve ser "admin" ou "gestor")
-      if (!["admin"].includes(nivel_acesso_sanitized))
+      if (!["admin"].includes(nivel_acesso))
       {
         return res.status(400).json({
           success: false,
@@ -145,7 +145,7 @@ export default class CreateAccountAdminController {
       // Resposta final após todas as operações bem-sucedidas
       return res.status(201).json({
         success: true,
-        message: "Usuário criado com sucesso!",
+        message: `${nivel_acesso} criado com sucesso!`,
         response: result,
       }) 
     } catch (error: any) {

@@ -19,15 +19,10 @@ class GetDepositController
             {
                 return res.status(400).json({success: false, message: "Campos inválidos."})
             }
-            if (! await ValidatorProps.EntityExists(id_deposito))
-             {
-                return res.status(400).json({success: false, message: "Usúario não encontrado"})
-             }
-
              const result = await this.DepositsRepositoriesInstance.findDeposit(id_deposito)
-             if (!result || result == null)
+             if (!result)
              {
-                return res.status(400).json({success: false, message: "Ocorreu um erro ao retornar este usúario."})
+                return res.status(400).json({success: false, message: "Não conseguimos encontrar este depósito."})
              }
              return res.status(200).json({success: true, response: result.depositDatas, pagination: result.pagination})
         } catch (error)

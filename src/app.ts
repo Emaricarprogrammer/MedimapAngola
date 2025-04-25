@@ -20,13 +20,13 @@ App.use(express.json())
 App.use(cookieParser())
 App.use(helmet())
 
-App.use(morgan("dev", {
+App.use(morgan("combined", {
   stream: fs.createWriteStream(
     path.join(__dirname, 'access_logs'), { flags: 'a' }
   )
 }));
 
-if (process.env.NODE_ENV === "dev") {
+if (process.env.NODE_ENV === "production") {
   console.log = (...args) => {
     const message = `${new Date().toISOString()} - ${args.join(' ')}\n`;
     try {

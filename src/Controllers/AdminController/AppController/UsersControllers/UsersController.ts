@@ -12,7 +12,7 @@ class UsersMagementController
             const allUsers: number = await prisma.entidades.count()
             if (!allUsers)
             {
-                return res.status(400).json({success: false, message: "Oooops! Não foi possível retornar estes dados, por favor tente novamente."})
+                return res.status(400).json({success: false, message: "Oooops! Não foi possível retornar estes dados, de momento estamos sem contas cadastradas."})
             }
 
             const allPharmacy : number = await prisma.entidades.count({where:{tipo_entidade: "farmacia"}})
@@ -41,7 +41,7 @@ class UsersMagementController
         try
         {
             const allEntities = await prisma.entidades.findMany({include:{contacto_entidade: true, geolocalizacao_entidade: true, endereco_entidade: true, credenciais_entidades: true}})
-            if (allEntities == null)
+            if (allEntities.length == 0 )
             {
                 return res.status(400).json({success: false, message: "Oooops! De momento ainda não existem contas."})
             }
@@ -75,7 +75,6 @@ class UsersMagementController
         try
         {
             const allEntities = await prisma.entidades.findMany()
-            console.log(allEntities)
             if (!allEntities || allEntities === null)
             {
                 return res.status(400).json({success: false, message: "Oooops! De momento ainda não existem contas."})

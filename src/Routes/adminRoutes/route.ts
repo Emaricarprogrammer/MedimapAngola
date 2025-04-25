@@ -22,7 +22,7 @@ AdminRouter.route("/:id_admin").delete(AuthenticationController.Authentication,A
 AdminRouter.route("/all/admins").get(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,( req: Request, res: Response) => {FindAllAdminsController.findAllAdmin(req, res)})
 AdminRouter.route("/:id_admin").patch(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,(req:Request, res:Response) => {UpdateAdminAccountController.updateAdminAccount(req, res)})
 AdminRouter.route("/appControll/users").get(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,(req: Request, res: Response) => {UsersMagementController.CountUsers(req, res)})
-AdminRouter.route("/appControll/all/users").get(AuthenticationController.AdminAuthentication,(req: Request, res: Response) => {UsersMagementController.AllEntities(req, res)})
+AdminRouter.route("/appControll/all/users").get(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,(req: Request, res: Response) => {UsersMagementController.AllEntities(req, res)})
 AdminRouter.route("/appControll/delete/users").delete(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,(req: Request, res: Response) => {UsersMagementController.DeleteAllAccountsEntities(req, res)})
 AdminRouter.route("/appControll/delete/:id_entidade").delete(AuthenticationController.Authentication,AuthenticationController.AdminAuthentication,(req: Request, res: Response) => {DeleteEntityController.deleteEntity(req, res)})
 
