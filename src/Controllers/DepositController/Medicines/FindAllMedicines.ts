@@ -13,9 +13,9 @@ export class FindAllMedicinesController
         {
 
             const MedicineResult = await MedicineRepositoryInstance.findAllMedicine()
-            if (!MedicineResult || MedicineResult == null)
+            if (MedicineResult.MedicineResults.length ==0)
             {
-                return res.status(404).json({success: false, message: "Ooooops! Infelizmente não conseguimos retornar estes medicamento"})
+                return res.status(200).json({success: true, message: "Ooooops! De momento estamos sem medicamentos."})
             }
           
             return res.status(200).json({success: true, response: MedicineResult.MedicineResults, pagination: MedicineResult.pagination})

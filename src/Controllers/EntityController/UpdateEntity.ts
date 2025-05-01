@@ -21,7 +21,6 @@ export class UpdateEntityController {
             const {
                 nif,
                 firma,
-                tipo_entidade,
                 contacto,
                 email,
                 password,
@@ -30,9 +29,7 @@ export class UpdateEntityController {
                 rua,
                 numero,
                 cidade,
-                pais,
             } = req.body 
-            
             const EntityExists = await ValidatorProps.EntityExists(id_entidade)
             if (!EntityExists) {
                 return res.status(404).json({ success: false, message: "Usuário não encontrado." }) 
@@ -41,14 +38,14 @@ export class UpdateEntityController {
             const ContactsExists = await ValidatorProps.NumberExists(contacto)
             const NifExists = await ValidatorProps.NifExists(nif)
 
-            if (!nif && !firma && !tipo_entidade && !contacto && !email && !password && !logradouro && !rua && !numero && !cidade && !pais) {
+            if (!nif && !firma  && !contacto && !email && !password && !logradouro && !rua && !numero && !cidade) {
                 return res.status(400).json({ success: false, message: "Informe pelo menos um campo para atualização." }) 
             }
 
-            const EntityUpdateData: Partial<{ nif: string, tipo_entidade: string, firma: string}> = {} 
+            const EntityUpdateData: Partial<{ nif: string, firma: string}> = {} 
             const AccountUpdateData: Partial<{ email: string, password: string }> = {} 
-            const AdressUpdateData: Partial<{ logradouro: string, rua: string, cidade: string, pais: string, numero: number }> = {} 
-            const ContactsUpdateData: Partial<{ contacto: string }> = {} 
+            const AdressUpdateData: Partial<{ logradouro: string, rua: string, cidade: string, numero: number }> = {} 
+            const ContactsUpdateData: Partial<{ contacto: number }> = {} 
 
             if (nif) {
                 if (NifExists) {
@@ -69,13 +66,7 @@ export class UpdateEntityController {
             } 
             if (firma)
             {
-                EntityUpdateData.firma = firma
-            }
-            if (tipo_entidade) {
-                if (!["farmacia", "deposito"].includes(tipo_entidade.toLowerCase())) {
-                    return res.status(400).json({ success: false, message: "Apenas aceitamos Farmácias e Depósitos." }) 
-                }
-                EntityUpdateData.tipo_entidade = tipo_entidade.toLowerCase() 
+                EntityUpdateData.firma = validator.escape(firma)
             }
 
             if (email) {
@@ -126,14 +117,7 @@ export class UpdateEntityController {
                 if (ContactsExists) {
                     return res.status(400).json({ success: false, message: "O número já esta sendo usado." }) 
                 }
-                
-                if (!validator.isInt(contacto))
-                    {
-                        return res.status(400).json({
-                            success: false,
-                            message: "Por favor informe um contacto válido.",
-                        }) 
-                    }
+
                 ContactsUpdateData.contacto = contacto
             }
 
@@ -153,10 +137,7 @@ export class UpdateEntityController {
             {
                 AdressUpdateData.numero = numero
             }
-            if (pais)
-            {
-                AdressUpdateData.pais = validator.escape(pais)
-            }
+
 
             if (Object.keys(AccountUpdateData).length > 0) {
                 const AccountUpdated = await AccountRepositoriesInstance.updateAccount(EntityExists.id_conta_fk, AccountUpdateData) 
@@ -168,7 +149,6 @@ export class UpdateEntityController {
             if (Object.keys(EntityUpdateData).length > 0) {
                 const EntityUpdated = await EntitiesRepositoriesInstance.updateEntity(id_entidade, { 
                     NIF_entidade: nif, 
-                    tipo_entidade: tipo_entidade, 
                     firma_entidade: validator.escape(firma)
                 }) 
                 if (!EntityUpdated) {

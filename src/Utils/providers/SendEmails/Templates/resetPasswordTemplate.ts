@@ -93,7 +93,7 @@ function ResetPasswordTemplate(token: string): string {
             <p>Olá,</p>
             <p>Recebemos uma solicitação para redefinir a senha da sua conta MediMap Angola. Para continuar, clique no botão abaixo:</p>
             
-            <a href="${process.env.RESET_URI}/reset_password?auth=${token}" class="btn-primary">
+            <a href="${process.env.RESET_URI}?auth=${token}" class="btn-primary">
                 Redefinir Senha
             </a>
             
@@ -101,7 +101,7 @@ function ResetPasswordTemplate(token: string): string {
             
             <p>Se o botão não funcionar, copie e cole este link no seu navegador:</p>
             <div class="link-box">
-                ${process.env.RESET_URI}/reset_password?auth=${token}
+                ${process.env.RESET_URI}?auth=${token}
             </div>
             
             <p>Este link expira em <span class="highlight">1 hora</span> por motivos de segurança.</p>

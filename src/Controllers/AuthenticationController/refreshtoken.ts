@@ -77,8 +77,8 @@ export default class RefreshTokenController {
                 ]) 
                 res.cookie("refreshToken", newRefreshToken, {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV !== "dev",
-                    sameSite: "lax",
+                    secure: true,
+                    sameSite: "none",
                     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
                 }) 
     

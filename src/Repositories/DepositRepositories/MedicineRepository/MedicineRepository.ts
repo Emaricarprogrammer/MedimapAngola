@@ -90,10 +90,7 @@ export class MedicineRepositories implements IMedicineRepositories
         const skip = (page - 1) * limit;
 
         const MedicineQuery = await this.prisma.medicamentos.findMany({skip:skip,take:limit,include:{categoria:true, deposito:{include:{endereco_entidade:true}}}, orderBy:{validade_medicamento:"desc"}})
-        if (MedicineQuery == null)
-        {
-            return null
-        }
+
         const totalMedicines = await this.prisma.medicamentos.count()
         const totalPages = Math.ceil(totalMedicines/ limit)
 

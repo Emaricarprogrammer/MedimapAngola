@@ -19,7 +19,7 @@ const allowdDomains = ["http://localhost:5173", "*", 'file://']
 App.use(express.json())
 App.use(cookieParser())
 App.use(helmet())
-
+/*
 App.use(morgan("combined", {
   stream: fs.createWriteStream(
     path.join(__dirname, 'access_logs'), { flags: 'a' }
@@ -36,9 +36,11 @@ if (process.env.NODE_ENV === "production") {
     }
   } 
 }
-
-App.use(cors({
-  origin: true,
+*/
+App.use(cors({ 
+  origin: ['http://localhost:5173', 'http://192.168.188.103:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allowed methods
+  allowedHeaders: ['Authorization', 'Content-Type'],
   credentials: true,
 }))
 
@@ -55,9 +57,7 @@ App.use((req: Request, res: Response, next: NextFunction) => {
 App.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error("Erro interno:", err);
   res.status(500).json({
-    message: "Estamos tentando resolver este problema. Por favor, tente mais tarde ou contacte o suporte.",
-    ...(process.env.NODE_ENV === "dev" && { error: err.message })
-  });
+    message: "Estamos tentando resolver este problema. Por favor, tente mais tarde ou contacte o suporte.",});
 });
 
 export default App

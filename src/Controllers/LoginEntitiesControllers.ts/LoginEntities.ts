@@ -65,8 +65,8 @@ export class LoginEntity
 
         res.cookie("refreshToken", refreshToken,{
             httpOnly: true,
-            secure: process.env.NODE_ENV == "dev" ? false : true,
-            sameSite: "lax",
+            secure: false,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -106,8 +106,8 @@ export class LoginEntity
 
             res.clearCookie("refreshToken",{
                 httpOnly: true,
-                secure: process.env.NODE_ENV == "dev" ? false : true,
-                 sameSite: "lax"
+                secure: true,
+                sameSite: "none"
             })
             return res.status(200).json({success: true, message: "Sessão terminada com sucesso!"})
         } catch (error: any)
