@@ -20,6 +20,7 @@ class RequestsMedicineController
                 id_medicamento
             } = req.body
             const {id_farmacia} = req.params
+            console.log(req.body)
             if (!id_farmacia)
             {
                 return res.status(400).json({

@@ -14,47 +14,63 @@ export class MedicineRepositories implements IMedicineRepositories
         return MedicineQuery || null
         }
 
-    async findMedicine(generic_name: string, comercial_name?:string, id?: string): Promise<MedicineDatas | any> {
-        if (generic_name)
+    async findMedicine(nome_generico: string, comercial_name?:string, id?: string): Promise<MedicineDatas | any> {
+        if (nome_generico)
         {
-            const MedicineQuery = await this.prisma.medicamentos.findFirst({where:{nome_generico_medicamento: generic_name}, include:{categoria:true,deposito:true}})
+            const MedicineQuery = await this.prisma.medicamentos.findMany({where:{nome_generico_medicamento: nome_generico}, include:{categoria:true,deposito:{include:{endereco_entidade:true}}}})
             if (MedicineQuery == null)
             {
                 return null
             }
-            const MedicineResult = {
-                id_medicamento: MedicineQuery.id_medicamento,
-                categoria: MedicineQuery.categoria.nome_categoria_medicamento,
-                nome_generico: MedicineQuery.nome_generico_medicamento,
-                nome_comercial: MedicineQuery.nome_comercial_medicamento,
-                origem: MedicineQuery.origem_medicamento,
-                validade: dayjs(MedicineQuery.validade_medicamento).format("DD/MM/YY"),
-                quantidade_disponivel: MedicineQuery.quantidade_disponivel_medicamento,
-                deposito: MedicineQuery?.deposito.firma_entidade,
-                preco: MedicineQuery?.preco_medicamento,
-                imagem: MedicineQuery?.imagem_url
-            }
+            const MedicineResult = MedicineQuery.map((medicines => ({
+                id_medicamento: medicines.id_medicamento,
+                categoria: medicines.categoria.nome_categoria_medicamento,
+                nome_generico: medicines.nome_generico_medicamento,
+                nome_comercial: medicines.nome_comercial_medicamento,
+                origem: medicines.origem_medicamento,
+                validade: medicines.validade_medicamento,
+                quantidade_disponivel: medicines.quantidade_disponivel_medicamento,
+                deposito:{
+                    id_deposito: medicines.deposito.id_entidade,
+                    firma_deposito: medicines.deposito.firma_entidade,
+                    logradouro: medicines.deposito.endereco_entidade[0].logradouro,
+                    rua: medicines.deposito.endereco_entidade[0].rua,
+                    numero_rua: medicines.deposito.endereco_entidade[0].numero,
+                    cidade: medicines.deposito.endereco_entidade[0].cidade
+                },
+                preco: medicines.preco_medicamento,
+                imagem: medicines.imagem_url
+            })))
+
             return MedicineResult
         }
         else if(comercial_name)
         {
-            const MedicineQuery = await this.prisma.medicamentos.findFirst({where:{nome_comercial_medicamento: comercial_name}, include:{categoria:true,deposito:true}})
+            const MedicineQuery = await this.prisma.medicamentos.findMany({where:{nome_comercial_medicamento: comercial_name}, include:{categoria:true,deposito:{include:{endereco_entidade:true}}}})   
             if (MedicineQuery == null)
                 {
                     return null
                 }
-                const MedicineResult = {
-                    id_medicamento: MedicineQuery.id_medicamento,
-                    categoria: MedicineQuery.categoria.nome_categoria_medicamento,
-                    nome_generico: MedicineQuery.nome_generico_medicamento,
-                    nome_comercial: MedicineQuery.nome_comercial_medicamento,
-                    origem: MedicineQuery.origem_medicamento,
-                    validade: dayjs(MedicineQuery.validade_medicamento).format("DD/MM/YY"),
-                    quantidade_disponivel: MedicineQuery.quantidade_disponivel_medicamento,
-                    deposito: MedicineQuery?.deposito.firma_entidade,
-                    preco: MedicineQuery?.preco_medicamento,
-                    imagem: MedicineQuery?.imagem_url
-                }
+                const MedicineResult = MedicineQuery.map((medicines => ({
+                    id_medicamento: medicines.id_medicamento,
+                    categoria: medicines.categoria.nome_categoria_medicamento,
+                    nome_generico: medicines.nome_generico_medicamento,
+                    nome_comercial: medicines.nome_comercial_medicamento,
+                    origem: medicines.origem_medicamento,
+                    validade: medicines.validade_medicamento,
+                    quantidade_disponivel: medicines.quantidade_disponivel_medicamento,
+                    deposito:{
+                        id_deposito: medicines.deposito.id_entidade,
+                        firma_deposito: medicines.deposito.firma_entidade,
+                        logradouro: medicines.deposito.endereco_entidade[0].logradouro,
+                        rua: medicines.deposito.endereco_entidade[0].rua,
+                        numero_rua: medicines.deposito.endereco_entidade[0].numero,
+                        cidade: medicines.deposito.endereco_entidade[0].cidade
+                    },
+                    preco: medicines.preco_medicamento,
+                    imagem: medicines.imagem_url
+                })))
+
             return MedicineResult
         }
         else if(id)

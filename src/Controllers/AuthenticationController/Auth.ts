@@ -23,7 +23,6 @@ export class AuthenticationController
     
             const decodedToken = await JWT.verify(token, jwtSecretKey.ACCESS_SECRET) as JwtPayload
             req.body.user = decodedToken
-            console.log("Decoded Token: ", decodedToken)
             next()
             
         } catch (error: any) {

@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === "production") {
 }
 */
 App.use(cors({ 
-  origin: ['http://localhost:5173', 'http://192.168.188.103:5173'],
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allowed methods
   allowedHeaders: ['Authorization', 'Content-Type'],
   credentials: true,

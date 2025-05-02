@@ -21,7 +21,7 @@ DepositRouter.route("/medicines").get((req:Request, res:Response) => {FindAllMed
  * Private Routes
  */
 DepositRouter.route("/medicines").post(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication, upload.single("imagem"),(req:Request, res:Response) => {CreateMedicineController.CreateMedicine(req, res)})
-DepositRouter.route("/medicine/:nome_comercial").get((req:Request, res:Response) => {FindMedicineController.FindMedicine(req, res)})
+DepositRouter.route("/medicine/:nome_generico").get((req:Request, res:Response) => {FindMedicineController.FindMedicine(req, res)})
 DepositRouter.route("/medicine/:id_medicamento").patch(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req:Request, res:Response) => {UpdateMedicineController.UpdateMedicine(req, res)})
 DepositRouter.route("/medicine/:id_medicamento").delete(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DeleteMedicineController.DeleteMedicine(req, res)})
 DepositRouter.route("/medicines/my/requests/:id_deposito").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DepositsOrders.getOrders(req, res)})

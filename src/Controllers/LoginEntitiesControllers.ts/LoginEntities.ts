@@ -67,7 +67,7 @@ export class LoginEntity
             httpOnly: true,
             secure: false,
             sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         })
 
         const existingToken = await prisma.refreshTokens.findFirst({where:{id_conta_fk: AccountExists.id_conta}})
@@ -106,7 +106,7 @@ export class LoginEntity
 
             res.clearCookie("refreshToken",{
                 httpOnly: true,
-                secure: true,
+                secure: false,
                 sameSite: "none"
             })
             return res.status(200).json({success: true, message: "Sessão terminada com sucesso!"})
