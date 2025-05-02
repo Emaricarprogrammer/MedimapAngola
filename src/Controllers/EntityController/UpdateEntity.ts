@@ -62,6 +62,12 @@ export class UpdateEntityController {
                         message: "Por favor informe um nif válido.",
                     }) 
                 }
+                if (!validator.isLength(nif, { min: 10, max: 10 })) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "O nif deve ter exatamente 10 dígitos.",
+                    }) 
+                }
                 EntityUpdateData.nif = nif
             } 
             if (firma)
@@ -157,7 +163,10 @@ export class UpdateEntityController {
             }
 
             if (Object.keys(ContactsUpdateData).length > 0) {
-                    const ContactUpdated = await ContactsRepositoriesInstance.updateContacts({contacto: contacto, id_entidade_fk: id_entidade});
+                    const ContactUpdated = await ContactsRepositoriesInstance.updateContacts({
+                        id_entidade_fk: id_entidade,
+                        contacto: contacto
+                    });
                     if (!ContactUpdated) {
                         return res.status(500).json({ success: false, message: "Erro ao atualizar este contato." });
                     }

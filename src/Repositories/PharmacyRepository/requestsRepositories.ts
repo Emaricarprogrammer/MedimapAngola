@@ -151,7 +151,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
             return null
         }
 
-        const allOrders = await this.prisma.aquisicao.findMany({where:{id_entidade_fk: id_farmacia}, include:{aquisicao_medicamento:{include:{medicamento:{include:{categoria:true}}}}, entidade:true}, skip: skip, take: limit})
+        const allOrders = await this.prisma.aquisicao.findMany({where:{id_entidade_fk: id_farmacia}, include:{aquisicao_medicamento:{include:{medicamento:{include:{categoria:true, deposito: true}}}}, entidade:true}, skip: skip, take: limit})
         const totalOrders = await this.prisma.aquisicao.count({where:{id_entidade_fk: id_farmacia}})
         if (totalOrders == 0)
         {
@@ -168,7 +168,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
                 id_medicamento: medicamento.medicamento.id_medicamento,
                 nome_medicamento: medicamento.medicamento.nome_comercial_medicamento,
                 preco: medicamento.medicamento.preco_medicamento,
-                firma_deposito: pedido.entidade.firma_entidade,
+                firma_deposito: medicamento.medicamento.deposito.firma_entidade,
                 categoria_medicamento: medicamento.medicamento.categoria.nome_categoria_medicamento,
                 validade: dayjs(medicamento.medicamento.validade_medicamento).format("DD-MM-YY"),
                 createdAt: medicamento.medicamento.createdAt,

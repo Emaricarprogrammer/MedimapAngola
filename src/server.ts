@@ -6,8 +6,7 @@ const runServer = async () => {
     App.listen(portURI, () => {
       console.log(`Servidor online, ouvindo a porta: ${portURI}`)
     })
-  } catch (error)
-  {
+  } catch (error) {
     console.log("Houve um erro: ", error)
     process.exit(1)
   }

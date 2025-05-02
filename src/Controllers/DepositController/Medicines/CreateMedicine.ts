@@ -27,7 +27,7 @@ export class CreateMedicineController {
         id_entidade_fk,
       } = req.body;
 
-      const imagem = req.file
+    const imagem = req.file
 
       // Verificação de campos obrigatórios
       const missingFields = [

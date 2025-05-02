@@ -57,7 +57,7 @@ App.use((req: Request, res: Response, next: NextFunction) => {
 App.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error("Erro interno:", err);
   res.status(500).json({
-    message: "Estamos tentando resolver este problema. Por favor, tente mais tarde ou contacte o suporte.",});
+    message: `Estamos tentando resolver este problema. Por favor, tente mais tarde ou contacte o suporte.`,});
 });
 
 export default App
