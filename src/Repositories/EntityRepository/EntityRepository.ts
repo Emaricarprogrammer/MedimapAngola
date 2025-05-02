@@ -39,8 +39,8 @@ class EntitiesRepositories implements IEntityRepositories
                     latitude: entityResults.geolocalizacao_entidade[0].latitude,
                     longitude: entityResults.geolocalizacao_entidade[0].longitude
                 },
-                createdAt: dayjs(entityResults.createdAt).format("DD:MM:YY HH:MM:ss"),
-                updatedAt: dayjs(entityResults.updatedAt).format("DD:MM:YY HH:MM:ss")
+                createdAt: entityResults.createdAt,
+                updatedAt: entityResults.updatedAt
             }
             return datas
         }
@@ -67,8 +67,8 @@ class EntitiesRepositories implements IEntityRepositories
                     latitude: entityResults.geolocalizacao_entidade[0].latitude,
                     longitude: entityResults.geolocalizacao_entidade[0].longitude
                 },
-                createdAt: dayjs(entityResults.createdAt).format("DD:MM:YY HH:MM:ss"),
-                updatedAt: dayjs(entityResults.updatedAt).format("DD:MM:YY HH:MM:ss")
+                createdAt: entityResults.createdAt,
+                updatedAt: entityResults.updatedAt
             }
             return datas
         }

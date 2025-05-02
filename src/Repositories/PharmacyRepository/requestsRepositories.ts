@@ -160,7 +160,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
 
         const allPharmacyOrders =  pharmacyOrders.map(order => ({
             pedidos: allOrders.map(pedido => ({
-                data_aquisicao: dayjs(pedido.data_aquisicao).format("DD-MM-YY: HH:MM:ss"),
+                data_aquisicao: pedido.data_aquisicao,
                 quantidade_medicamentos: pedido.quantidade_aquisicao,
                 id_aquisicao: pedido.id_aquisicao,
                 status: pedido.status,
@@ -171,7 +171,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
                 firma_deposito: pedido.entidade.firma_entidade,
                 categoria_medicamento: medicamento.medicamento.categoria.nome_categoria_medicamento,
                 validade: dayjs(medicamento.medicamento.validade_medicamento).format("DD-MM-YY"),
-                createdAt: dayjs(medicamento.medicamento.createdAt).format("DD-MM-YY"),
+                createdAt: medicamento.medicamento.createdAt,
                 total_compra: pedido.total_compra
             }))
                 })),
