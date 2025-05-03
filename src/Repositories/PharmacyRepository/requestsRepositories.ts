@@ -22,7 +22,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
 
     async getOrdersDetails(id_deposito: string) {
       const page = 1;
-      const limit = 10;
+      const limit = 20;
       const skip = (page - 1) * limit;
   
       // 1. Verifica se o depósito existe
@@ -145,7 +145,7 @@ export class RequestsRepositories implements IRequestMedicineRepositories, IRequ
     {
         const pharmacyOrders = await this.prisma.entidades.findMany({where:{id_entidade:id_farmacia}, include:{aquisicao_medicamento: true}})
         const pages = 1 
-        const limit = 9 
+        const limit = 20 
     
         const skip = (pages - 1) * limit 
         const totalRequests = await this.prisma.aquisicao_medicamentos.count({where:{aquisicao:{id_entidade_fk: id_farmacia}}, orderBy:{createdAt:"desc"}}) 

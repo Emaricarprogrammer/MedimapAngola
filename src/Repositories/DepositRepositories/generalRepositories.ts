@@ -12,7 +12,7 @@ class GeneralDepositsRepositories
 
     async findDeposit(id_deposit: string): Promise<EntityDatas | any> {
         const page = 1 
-        const limit = 8 
+        const limit = 20 
         const skip = (page - 1) * limit 
         const deposit = await this.Prisma.entidades.findFirst({
                 where: { id_entidade: id_deposit },
@@ -84,7 +84,7 @@ class GeneralDepositsRepositories
     }
     async findDeposits(): Promise<{ data: any[], pagination: any }>{
         const page = 1 
-        const limit = 8 
+        const limit = 20 
         const skip = (page - 1) * limit 
         const deposits = await this.Prisma.entidades.findMany({
             where: { tipo_entidade: "deposito" },
@@ -165,7 +165,7 @@ class GeneralDepositsRepositories
     async MyMedicines(id_deposit: string):Promise<{ medicines: any[], pagination: any }>
     {
         const page = 1 
-        const limit = 8 
+        const limit = 20 
         const skip = (page - 1) * limit 
         const deposits = await this.Prisma.medicamentos.findMany({where: { id_entidade_fk: id_deposit },include:{categoria:true},skip: skip,take: limit, orderBy: {createdAt:"desc"}})
         const totalMedicines = await this.Prisma.medicamentos.count({ where: { id_entidade_fk:id_deposit}})
