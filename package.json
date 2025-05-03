@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon ./dist/server.js",
     "start": "node ./dist/server.js",
-    "build": "tsc"
+    "build": "tsc "
   },
   "prisma": {
     "schema": "prisma/schema.prisma"
