@@ -194,5 +194,38 @@ class GeneralDepositsRepositories
                 }
             }
         }   
-}
+
+        async findMyDatas(id_deposit: string)
+        {
+            const allMyMedicines = await this.Prisma.medicamentos.count({where: { id_entidade_fk: id_deposit}})
+            const deposit = await this.Prisma.entidades.findFirst({
+                where: { id_entidade: id_deposit },
+                include: {
+                    endereco_entidade: true,
+                    contacto_entidade: true,
+                    geolocalizacao_entidade: true
+                }
+            }) 
+            if (!deposit) {
+                return null 
+            }
+            const depositDatas = {
+                contacto: deposit.contacto_entidade[0].contacto,
+                logradouro: deposit.endereco_entidade[0].logradouro,
+                rua: deposit.endereco_entidade[0].rua,
+                numero: deposit.endereco_entidade[0].numero,
+                cidade: deposit.endereco_entidade[0].cidade,
+                pais: deposit.endereco_entidade[0].pais,
+                geolocalizacao_deposito: {
+                    latitude: deposit.geolocalizacao_entidade[0].latitude,
+                    longitude: deposit.geolocalizacao_entidade[0].longitude,
+                },
+                total_medicamentos: allMyMedicines,
+
+            } 
+            return {
+                depositDatas
+        }
+
+            }    }
 export {GeneralDepositsRepositories}

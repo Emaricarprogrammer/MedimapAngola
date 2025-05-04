@@ -55,7 +55,7 @@ export class UpdateMedicineController {
                 Medicines.origem_medicamento = validator.escape(origem_medicamento);
             }
             if (validade_medicamento) {
-                Medicines.validade_medicamento = validade_medicamento
+                Medicines.validade_medicamento = new Date(validade_medicamento)
             }
             if (preco_medicamento) {
                 if (!validator.isNumeric(preco_medicamento.toString())) {
@@ -68,9 +68,7 @@ export class UpdateMedicineController {
                 Medicines.preco_medicamento = parseFloat(preco_medicamento);
             }
             if (imagem_url) {
-                if (!validator.isURL(imagem_url)) {
-                    return res.status(400).json({ success: false, message: "URL da imagem inválido." });
-                }
+
                 Medicines.imagem_url = imagem_url;
             }
             if (quantidade_disponivel_medicamento) {

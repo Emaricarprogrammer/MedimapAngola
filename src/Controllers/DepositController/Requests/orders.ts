@@ -29,7 +29,6 @@ class DepositsOrders
                 return res.status(401).json({ success: false, message: "Desculpe, mas não podemos realizar está acção detetamos uma falha. Por favor faça login novamente ou tente mais tarde" })
             }
              const detailsOrders = await RequestsRepositoriesInstane.getOrdersDetails(id_deposito)
-             console.log("Detalhes: ", detailsOrders.allRequests)
              if (detailsOrders.allRequests?.length == 0)
              {
                 return res.status(400).json({ success: false, message: "Sem pedidos de momento." })

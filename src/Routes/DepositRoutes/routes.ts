@@ -9,7 +9,7 @@ import { DepositsOrders } from "../../Controllers/DepositController/Requests/ord
 import {upload} from "../../Utils/providers/UploadConfig"
 import { FindAllMyMedicinesController } from "../../Controllers/DepositController/Medicines/FindMyMedicines"
 import { FindEntityController } from "../../Controllers/EntityController/FindEntity"
-
+import { GetMyDatasController } from "../../Controllers/DepositController/getMyDatas"
 const DepositRouter: Router = Router()
 
 /**
@@ -27,6 +27,6 @@ DepositRouter.route("/medicine/:id_medicamento").delete(AuthenticationController
 DepositRouter.route("/medicines/my/requests/:id_deposito").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DepositsOrders.getOrders(req, res)})
 DepositRouter.route("/myMedicines/:id_deposito").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {FindAllMyMedicinesController.FindMedicines(req, res)})
 DepositRouter.route("/medicines/requests/:id_aquisicao/status").patch(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) => {DepositsOrders.OrdersStatus(req, res)})
-DepositRouter.route("/profile/:id_entidade").get((req: Request, res: Response) => {FindEntityController.findEntity(req, res)})
+DepositRouter.route("/myDatas/:id_deposito").get(AuthenticationController.Authentication,AuthenticationController.DepositAuthentication,(req: Request, res: Response) =>{GetMyDatasController.getMyDatas(req, res)})
 
 export default DepositRouter
