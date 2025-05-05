@@ -55,14 +55,7 @@ export class UpdateEntityController {
                     }) 
                 }
 
-                if (!validator.isInt(nif))
-                {
-                    return res.status(400).json({
-                        success: false,
-                        message: "Por favor informe um nif válido.",
-                    }) 
-                }
-                if (!validator.isLength(nif, { min: 10, max: 10 })) {
+                if (nif.length < 10) {
                     return res.status(400).json({
                         success: false,
                         message: "O nif deve ter exatamente 10 dígitos.",
