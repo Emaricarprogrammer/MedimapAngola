@@ -15,6 +15,7 @@ dotenv.config()
 
 const App = express()
 const allowdDomains = ["http://localhost:5173", "*", 'file://']    
+App.set('trust proxy', 1)
 
 App.use(express.json())
 App.use(cookieParser())
